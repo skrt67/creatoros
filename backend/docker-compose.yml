@@ -51,8 +51,9 @@ services:
   api:
     build: .
     ports:
-      - "8000:8000"
+      - "8003:8000"
     environment:
+      - PORT=8000
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/creatorOS
       - TEMPORAL_SERVER_URL=temporal:7233
       - JWT_SECRET_KEY=dev-secret-key-change-in-production
