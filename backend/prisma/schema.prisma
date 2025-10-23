@@ -18,6 +18,8 @@ model User {
   updatedAt     DateTime      @updatedAt
   workspaces    Workspace[]
   subscription  Subscription?
+
+  @@map("users")
 }
 
 model Workspace {
@@ -28,6 +30,8 @@ model Workspace {
   ownerId     String
   owner       User          @relation(fields: [ownerId], references: [id])
   videoSources VideoSource[]
+
+  @@map("workspaces")
 }
 
 model VideoSource {
@@ -40,6 +44,8 @@ model VideoSource {
   workspaceId    String
   workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   processingJob  ProcessingJob?
+
+  @@map("video_sources")
 }
 
 model ProcessingJob {
@@ -52,6 +58,8 @@ model ProcessingJob {
   videoSource   VideoSource    @relation(fields: [videoSourceId], references: [id], onDelete: Cascade)
   transcript    Transcript?
   contentAssets ContentAsset[]
+
+  @@map("processing_jobs")
 }
 
 model Transcript {
@@ -61,6 +69,8 @@ model Transcript {
   updatedAt       DateTime  @updatedAt
   jobId           String    @unique
   job             ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@map("transcripts")
 }
 
 model ContentAsset {
@@ -72,6 +82,8 @@ model ContentAsset {
   updatedAt DateTime   @updatedAt
   jobId     String
   job       ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@map("content_assets")
 }
 
 model Subscription {
@@ -83,6 +95,8 @@ model Subscription {
   stripePriceId      String
   stripeCurrentPeriodEnd DateTime
   status             String
+
+  @@map("subscriptions")
 }
 
 enum VideoStatus {
