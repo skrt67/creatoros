@@ -54,10 +54,11 @@ services:
       - "8003:8000"
     environment:
       - PORT=8000
-      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/creatorOS
-      - TEMPORAL_SERVER_URL=temporal:7233
-      - JWT_SECRET_KEY=dev-secret-key-change-in-production
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:postgres@postgres:5432/creatorOS}
+      - TEMPORAL_SERVER_URL=${TEMPORAL_SERVER_URL:-temporal:7233}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-dev-secret-key-change-in-production}
       - ASSEMBLYAI_API_KEY=${ASSEMBLYAI_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET}
       - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
