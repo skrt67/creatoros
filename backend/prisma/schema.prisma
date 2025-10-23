@@ -1,0 +1,113 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  hashedPassword String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  workspaces    Workspace[]
+  subscription  Subscription?
+}
+
+model Workspace {
+  id          String        @id @default(cuid())
+  name        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  ownerId     String
+  owner       User          @relation(fields: [ownerId], references: [id])
+  videoSources VideoSource[]
+}
+
+model VideoSource {
+  id             String          @id @default(cuid())
+  youtubeUrl     String
+  title          String?
+  status         VideoStatus     @default(PENDING)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  workspaceId    String
+  workspace      Workspace       @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  processingJob  ProcessingJob?
+}
+
+model ProcessingJob {
+  id            String         @id @default(cuid())
+  temporalWorkflowId String    @unique
+  status        JobStatus      @default(STARTED)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  videoSourceId String         @unique
+  videoSource   VideoSource    @relation(fields: [videoSourceId], references: [id], onDelete: Cascade)
+  transcript    Transcript?
+  contentAssets ContentAsset[]
+}
+
+model Transcript {
+  id              String    @id @default(cuid())
+  fullTranscript  Json
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  jobId           String    @unique
+  job             ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model ContentAsset {
+  id        String     @id @default(cuid())
+  type      AssetType
+  content   String
+  status    AssetStatus @default(GENERATED)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  jobId     String
+  job       ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id                 String   @id @default(cuid())
+  userId             String   @unique
+  user               User     @relation(fields: [userId], references: [id])
+  stripeCustomerId   String   @unique
+  stripeSubscriptionId String @unique
+  stripePriceId      String
+  stripeCurrentPeriodEnd DateTime
+  status             String
+}
+
+enum VideoStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum JobStatus {
+  STARTED
+  COMPLETED
+  FAILED
+}
+
+enum AssetType {
+  BLOG_POST
+  TWITTER_THREAD
+  LINKEDIN_POST
+  TIKTOK
+  VIDEO_HIGHLIGHTS
+}
+
+enum AssetStatus {
+  GENERATED
+  PUBLISHED
+  ARCHIVED
+}

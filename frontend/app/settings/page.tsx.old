@@ -1,0 +1,379 @@
+'use client';
+
+import Link from 'next/link';
+import { useState } from 'react';
+import { toast } from 'react-hot-toast';
+import { ArrowLeft, Zap, User, Bell, Shield, CreditCard, Palette, Globe, Save, CheckCircle } from 'lucide-react';
+
+export default function SettingsPage() {
+  const [activeTab, setActiveTab] = useState('profile');
+  const [saved, setSaved] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordError, setPasswordError] = useState('');
+
+  const tabs = [
+    { id: 'profile', label: 'Profil', icon: User },
+    { id: 'notifications', label: 'Notifications', icon: Bell },
+    { id: 'security', label: 'Sécurité', icon: Shield },
+    { id: 'billing', label: 'Facturation', icon: CreditCard },
+    { id: 'preferences', label: 'Préférences', icon: Palette },
+  ];
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordError('');
+
+    // Validation
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      setPasswordError('Les mots de passe ne correspondent pas');
+      return;
+    }
+
+    if (passwordData.newPassword.length < 6) {
+      setPasswordError('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('auth_token');
+      const response = await fetch('http://localhost:8003/auth/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          current_password: passwordData.currentPassword,
+          new_password: passwordData.newPassword
+        })
+      });
+
+      if (response.ok) {
+        toast.success('Mot de passe modifié avec succès ! 🔒');
+        setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' });
+      } else {
+        const error = await response.json();
+        setPasswordError(error.detail || 'Erreur lors du changement de mot de passe');
+        toast.error('Échec du changement de mot de passe');
+      }
+    } catch (error) {
+      setPasswordError('Erreur de connexion au serveur');
+      toast.error('Erreur de connexion au serveur');
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
+      {/* Header */}
+      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-sm">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <Link href="/dashboard" className="flex items-center gap-3 group">
+              <div className="relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
+                  <Zap className="h-5 w-5 text-white" />
+                </div>
+              </div>
+              <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">
+                CreatorOS
+              </span>
+            </Link>
+
+            <Link
+              href="/dashboard"
+              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span>Retour au dashboard</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl lg:text-4xl font-black text-gray-900">Paramètres</h1>
+          <p className="mt-2 text-gray-600">Gérez votre compte et vos préférences</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Sidebar */}
+          <aside className="lg:col-span-1">
+            <nav className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
+                      isActive
+                        ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-md'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                    <span className="font-semibold">{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
+          </aside>
+
+          {/* Content */}
+          <div className="lg:col-span-3">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+              {/* Profile */}
+              {activeTab === 'profile' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Informations du profil</h2>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nom</label>
+                      <input
+                        type="text"
+                        defaultValue="John Doe"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
+                      <input
+                        type="email"
+                        defaultValue="demo@creatoros.com"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Bio</label>
+                      <textarea
+                        rows={4}
+                        placeholder="Parlez-nous de vous..."
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleSave}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <Save className="h-5 w-5" />
+                    <span>Enregistrer les modifications</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Notifications */}
+              {activeTab === 'notifications' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Préférences de notifications</h2>
+                    <p className="text-gray-600">Gérez comment et quand vous recevez des notifications</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {[
+                      { label: 'Notifications email', description: 'Recevez des emails pour les mises à jour importantes' },
+                      { label: 'Vidéo traitée', description: 'Notification quand une vidéo est prête' },
+                      { label: 'Résumé hebdomadaire', description: 'Statistiques de vos créations de la semaine' },
+                      { label: 'Nouvelles fonctionnalités', description: 'Soyez informé des nouvelles fonctionnalités' },
+                    ].map((item, i) => (
+                      <label key={i} className="flex items-start gap-4 p-4 rounded-xl border border-gray-200 hover:bg-gray-50 transition-all cursor-pointer">
+                        <input type="checkbox" defaultChecked className="mt-1 rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+                        <div>
+                          <p className="font-semibold text-gray-900">{item.label}</p>
+                          <p className="text-sm text-gray-600">{item.description}</p>
+                        </div>
+                      </label>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={handleSave}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <Save className="h-5 w-5" />
+                    <span>Enregistrer</span>
+                  </button>
+                </div>
+              )}
+
+              {/* Security */}
+              {activeTab === 'security' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Sécurité du compte</h2>
+                    <p className="text-gray-600">Protégez votre compte avec un mot de passe fort</p>
+                  </div>
+
+                  {passwordError && (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl">
+                      <p className="text-sm text-red-700">{passwordError}</p>
+                    </div>
+                  )}
+
+                  <form onSubmit={handlePasswordChange} className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Mot de passe actuel</label>
+                      <input
+                        type="password"
+                        value={passwordData.currentPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nouveau mot de passe</label>
+                      <input
+                        type="password"
+                        value={passwordData.newPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                        minLength={6}
+                        required
+                      />
+                      <p className="mt-1 text-sm text-gray-500">Minimum 6 caractères</p>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Confirmer le mot de passe</label>
+                      <input
+                        type="password"
+                        value={passwordData.confirmPassword}
+                        onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
+                        className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                        required
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                    >
+                      <Shield className="h-5 w-5" />
+                      <span>Mettre à jour le mot de passe</span>
+                    </button>
+                  </form>
+
+                  <div className="mt-8 p-6 bg-red-50 border border-red-200 rounded-xl">
+                    <h3 className="font-bold text-red-900 mb-2">Zone de danger</h3>
+                    <p className="text-sm text-red-700 mb-4">Une fois supprimé, votre compte ne peut pas être récupéré.</p>
+                    <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-all">
+                      Supprimer mon compte
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Billing */}
+              {activeTab === 'billing' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Facturation & Abonnement</h2>
+                    <p className="text-gray-600">Gérez votre plan et vos paiements</p>
+                  </div>
+
+                  <div className="p-6 bg-gradient-to-br from-primary-50 to-purple-50 border border-primary-200 rounded-2xl">
+                    <div className="flex items-center justify-between mb-4">
+                      <div>
+                        <p className="text-sm font-semibold text-primary-700">Plan actuel</p>
+                        <p className="text-2xl font-black text-gray-900">Gratuit</p>
+                      </div>
+                      <div className="px-4 py-2 bg-white rounded-lg border border-primary-200">
+                        <p className="text-xs text-gray-600">3 vidéos / mois</p>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <Link
+                        href="/billing"
+                        className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg transition-all hover:scale-105"
+                      >
+                        <CreditCard className="h-5 w-5" />
+                        <span>Voir tous les plans</span>
+                      </Link>
+                      <p className="text-xs text-gray-600">Upgrader pour débloquer toutes les fonctionnalités</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Preferences */}
+              {activeTab === 'preferences' && (
+                <div className="space-y-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Préférences</h2>
+                    <p className="text-gray-600">Personnalisez votre expérience</p>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <Globe className="inline h-4 w-4 mr-2" />
+                        Langue
+                      </label>
+                      <select className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                        <option>Français</option>
+                        <option>English</option>
+                        <option>Español</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <Palette className="inline h-4 w-4 mr-2" />
+                        Thème
+                      </label>
+                      <select className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all">
+                        <option>Clair</option>
+                        <option>Sombre</option>
+                        <option>Automatique</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={handleSave}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
+                  >
+                    <Save className="h-5 w-5" />
+                    <span>Enregistrer</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </main>
+
+      {/* Save Notification */}
+      {saved && (
+        <div className="fixed bottom-6 right-6 z-50 animate-slide-in-right">
+          <div className="flex items-center gap-3 px-6 py-4 bg-green-600 text-white rounded-xl shadow-2xl">
+            <CheckCircle className="h-5 w-5" />
+            <span className="font-semibold">Modifications enregistrées !</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
