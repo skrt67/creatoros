@@ -3,7 +3,6 @@
 import { useEffect } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import Link from 'next/link';
-import { Button } from '@/components/ui';
 
 export default function Error({
   error,
@@ -57,24 +56,17 @@ export default function Error({
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-          <Button
-            size="lg"
+          <button
             onClick={reset}
-            className="w-full sm:w-auto"
+            className="inline-flex items-center justify-center h-12 px-6 text-base font-medium text-white bg-gradient-to-r from-primary-600 to-purple-600 rounded-lg hover:opacity-90 transition-opacity w-full sm:w-auto"
           >
             <RefreshCw className="mr-2 h-5 w-5" />
             Réessayer
-          </Button>
+          </button>
           
-          <Link href="/">
-            <Button
-              size="lg"
-              variant="secondary"
-              className="w-full sm:w-auto"
-            >
-              <Home className="mr-2 h-5 w-5" />
-              Retour à l'accueil
-            </Button>
+          <Link href="/" className="inline-flex items-center justify-center h-12 px-6 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors w-full sm:w-auto">
+            <Home className="mr-2 h-5 w-5" />
+            Retour à l'accueil
           </Link>
         </div>
 
