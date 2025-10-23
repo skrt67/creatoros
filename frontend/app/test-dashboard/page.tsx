@@ -55,8 +55,8 @@ export default function TestDashboard() {
           setStatus('Login failed');
         }
         
-      } catch (error) {
-        setStatus(`Error: ${error.message}`);
+      } catch (error: any) {
+        setStatus(`Error: ${error?.message || 'Unknown error'}`);
       }
     };
     
