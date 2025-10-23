@@ -4,6 +4,8 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "outputDirectory": ".next",
+  "trailingSlash": false,
+  "cleanUrls": true,
   "rewrites": [
     {
       "source": "/api/:path*",
