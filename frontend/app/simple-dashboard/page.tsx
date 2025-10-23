@@ -12,7 +12,7 @@ interface Workspace {
 }
 
 export default function SimpleDashboard() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<any>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -41,7 +41,7 @@ export default function SimpleDashboard() {
           if (loginResponse.ok) {
             const loginData = await loginResponse.json();
             token = loginData.access_token;
-            localStorage.setItem('auth_token', token);
+            if (token) localStorage.setItem('auth_token', token);
           } else {
             throw new Error('Login failed');
           }
@@ -69,10 +69,10 @@ export default function SimpleDashboard() {
           throw new Error(`Failed to fetch workspaces: ${workspacesResponse.status}`);
         }
         
-      } catch (err) {
-        setError(err.message);
+      } catch (err: any) {
+        setError(err.message || 'An error occurred');
         // Redirect to login if auth fails
-        if (err.message.includes('401') || err.message.includes('Login failed')) {
+        if (err.message?.includes('401') || err.message?.includes('Login failed')) {
           router.push('/login');
         }
       } finally {
