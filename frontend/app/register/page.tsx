@@ -61,6 +61,7 @@ export default function RegisterPage() {
     setIsLoading(true);
 
     try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
       // Ajouter workspace_name automatiquement basé sur le nom de l'utilisateur
       const registrationData = {
         email: formData.email,
@@ -68,7 +69,7 @@ export default function RegisterPage() {
         workspace_name: formData.name ? `Workspace de ${formData.name}` : 'Mon Workspace'
       };
       
-      const response = await fetch('http://localhost:8003/auth/register', {
+      const response = await fetch(`${apiUrl}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(registrationData)
