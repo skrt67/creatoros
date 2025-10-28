@@ -26,6 +26,11 @@ export default function SettingsPage() {
   const [timezone, setTimezone] = useState('Europe/Paris');
   const [dateFormat, setDateFormat] = useState('DD/MM/YYYY');
   
+  // User data
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [loading, setLoading] = useState(true);
+  
   // Notifications
   const [emailNotifs, setEmailNotifs] = useState(true);
   const [videoNotifs, setVideoNotifs] = useState(true);
@@ -54,10 +59,30 @@ export default function SettingsPage() {
   }, [language]);
 
   useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('auth_token');
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+        const response = await fetch(`${apiUrl}/auth/me`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUserEmail(data.email || '');
+          setUserName(data.name || data.email?.split('@')[0] || '');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserData();
+
     const saved = localStorage.getItem('userSettings');
     if (saved) {
       const s = JSON.parse(saved);
-      // La langue est gérée par le contexte global, on ne la charge pas ici
       setGeminiApiKey(s.geminiApiKey || '');
       setYoutubeApiKey(s.youtubeApiKey || '');
       setContentTone(s.contentTone || 'professional');
@@ -170,20 +195,26 @@ export default function SettingsPage() {
               {activeTab === 'profile' && (
                 <div className="space-y-6">
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{t('profileInfo')}</h2>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('name')}</label>
-                      <input type="text" defaultValue="Demo User" className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl" />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('email')}</label>
-                      <input type="email" defaultValue="demo@creatoros.com" className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl" />
-                    </div>
-                  </div>
-                  <button onClick={handleSave} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white font-bold rounded-xl">
-                    <Save className="h-5 w-5" />
-                    {t('saveChanges')}
-                  </button>
+                  {loading ? (
+                    <div className="text-center py-8 text-gray-500">Chargement...</div>
+                  ) : (
+                    <>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('name')}</label>
+                          <input type="text" value={userName} onChange={(e) => setUserName(e.target.value)} className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl" />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">{t('email')}</label>
+                          <input type="email" value={userEmail} disabled className="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-xl bg-gray-100 dark:bg-gray-800 cursor-not-allowed" />
+                        </div>
+                      </div>
+                      <button onClick={handleSave} className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white font-bold rounded-xl">
+                        <Save className="h-5 w-5" />
+                        {t('saveChanges')}
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
 
