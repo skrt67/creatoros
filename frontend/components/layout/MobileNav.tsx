@@ -68,7 +68,7 @@ export function MobileNav({ onLogout, userEmail }: MobileNavProps) {
                   <Sparkles className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold gradient-text">CreatorOS</h2>
+                  <h2 className="text-lg font-bold gradient-text">Vidova</h2>
                   <p className="text-xs text-gray-500">Menu</p>
                 </div>
               </div>

@@ -1,6 +1,6 @@
-# CreatorOS - AI-Powered Content Creation Platform
+# Vidova - AI-Powered Content Creation Platform
 
-CreatorOS is a comprehensive SaaS platform that transforms YouTube videos into a diverse portfolio of high-quality marketing assets using advanced AI automation. Built with a modern, scalable architecture designed for production deployment.
+Vidova is a comprehensive SaaS platform that transforms YouTube videos into a diverse portfolio of high-quality marketing assets using advanced AI automation. Built with a modern, scalable architecture designed for production deployment.
 
 ## 🚀 Features
 
@@ -53,7 +53,7 @@ CreatorOS is a comprehensive SaaS platform that transforms YouTube videos into a
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd CreatorOS
+   cd Vidova
    ```
 
 2. **Set up environment variables**
@@ -307,4 +307,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-Built with ❤️ by the CreatorOS team
+Built with ❤️ by the Vidova team

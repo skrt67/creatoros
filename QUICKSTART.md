@@ -1,6 +1,6 @@
-# CreatorOS Quick Start Guide
+# Vidova Quick Start Guide
 
-Get CreatorOS running locally in under 10 minutes!
+Get Vidova running locally in under 10 minutes!
 
 ## 🚀 Prerequisites
 
@@ -14,7 +14,7 @@ Get CreatorOS running locally in under 10 minutes!
 ### 1. Clone and Setup
 ```bash
 git clone <repository-url>
-cd CreatorOS
+cd Vidova
 ```
 
 ### 2. Configure Environment
@@ -65,7 +65,7 @@ npm run dev
 ```bash
 # Clone repository
 git clone <repository-url>
-cd CreatorOS/backend
+cd Vidova/backend
 
 # Create virtual environment
 python -m venv venv
@@ -215,7 +215,7 @@ curl http://localhost:7233
 ## 📁 Project Structure
 
 ```
-CreatorOS/
+Vidova/
 ├── backend/                 # Python FastAPI backend
 │   ├── app/                # API routes and models
 │   ├── temporal_workflows/ # Temporal workflows and activities
@@ -231,13 +231,13 @@ CreatorOS/
 
 ## 🎉 What's Next?
 
-Once you have CreatorOS running:
+Once you have Vidova running:
 
 1. **Explore Features**: Try different types of YouTube videos
 2. **Customize Content**: Edit generated content assets
 3. **Check Workflows**: Monitor processing in Temporal UI
 4. **Read Documentation**: Dive deeper into the architecture
-5. **Contribute**: Help improve CreatorOS!
+5. **Contribute**: Help improve Vidova!
 
 ## 💡 Pro Tips
 

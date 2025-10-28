@@ -10,6 +10,7 @@ from ..auth import (
     create_access_token,
     get_password_hash,
     get_current_active_user,
+    verify_password,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
 from ..email import send_password_reset_email, generate_reset_token
@@ -109,6 +110,50 @@ async def get_current_user_info(current_user = Depends(get_current_active_user))
         created_at=current_user.createdAt,
         updated_at=current_user.updatedAt
     )
+
+@router.post("/change-password", response_model=APIResponse)
+async def change_password(data: dict, current_user = Depends(get_current_active_user)):
+    """Change user password."""
+    current_password = data.get('current_password')
+    new_password = data.get('new_password')
+    
+    if not current_password or not new_password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Current and new password are required"
+        )
+    
+    if len(new_password) < 6:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="New password must be at least 6 characters"
+        )
+    
+    # Verify current password
+    if not verify_password(current_password, current_user.hashedPassword):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Current password is incorrect"
+        )
+    
+    # Update password
+    prisma = Prisma()
+    await prisma.connect()
+    
+    try:
+        new_hashed_password = get_password_hash(new_password)
+        await prisma.user.update(
+            where={"id": current_user.id},
+            data={"hashedPassword": new_hashed_password}
+        )
+        
+        return APIResponse(
+            success=True,
+            message="Password updated successfully",
+            data={}
+        )
+    finally:
+        await prisma.disconnect()
 
 @router.post("/forgot-password", response_model=APIResponse)
 async def forgot_password(data: dict):

@@ -157,7 +157,7 @@ export default function SettingsPage() {
                   <Zap className="h-5 w-5 text-white" />
                 </div>
               </div>
-              <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 dark:from-white dark:via-primary-400 dark:to-purple-400 bg-clip-text text-transparent">CreatorOS</span>
+              <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 dark:from-white dark:via-primary-400 dark:to-purple-400 bg-clip-text text-transparent">Vidova</span>
             </Link>
             <Link href="/dashboard" className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-300 hover:text-primary-600 rounded-lg">
               <ArrowLeft className="h-4 w-4" />

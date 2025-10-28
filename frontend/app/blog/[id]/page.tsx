@@ -8,7 +8,7 @@ import { Footer } from '@/components/layout/Footer';
 const articles: Record<string, any> = {
   '1': { title: 'Comment l\'IA transforme la création de contenu en 2025', category: 'IA & Technologie', date: '2025-01-15', readTime: '8 min', author: 'Marie Laurent', image: '🤖' },
   '2': { title: '10 astuces pour optimiser vos transcriptions vidéo', category: 'Guide pratique', date: '2025-01-12', readTime: '5 min', author: 'Thomas Martin', image: '📝' },
-  '3': { title: 'Automatiser votre stratégie de contenu avec CreatorOS', category: 'Productivité', date: '2025-01-10', readTime: '6 min', author: 'Sophie Bernard', image: '⚡' },
+  '3': { title: 'Automatiser votre stratégie de contenu avec Vidova', category: 'Productivité', date: '2025-01-10', readTime: '6 min', author: 'Sophie Bernard', image: '⚡' },
   '4': { title: 'Les secrets des créateurs qui cartonnent sur TikTok', category: 'Social Media', date: '2025-01-08', readTime: '7 min', author: 'Jean Dupont', image: '🎥' },
   '5': { title: 'Comment générer des articles de blog à partir de vidéos', category: 'SEO & Content', date: '2025-01-05', readTime: '5 min', author: 'Marie Laurent', image: '📰' },
   '6': { title: 'L\'avenir du marketing de contenu', category: 'Marketing', date: '2025-01-03', readTime: '9 min', author: 'Sophie Bernard', image: '🚀' },
@@ -92,7 +92,7 @@ export default function BlogPostPage() {
         <footer className="mt-16 pt-8 border-t">
           <div className="bg-gradient-to-br from-primary-600 to-purple-600 rounded-2xl p-8 text-white text-center">
             <h3 className="text-2xl font-bold mb-4">Prêt à transformer vos vidéos en contenu ?</h3>
-            <p className="mb-6">Rejoignez des milliers de créateurs qui utilisent CreatorOS</p>
+            <p className="mb-6">Rejoignez des milliers de créateurs qui utilisent Vidova</p>
             <Link href="/register" className="inline-block px-8 py-4 bg-white text-primary-700 font-bold rounded-xl hover:bg-gray-100">
               Commencer gratuitement
             </Link>

@@ -19,7 +19,7 @@ from sqlalchemy.orm import Session
 
 print("""
 ╔══════════════════════════════════════════════════════════╗
-║         CreatorOS - Simple Worker                       ║
+║         Vidova - Simple Worker                       ║
 ║         Traitement automatique des vidéos               ║
 ╚══════════════════════════════════════════════════════════╝
 """)

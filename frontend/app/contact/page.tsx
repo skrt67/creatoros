@@ -53,7 +53,7 @@ export default function ContactPage() {
     },
     {
       question: 'Comment puis-je obtenir une démo ?',
-      answer: 'Vous pouvez essayer CreatorOS gratuitement ou nous contacter pour une démonstration personnalisée.'
+      answer: 'Vous pouvez essayer Vidova gratuitement ou nous contacter pour une démonstration personnalisée.'
     },
     {
       question: 'Proposez-vous un support en français ?',

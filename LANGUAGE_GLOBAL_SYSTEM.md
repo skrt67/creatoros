@@ -1,4 +1,4 @@
-# 🌍 Système de Langue Global - CreatorOS
+# 🌍 Système de Langue Global - Vidova
 
 ## ✅ Modifications Complètes
 

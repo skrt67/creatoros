@@ -1,4 +1,4 @@
-# 🏢 Pages Entreprise CreatorOS - Documentation Complète
+# 🏢 Pages Entreprise Vidova - Documentation Complète
 
 ## ✅ Pages créées
 
@@ -37,7 +37,7 @@ Toutes les pages entreprise essentielles pour une présence professionnelle comp
 **Articles inclus** :
 1. Comment l'IA transforme la création de contenu en 2025
 2. 10 astuces pour optimiser vos transcriptions vidéo
-3. Automatiser votre stratégie de contenu avec CreatorOS
+3. Automatiser votre stratégie de contenu avec Vidova
 4. Les secrets des créateurs qui cartonnent sur TikTok
 5. Comment générer des articles de blog à partir de vidéos
 6. L'avenir du marketing de contenu
@@ -257,8 +257,8 @@ POST /api/contact
 1. **Metadata** : Ajouter des balises meta pour chaque page
 ```tsx
 export const metadata = {
-  title: 'À propos - CreatorOS',
-  description: 'Découvrez CreatorOS, la plateforme IA...',
+  title: 'À propos - Vidova',
+  description: 'Découvrez Vidova, la plateforme IA...',
   openGraph: { ... }
 }
 ```

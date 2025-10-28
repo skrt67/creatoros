@@ -1,6 +1,6 @@
-# CreatorOS Deployment Guide
+# Vidova Deployment Guide
 
-This guide covers deploying CreatorOS to production environments.
+This guide covers deploying Vidova to production environments.
 
 ## 🏗️ Architecture Overview
 
@@ -233,7 +233,7 @@ helm install temporal temporalio/temporal \
 # Store JWT secret
 aws secretsmanager create-secret \
   --name "creatorOS/jwt-secret" \
-  --description "JWT secret for CreatorOS" \
+  --description "JWT secret for Vidova" \
   --secret-string "your-super-secure-jwt-secret"
 
 # Store AssemblyAI API key
@@ -465,4 +465,4 @@ aws ecs describe-tasks --cluster creatorOS-prod --tasks TASK_ARN
 
 ---
 
-This deployment guide provides a production-ready setup for CreatorOS. Adjust configurations based on your specific requirements and scale.
+This deployment guide provides a production-ready setup for Vidova. Adjust configurations based on your specific requirements and scale.

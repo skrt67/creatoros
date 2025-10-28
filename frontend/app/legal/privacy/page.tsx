@@ -33,7 +33,7 @@ export default function PolitiqueConfidentialite() {
           <section>
             <div className="bg-green-50 border border-green-200 rounded-xl p-6">
               <p className="text-gray-700 leading-relaxed">
-                CreatorOS s'engage à protéger votre vie privée et vos données personnelles. Cette politique 
+                Vidova s'engage à protéger votre vie privée et vos données personnelles. Cette politique 
                 de confidentialité décrit comment nous collectons, utilisons et protégeons vos informations 
                 conformément au Règlement Général sur la Protection des Données (RGPD).
               </p>
@@ -275,7 +275,7 @@ export default function PolitiqueConfidentialite() {
                   </a>
                 </p>
                 <p className="text-gray-700">
-                  <strong className="text-gray-900">Courrier :</strong> CreatorOS - DPO, 123 Avenue des Champs-Élysées, 75008 Paris
+                  <strong className="text-gray-900">Courrier :</strong> Vidova - DPO, 123 Avenue des Champs-Élysées, 75008 Paris
                 </p>
               </div>
               <p className="text-sm text-gray-600 mt-4">

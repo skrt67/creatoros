@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo "🚀 Démarrage de CreatorOS..."
+echo "🚀 Démarrage de Vidova..."
 
 # Backend setup
 echo "📦 Configuration du backend..."
-cd /Users/altan/Desktop/CreatorOS/backend
+cd /Users/altan/Desktop/Vidova/backend
 source venv/bin/activate
 
 # Configuration directe de la base de données
@@ -19,7 +19,7 @@ from prisma import Prisma
 from app.auth import get_password_hash
 
 async def setup():
-    print('🔧 Setting up CreatorOS database...')
+    print('🔧 Setting up Vidova database...')
     prisma = Prisma()
     await prisma.connect()
     
@@ -62,7 +62,7 @@ fi
 
 # Frontend setup
 echo "🎨 Configuration du frontend..."
-cd /Users/altan/Desktop/CreatorOS/frontend
+cd /Users/altan/Desktop/Vidova/frontend
 rm -rf node_modules package-lock.json
 npm install
 

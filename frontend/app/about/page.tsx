@@ -86,7 +86,7 @@ export default function AboutPage() {
             </h1>
             <p className="text-xl md:text-2xl text-white/90 leading-relaxed">
               Nous croyons que chaque créateur mérite des outils puissants pour transformer ses idées en contenu viral. 
-              CreatorOS rend l'IA accessible à tous.
+              Vidova rend l'IA accessible à tous.
             </p>
           </div>
         </div>
@@ -122,7 +122,7 @@ export default function AboutPage() {
             </div>
             <div className="prose prose-lg max-w-none">
               <p className="text-gray-700 leading-relaxed mb-6">
-                CreatorOS est né d'une frustration : créer du contenu de qualité à partir de vidéos prenait trop de temps. 
+                Vidova est né d'une frustration : créer du contenu de qualité à partir de vidéos prenait trop de temps. 
                 En 2024, nos fondateurs ont décidé de changer cela.
               </p>
               <p className="text-gray-700 leading-relaxed mb-6">
@@ -130,7 +130,7 @@ export default function AboutPage() {
                 nous avons construit une plateforme qui transforme radicalement la façon dont les créateurs travaillent.
               </p>
               <p className="text-gray-700 leading-relaxed">
-                Aujourd'hui, des milliers de créateurs, marketeurs et entreprises utilisent CreatorOS pour générer des 
+                Aujourd'hui, des milliers de créateurs, marketeurs et entreprises utilisent Vidova pour générer des 
                 millions de contenus chaque mois. Et nous ne faisons que commencer.
               </p>
             </div>
@@ -177,7 +177,7 @@ export default function AboutPage() {
               Notre Équipe
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Les talents qui rendent CreatorOS possible
+              Les talents qui rendent Vidova possible
             </p>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">

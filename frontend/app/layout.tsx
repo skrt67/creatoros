@@ -10,14 +10,14 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   metadataBase: new URL('https://creatoros.com'),
   title: {
-    default: 'CreatorOS - AI-Powered Content Creation Platform',
-    template: '%s | CreatorOS'
+    default: 'Vidova - AI-Powered Content Creation Platform',
+    template: '%s | Vidova'
   },
   description: 'Transform your YouTube videos into a diverse portfolio of high-quality marketing assets with AI-powered automation. Generate blog posts, social media content, and newsletters instantly.',
   keywords: ['AI content creation', 'YouTube to blog', 'video transcription', 'content marketing automation', 'AI writing assistant', 'social media content generator', 'video to text', 'content repurposing'],
-  authors: [{ name: 'CreatorOS Team', url: 'https://creatoros.com' }],
-  creator: 'CreatorOS',
-  publisher: 'CreatorOS',
+  authors: [{ name: 'Vidova Team', url: 'https://creatoros.com' }],
+  creator: 'Vidova',
+  publisher: 'Vidova',
   formatDetection: {
     email: false,
     address: false,
@@ -27,21 +27,21 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://creatoros.com',
-    title: 'CreatorOS - AI-Powered Content Creation Platform',
+    title: 'Vidova - AI-Powered Content Creation Platform',
     description: 'Transform your YouTube videos into high-quality marketing assets with AI. Generate blog posts, social media content, and more instantly.',
-    siteName: 'CreatorOS',
+    siteName: 'Vidova',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'CreatorOS - AI Content Creation Platform',
+        alt: 'Vidova - AI Content Creation Platform',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CreatorOS - AI-Powered Content Creation',
+    title: 'Vidova - AI-Powered Content Creation',
     description: 'Transform your YouTube videos into marketing assets with AI',
     creator: '@creatoros',
     images: ['/twitter-image.png'],

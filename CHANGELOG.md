@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to CreatorOS will be documented in this file.
+All notable changes to Vidova will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Initial release of CreatorOS
+- Initial release of Vidova
 - AI-powered video processing with AssemblyAI integration
 - Multi-format content generation (blog posts, Twitter threads, LinkedIn posts, newsletters, video highlights)
 - Interactive transcript viewer with word-level timing

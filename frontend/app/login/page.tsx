@@ -80,7 +80,7 @@ export default function LoginPage() {
               <Zap className="h-8 w-8 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-black text-white">CreatorOS</h1>
+              <h1 className="text-3xl font-black text-white">Vidova</h1>
               <p className="text-white/80 text-sm">AI Content Studio</p>
             </div>
           </div>
@@ -112,7 +112,7 @@ export default function LoginPage() {
 
         {/* Footer */}
         <div className="relative z-10 text-white/60 text-sm">
-          © 2024 CreatorOS. Tous droits réservés.
+          © 2024 Vidova. Tous droits réservés.
         </div>
       </div>
 
@@ -129,7 +129,7 @@ export default function LoginPage() {
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
                 <Zap className="h-6 w-6 text-white" />
               </div>
-              <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">CreatorOS</h1>
+              <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">Vidova</h1>
             </div>
           </div>
 

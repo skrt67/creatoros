@@ -1,7 +1,7 @@
-# 🎨 CreatorOS Design System
+# 🎨 Vidova Design System
 
 ## Vision Design
-**CreatorOS** est une plateforme SaaS moderne, professionnelle et accessible. Le design reflète l'innovation, la simplicité et la puissance de l'IA.
+**Vidova** est une plateforme SaaS moderne, professionnelle et accessible. Le design reflète l'innovation, la simplicité et la puissance de l'IA.
 
 ---
 

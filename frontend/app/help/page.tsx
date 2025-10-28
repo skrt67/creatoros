@@ -88,7 +88,7 @@ export default function HelpPage() {
                 </div>
               </div>
               <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">
-                CreatorOS
+                Vidova
               </span>
             </Link>
 

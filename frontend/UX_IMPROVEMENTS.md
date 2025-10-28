@@ -1,4 +1,4 @@
-# 🚀 Améliorations UX/Navigation - CreatorOS
+# 🚀 Améliorations UX/Navigation - Vidova
 
 ## ✨ Vue d'Ensemble
 

@@ -1,4 +1,4 @@
-# 🚀 Guide de Déploiement CreatorOS
+# 🚀 Guide de Déploiement Vidova
 ## Supabase + DigitalOcean + Vercel
 
 **Temps estimé** : 45 minutes  
@@ -10,7 +10,7 @@
 
 ✅ Compte GitHub (déjà fait)  
 ✅ GitHub Student Pack activé (déjà fait)  
-✅ Code CreatorOS sur GitHub  
+✅ Code Vidova sur GitHub  
 
 ---
 
@@ -29,7 +29,7 @@ Frontend (Vercel) → Supabase (DB + Auth + Storage) ← Backend (DigitalOcean)
 1. **Allez sur** : https://supabase.com
 2. **Sign in with GitHub**
 3. **New Project** :
-   - Name : `CreatorOS`
+   - Name : `Vidova`
    - Database Password : `[NOTEZ-LE BIEN]`1905Altan.
    - Region : `Europe (Paris)` ou le plus proche
    - Plan : Free
@@ -53,7 +53,7 @@ Dans votre projet Supabase :
 3. **Copiez-collez tout le contenu ci-dessous** :
 
 ```sql
--- CreatorOS Database Schema for Supabase
+-- Vidova Database Schema for Supabase
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Create ENUM types
@@ -214,8 +214,8 @@ docker-compose --version
 apt install git -y
 
 # Cloner votre repo (remplacez par votre URL)
-git clone https://github.com/VOTRE_USERNAME/CreatorOS.git
-cd CreatorOS/backend
+git clone https://github.com/VOTRE_USERNAME/Vidova.git
+cd Vidova/backend
 
 # Créer le fichier .env
 nano .env
@@ -284,7 +284,7 @@ NEXT_PUBLIC_API_URL=http://142.93.xxx.xxx:8003
 1. **Allez sur** : https://vercel.com
 2. **Sign up with GitHub**
 3. **Import Project**
-4. **Sélectionnez** : `CreatorOS`
+4. **Sélectionnez** : `Vidova`
 5. **Configuration** :
    - Framework Preset : `Next.js`
    - Root Directory : `frontend`
@@ -349,7 +349,7 @@ Password: demo123
 ### Sentry (Erreurs) - GRATUIT
 
 1. https://sentry.io → Sign up with GitHub
-2. Créer projet "CreatorOS"
+2. Créer projet "Vidova"
 3. Suivre les instructions d'intégration
 
 ### Datadog (Performance) - 2 ans GRATUIT
@@ -418,4 +418,4 @@ app.add_middleware(
 - DigitalOcean : https://docs.digitalocean.com
 - Vercel : https://vercel.com/docs
 
-**🎉 Félicitations ! CreatorOS est en ligne ! 🚀**
+**🎉 Félicitations ! Vidova est en ligne ! 🚀**

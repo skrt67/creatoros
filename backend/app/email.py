@@ -15,13 +15,13 @@ def send_password_reset_email(email: str, reset_token: str):
     reset_url = f"https://creatoros-henna.vercel.app/reset-password?token={reset_token}"
     
     params = {
-        "from": "CreatorOS <onboarding@resend.dev>",
+        "from": "Vidova <onboarding@resend.dev>",
         "to": [email],
-        "subject": "Réinitialisation de votre mot de passe CreatorOS",
+        "subject": "Réinitialisation de votre mot de passe Vidova",
         "html": f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #6366f1;">Réinitialisation de mot de passe</h2>
-            <p>Vous avez demandé à réinitialiser votre mot de passe CreatorOS.</p>
+            <p>Vous avez demandé à réinitialiser votre mot de passe Vidova.</p>
             <p>Cliquez sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
             <a href="{reset_url}" style="display: inline-block; padding: 12px 24px; background-color: #6366f1; color: white; text-decoration: none; border-radius: 8px; margin: 20px 0;">
                 Réinitialiser mon mot de passe

@@ -36,7 +36,7 @@ async def main():
         ],
     )
     
-    print("🚀 Starting CreatorOS Temporal Worker...")
+    print("🚀 Starting Vidova Temporal Worker...")
     print("📋 Registered workflows:")
     print("   - ProcessVideoWorkflow")
     print("   - HealthCheckWorkflow")

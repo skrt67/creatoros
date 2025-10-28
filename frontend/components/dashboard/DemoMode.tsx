@@ -23,7 +23,7 @@ export function DemoMode({ workspaceId, onVideoSubmitted }: DemoModeProps) {
   const demoVideo = {
     url: 'https://www.youtube.com/watch?v=jNQXAC9IVRw',
     title: '🎬 Vidéo Démo - "Me at the zoo"',
-    description: 'La première vidéo YouTube - courte, simple et parfaite pour tester CreatorOS'
+    description: 'La première vidéo YouTube - courte, simple et parfaite pour tester Vidova'
   };
 
   const handleDismiss = () => {
@@ -90,7 +90,7 @@ export function DemoMode({ workspaceId, onVideoSubmitted }: DemoModeProps) {
           </div>
           <div>
             <h2 className="text-3xl font-black mb-1">Mode Démo</h2>
-            <p className="text-white/90 text-lg">Découvrez CreatorOS en 2 minutes</p>
+            <p className="text-white/90 text-lg">Découvrez Vidova en 2 minutes</p>
           </div>
         </div>
 

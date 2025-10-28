@@ -34,7 +34,7 @@ export default function ConditionsUtilisation() {
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
               <p className="text-gray-700 leading-relaxed">
                 Les présentes Conditions Générales d'Utilisation (CGU) régissent l'utilisation de la plateforme 
-                CreatorOS. En utilisant nos services, vous acceptez ces conditions dans leur intégralité.
+                Vidova. En utilisant nos services, vous acceptez ces conditions dans leur intégralité.
               </p>
             </div>
           </section>
@@ -44,7 +44,7 @@ export default function ConditionsUtilisation() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Objet</h2>
             <div className="prose prose-gray max-w-none">
               <p className="text-gray-700">
-                CreatorOS est une plateforme SaaS de transcription vidéo et génération de contenu alimentée par l'IA. 
+                Vidova est une plateforme SaaS de transcription vidéo et génération de contenu alimentée par l'IA. 
                 Elle permet aux utilisateurs de :
               </p>
               <ul className="space-y-2 mt-4">
@@ -63,7 +63,7 @@ export default function ConditionsUtilisation() {
               <div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">2.1 Inscription</h3>
                 <p className="text-gray-700">
-                  L'utilisation de CreatorOS nécessite la création d'un compte. Vous devez fournir des informations 
+                  L'utilisation de Vidova nécessite la création d'un compte. Vous devez fournir des informations 
                   exactes et maintenir vos identifiants confidentiels. Vous êtes responsable de toute activité sur votre compte.
                 </p>
               </div>
@@ -143,7 +143,7 @@ export default function ConditionsUtilisation() {
                 </li>
                 <li className="flex items-start gap-2 text-gray-700">
                   <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
-                  <span>Copier, modifier ou distribuer le code source de CreatorOS</span>
+                  <span>Copier, modifier ou distribuer le code source de Vidova</span>
                 </li>
                 <li className="flex items-start gap-2 text-gray-700">
                   <XCircle className="h-5 w-5 text-red-600 mt-0.5 flex-shrink-0" />
@@ -158,16 +158,16 @@ export default function ConditionsUtilisation() {
             <h2 className="text-2xl font-bold text-gray-900 mb-4">5. Propriété intellectuelle</h2>
             <div className="space-y-4">
               <div className="bg-gray-50 rounded-xl p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">5.1 Propriété de CreatorOS</h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">5.1 Propriété de Vidova</h3>
                 <p className="text-gray-700">
                   Tous les éléments de la plateforme (code, design, marques, logos) sont la propriété exclusive 
-                  de CreatorOS et sont protégés par le droit d'auteur et les lois sur la propriété intellectuelle.
+                  de Vidova et sont protégés par le droit d'auteur et les lois sur la propriété intellectuelle.
                 </p>
               </div>
               <div className="bg-gray-50 rounded-xl p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">5.2 Contenu utilisateur</h3>
                 <p className="text-gray-700">
-                  Vous conservez tous les droits sur vos contenus soumis. Vous accordez à CreatorOS une licence 
+                  Vous conservez tous les droits sur vos contenus soumis. Vous accordez à Vidova une licence 
                   limitée pour traiter vos vidéos et générer des transcriptions/contenus. Cette licence expire 
                   lorsque vous supprimez vos contenus.
                 </p>
@@ -236,7 +236,7 @@ export default function ConditionsUtilisation() {
             </h2>
             <div className="prose prose-gray max-w-none">
               <p className="text-gray-700">
-                CreatorOS ne peut être tenu responsable :
+                Vidova ne peut être tenu responsable :
               </p>
               <ul className="space-y-2 mt-4">
                 <li className="text-gray-700">• Des dommages indirects résultant de l'utilisation ou de l'impossibilité d'utiliser le service</li>
@@ -262,7 +262,7 @@ export default function ConditionsUtilisation() {
                 après 30 jours.
               </p>
               <p className="text-gray-700">
-                <strong className="text-gray-900">9.2 Par CreatorOS :</strong> Nous nous réservons le droit de 
+                <strong className="text-gray-900">9.2 Par Vidova :</strong> Nous nous réservons le droit de 
                 suspendre ou fermer un compte en cas de violation des CGU, d'activité suspecte ou frauduleuse.
               </p>
               <p className="text-gray-700">
@@ -309,7 +309,7 @@ export default function ConditionsUtilisation() {
                 </a>
               </p>
               <p className="text-gray-700 mt-2">
-                <strong className="text-gray-900">Courrier :</strong> CreatorOS SAS, 123 Avenue des Champs-Élysées, 75008 Paris
+                <strong className="text-gray-900">Courrier :</strong> Vidova SAS, 123 Avenue des Champs-Élysées, 75008 Paris
               </p>
             </div>
           </section>

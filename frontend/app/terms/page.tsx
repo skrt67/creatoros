@@ -28,7 +28,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Acceptation des conditions</h2>
               <p className="text-gray-700">
-                En utilisant CreatorOS, vous acceptez les présentes conditions d'utilisation. 
+                En utilisant Vidova, vous acceptez les présentes conditions d'utilisation. 
                 Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.
               </p>
             </section>
@@ -36,7 +36,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">2. Description du service</h2>
               <p className="text-gray-700 mb-4">
-                CreatorOS est une plateforme d'automatisation de contenu pour créateurs YouTube qui :
+                Vidova est une plateforme d'automatisation de contenu pour créateurs YouTube qui :
               </p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>Télécharge et analyse vos vidéos YouTube</li>
@@ -74,7 +74,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">5. Propriété intellectuelle</h2>
               <p className="text-gray-700">
-                Le contenu généré par CreatorOS vous appartient. Nous conservons les droits sur la plateforme 
+                Le contenu généré par Vidova vous appartient. Nous conservons les droits sur la plateforme 
                 et ses algorithmes. Vous nous accordez une licence pour traiter votre contenu afin de fournir nos services.
               </p>
             </section>
@@ -82,7 +82,7 @@ export default function TermsPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">6. Limitation de responsabilité</h2>
               <p className="text-gray-700">
-                CreatorOS est fourni "tel quel" sans garantie. Nous ne sommes pas responsables des dommages 
+                Vidova est fourni "tel quel" sans garantie. Nous ne sommes pas responsables des dommages 
                 résultant de l'utilisation ou de l'impossibilité d'utiliser nos services.
               </p>
             </section>

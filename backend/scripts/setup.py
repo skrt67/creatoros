@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Setup script for CreatorOS backend.
+Setup script for Vidova backend.
 This script helps initialize the database and create initial data.
 """
 
@@ -18,7 +18,7 @@ from app.auth import get_password_hash
 
 async def setup_database():
     """Initialize the database with schema and sample data."""
-    print("🔧 Setting up CreatorOS database...")
+    print("🔧 Setting up Vidova database...")
     
     # Connect to database
     prisma = Prisma()
@@ -116,7 +116,7 @@ async def test_connections():
 
 async def main():
     """Main setup function."""
-    print("🚀 CreatorOS Backend Setup")
+    print("🚀 Vidova Backend Setup")
     print("=" * 50)
     
     # Check environment

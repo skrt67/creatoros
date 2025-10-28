@@ -1,4 +1,4 @@
-# 🎨 Nouveau Design Dashboard - CreatorOS
+# 🎨 Nouveau Design Dashboard - Vidova
 
 ## ✨ Vue d'Ensemble
 

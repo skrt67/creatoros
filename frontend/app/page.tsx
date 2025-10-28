@@ -27,7 +27,7 @@ export default function HomePage() {
                 </div>
               </div>
               <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">
-                CreatorOS
+                Vidova
               </span>
             </Link>
 
@@ -250,7 +250,7 @@ export default function HomePage() {
             Prêt à transformer votre création de contenu ?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Rejoignez des milliers de créateurs qui utilisent CreatorOS pour scaler leur contenu.
+            Rejoignez des milliers de créateurs qui utilisent Vidova pour scaler leur contenu.
           </p>
           <Link
             href="/register"

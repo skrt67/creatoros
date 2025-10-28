@@ -15,7 +15,7 @@ from prisma import Prisma
 
 print("""
 ╔══════════════════════════════════════════════════════════╗
-║         CreatorOS - Simple Worker                       ║
+║         Vidova - Simple Worker                       ║
 ║         Traitement automatique des vidéos               ║
 ╚══════════════════════════════════════════════════════════╝
 """)

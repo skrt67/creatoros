@@ -216,7 +216,7 @@ export default function DashboardPage() {
                 </div>
               </div>
               <div className="hidden sm:block">
-                <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">CreatorOS</h1>
+                <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">Vidova</h1>
                 <p className="text-xs text-gray-500 font-medium">AI Content Studio</p>
               </div>
             </div>

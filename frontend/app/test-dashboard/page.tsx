@@ -65,7 +65,7 @@ export default function TestDashboard() {
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">CreatorOS API Test</h1>
+      <h1 className="text-2xl font-bold mb-4">Vidova API Test</h1>
       <div className="space-y-4">
         <div>
           <strong>API URL:</strong> {apiUrl}

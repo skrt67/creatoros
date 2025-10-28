@@ -1,4 +1,4 @@
-# 🚀 CreatorOS - Roadmap d'Améliorations Précises
+# 🚀 Vidova - Roadmap d'Améliorations Précises
 
 ## 📊 Priorités : Impact × Effort
 
@@ -127,7 +127,7 @@ eventSource.onmessage = (event) => {
 
 // Notifications navigateur
 if (Notification.permission === 'granted') {
-  new Notification('CreatorOS', {
+  new Notification('Vidova', {
     body: 'Votre contenu est prêt !',
     icon: '/logo.png'
   });
@@ -574,7 +574,7 @@ FREE :
 - 5 vidéos/mois (au lieu de 3)
 - Tous les formats de base
 - 1 workspace
-- Watermark "Made with CreatorOS"
+- Watermark "Made with Vidova"
 
 PRO ($29/mois) :
 - Vidéos illimitées

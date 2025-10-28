@@ -16,6 +16,7 @@ from app.routes.jobs import router as jobs_router
 from app.routes.billing import router as billing_router
 from app.routes.processing import router as processing_router
 from app.routes.progress import router as progress_router, set_prisma_client
+from app.routes.simple_processing import router as simple_processing_router
 from app.routes.videos import set_temporal_client
 
 # Global variables
@@ -27,7 +28,7 @@ async def lifespan(app: FastAPI):
     global temporal_client, prisma_client
     
     # Startup
-    print("🚀 Starting CreatorOS Backend...")
+    print("🚀 Starting Vidova Backend...")
     
     # Initialize Prisma
     prisma_client = Prisma()
@@ -77,12 +78,12 @@ async def lifespan(app: FastAPI):
         print(f"⚠️  Temporal client connection failed: {e}")
         print("   Continuing without Temporal (development mode)")
     
-    print("🎉 CreatorOS Backend started successfully!")
+    print("🎉 Vidova Backend started successfully!")
     
     yield
     
     # shutdown
-    print("🛑 Shutting down CreatorOS Backend...")
+    print("🛑 Shutting down Vidova Backend...")
     if 'temporal_client' in globals() and temporal_client:
         await temporal_client.close()
         print("✅ Temporal client disconnected")
@@ -91,11 +92,11 @@ async def lifespan(app: FastAPI):
         await prisma_client.disconnect()
         print("✅ Database disconnected")
     
-    print("👋 CreatorOS Backend shutdown complete")
+    print("👋 Vidova Backend shutdown complete")
 
 # Create FastAPI app
 app = FastAPI(
-    title="CreatorOS API",
+    title="Vidova API",
     description="AI-powered content creation platform for video creators",
     version="1.0.0",
     docs_url="/docs",
@@ -103,10 +104,17 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware
+# CORS middleware - Liste explicite des origines autorisées
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "https://creatoros-henna.vercel.app",
+    "https://creatoros.vercel.app",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Permet toutes les origines en développement
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -144,7 +152,7 @@ async def health_check():
     """Health check endpoint."""
     return {
         "status": "healthy",
-        "service": "CreatorOS API",
+        "service": "Vidova API",
         "version": "1.0.0",
         "temporal_connected": 'temporal_client' in globals() and temporal_client is not None,
         "database_connected": prisma_client is not None
@@ -158,6 +166,7 @@ app.include_router(jobs_router)
 app.include_router(billing_router)
 app.include_router(processing_router)
 app.include_router(progress_router)
+app.include_router(simple_processing_router)
 # app.include_router(integrations_router)  # Disabled for now
 
 # Root endpoint
@@ -165,7 +174,7 @@ app.include_router(progress_router)
 async def root():
     """Root endpoint."""
     return {
-        "message": "Welcome to CreatorOS API",
+        "message": "Welcome to Vidova API",
         "version": "1.0.0",
         "health": "/health"
     }
@@ -173,5 +182,5 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    print(f"🚀 Starting CreatorOS API on port {port}...")
+    print(f"🚀 Starting Vidova API on port {port}...")
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=False)

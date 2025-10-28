@@ -31,7 +31,7 @@ export default function BlogPage() {
     },
     {
       id: '3',
-      title: 'Automatiser votre stratégie de contenu avec CreatorOS',
+      title: 'Automatiser votre stratégie de contenu avec Vidova',
       excerpt: 'Comment gagner 10h par semaine en automatisant votre création de contenu.',
       category: 'Productivité',
       date: '2025-01-10',
@@ -102,7 +102,7 @@ export default function BlogPage() {
             Retour à l'accueil
           </Link>
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-5xl font-black text-gray-900 mb-4">Blog CreatorOS</h1>
+            <h1 className="text-5xl font-black text-gray-900 mb-4">Blog Vidova</h1>
             <p className="text-xl text-gray-600">
               Conseils, guides et actualités pour booster votre création de contenu
             </p>

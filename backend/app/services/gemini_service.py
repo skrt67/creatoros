@@ -125,7 +125,10 @@ STYLE :
 - Exemples concrets et relatable
 - Zéro jargon inutile
 
-GÉNÈRE L'ARTICLE COMPLET EN RESPECTANT CETTE STRUCTURE."""
+IMPORTANT : GÉNÈRE UNIQUEMENT LE CONTENU FINAL.
+Ne dis PAS "Voici l'article" ou "Absolument, voici..."
+Ne parle PAS à l'utilisateur.
+GÉNÈRE DIRECTEMENT LE TITRE, puis l'article, sans préambule."""
 
         try:
             response = self.model.generate_content(prompt)
@@ -199,7 +202,10 @@ RÈGLES STRICTES :
 - Supprimer tout ce qui n'est pas essentiel
 - Aller DROIT AU BUT
 
-GÉNÈRE UN THREAD COURT ET EFFICACE."""
+IMPORTANT : GÉNÈRE UNIQUEMENT LES TWEETS.
+Ne dis PAS "Voici le thread" ou "Absolument".
+Ne parle PAS à l'utilisateur.
+COMMENCE DIRECTEMENT par "1/X :" sans préambule."""
 
         try:
             response = self.model.generate_content(prompt)
@@ -269,7 +275,10 @@ STYLE LINKEDIN :
 - Exemples chiffrés si possible
 - Tone = "collegue qui partage" pas "prof qui enseigne"
 
-GÉNÈRE LE POST COMPLET."""
+IMPORTANT : GÉNÈRE UNIQUEMENT LE POST FINAL.
+Ne dis PAS "Voici le post" ou "Voilà".
+Ne parle PAS à l'utilisateur.
+COMMENCE DIRECTEMENT par le hook du post, sans préambule."""
 
         try:
             response = self.model.generate_content(prompt)
@@ -356,7 +365,10 @@ STYLE TIKTOK :
 - Énergie et authenticité > perfection
 - Parle comme à un pote
 
-GÉNÈRE LE SCRIPT COMPLET avec timings et indications visuelles."""
+IMPORTANT : GÉNÈRE UNIQUEMENT LE SCRIPT FINAL.
+Ne dis PAS "Voici le script" ou "Absolument".
+Ne parle PAS à l'utilisateur.
+COMMENCE DIRECTEMENT par [HOOK - 0:00-0:03] sans préambule."""
 
         try:
             response = self.model.generate_content(prompt)

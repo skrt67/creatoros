@@ -41,7 +41,7 @@ export function Footer() {
                 <Zap className="h-5 w-5 text-white" />
               </div>
               <div>
-                <span className="text-xl font-black text-white">CreatorOS</span>
+                <span className="text-xl font-black text-white">Vidova</span>
                 <p className="text-xs text-gray-400">AI Content Studio</p>
               </div>
             </div>
@@ -121,7 +121,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-gray-400">
-              © 2024 CreatorOS. Tous droits réservés.
+              © 2024 Vidova. Tous droits réservés.
             </p>
             <div className="flex items-center gap-6">
               <Link href="#" className="text-sm text-gray-400 hover:text-white transition-colors">

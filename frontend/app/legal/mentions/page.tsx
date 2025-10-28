@@ -37,7 +37,7 @@ export default function MentionsLegales() {
             </h2>
             <div className="bg-gray-50 rounded-xl p-6 space-y-3">
               <p className="text-gray-700">
-                <strong className="text-gray-900">Raison sociale :</strong> CreatorOS SAS
+                <strong className="text-gray-900">Raison sociale :</strong> Vidova SAS
               </p>
               <p className="text-gray-700">
                 <strong className="text-gray-900">Forme juridique :</strong> Société par Actions Simplifiée

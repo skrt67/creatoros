@@ -273,12 +273,13 @@ async def get_video_transcript(
             try:
                 transcript_content = json.loads(transcript_content)
             except:
-                transcript_content = {"full_text": transcript_content}
+                transcript_content = {"text": transcript_content}
         
         return {
             "id": transcript.id,
-            "content": transcript_content.get("full_text", ""),
-            "segments": transcript_content.get("segments", [])
+            "content": transcript_content.get("text", ""),
+            "summary": transcript_content.get("summary", None),
+            "chapters": transcript_content.get("chapters", [])
         }
         
     except HTTPException:

@@ -1,4 +1,4 @@
-// Système de traductions pour CreatorOS
+// Système de traductions pour Vidova
 
 export const translations = {
   fr: {

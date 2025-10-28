@@ -1,4 +1,4 @@
-# 🚀 Configuration de Google Gemini pour CreatorOS
+# 🚀 Configuration de Google Gemini pour Vidova
 
 ## ✅ Ce qui a été ajouté
 
@@ -27,7 +27,7 @@ J'ai intégré **Google Gemini AI** pour générer du vrai contenu au lieu du co
 ### Étape 1 : Installer la dépendance Python
 
 ```bash
-cd /Users/altan/Desktop/CreatorOS/backend
+cd /Users/altan/Desktop/Vidova/backend
 source venv/bin/activate
 pip install google-generativeai==0.3.2
 ```
@@ -108,7 +108,7 @@ Pour une vidéo typique :
 
 ```python
 # Test dans un terminal Python
-cd /Users/altan/Desktop/CreatorOS/backend
+cd /Users/altan/Desktop/Vidova/backend
 source venv/bin/activate
 python
 
@@ -178,7 +178,7 @@ il est crucial de rester à jour avec les dernières tendances...
 
 ## 🎉 Résultat Final
 
-Avec Gemini intégré, CreatorOS peut maintenant :
+Avec Gemini intégré, Vidova peut maintenant :
 - ✅ Générer du **contenu authentique** basé sur vos vidéos
 - ✅ Créer 6 types de **contenu marketing** différents
 - ✅ Adapter le **ton et le style** au contexte

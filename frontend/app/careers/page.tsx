@@ -146,7 +146,7 @@ export default function CareersPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
-              Pourquoi CreatorOS ?
+              Pourquoi Vidova ?
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Des avantages qui font la différence
@@ -180,7 +180,7 @@ export default function CareersPage() {
               Notre Culture
             </h2>
             <p className="text-xl text-gray-600">
-              Ce qui définit CreatorOS au quotidien
+              Ce qui définit Vidova au quotidien
             </p>
           </div>
           <div className="grid md:grid-cols-2 gap-4">

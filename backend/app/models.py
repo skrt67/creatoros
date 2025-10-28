@@ -72,7 +72,7 @@ class WorkspaceWithVideos(WorkspaceResponse):
 
 # Video Models
 class VideoSubmit(BaseModel):
-    youtube_url: str = Field(..., pattern=r'^https?://(www\.)?(youtube\.com/watch\?v=|youtu\.be/)')
+    youtube_url: str = Field(..., pattern=r'^https?://(www\.)?(youtube\.com/(watch\?v=|shorts/)|youtu\.be/).+')
 
 class VideoSourceResponse(BaseModel):
     id: str

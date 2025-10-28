@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Development helper script for CreatorOS.
+Development helper script for Vidova.
 Provides utilities for development and testing.
 """
 
@@ -186,7 +186,7 @@ def push_schema():
 async def main():
     """Main development helper."""
     if len(sys.argv) < 2:
-        print("🛠️  CreatorOS Development Helper")
+        print("🛠️  Vidova Development Helper")
         print("Usage: python dev.py <command>")
         print("\nCommands:")
         print("  reset-db     - Reset database (clear all data)")

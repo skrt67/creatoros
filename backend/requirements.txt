@@ -10,6 +10,7 @@ temporalio==1.5.1
 assemblyai==0.21.0
 pytube==15.0.0
 yt-dlp
+youtube-transcript-api
 stripe==7.8.0
 discord.py==2.3.2
 asyncio-mqtt==0.16.1

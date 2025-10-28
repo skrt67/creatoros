@@ -1,4 +1,4 @@
-"""Temporal workflows and activities for CreatorOS."""
+"""Temporal workflows and activities for Vidova."""
 
 from .workflows import ProcessVideoWorkflow, HealthCheckWorkflow
 from .activities import (

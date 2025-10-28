@@ -1,4 +1,4 @@
-# 📋 Pages Légales CreatorOS - Documentation Complète
+# 📋 Pages Légales Vidova - Documentation Complète
 
 ## ✅ Pages créées
 
@@ -48,7 +48,7 @@ Toutes les pages légales nécessaires pour une plateforme SaaS conforme ont ét
   - Tarification et paiement
   - Disponibilité et garanties
   - Limitation de responsabilité
-  - Résiliation (par l'utilisateur ou CreatorOS)
+  - Résiliation (par l'utilisateur ou Vidova)
   - Modifications des CGU
   - Droit applicable et juridiction
   - Contact
@@ -67,7 +67,7 @@ Avant de mettre en production, vous devez **obligatoirement** remplacer les info
 
 ### Dans `legal/mentions/page.tsx` :
 ```tsx
-- [X] Raison sociale : "CreatorOS SAS" → Votre vraie raison sociale
+- [X] Raison sociale : "Vidova SAS" → Votre vraie raison sociale
 - [X] SIRET : "XXX XXX XXX XXXXX" → Votre vrai numéro SIRET
 - [X] RCS : "Paris B XXX XXX XXX" → Votre vrai RCS
 - [X] N° TVA : "FR XX XXXXXXXXX" → Votre vrai numéro de TVA

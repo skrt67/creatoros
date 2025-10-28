@@ -28,7 +28,7 @@ export default function PrivacyPage() {
             <section className="mb-8">
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">1. Collecte des données</h2>
               <p className="text-gray-700 mb-4">
-                CreatorOS collecte les données suivantes pour fournir ses services :
+                Vidova collecte les données suivantes pour fournir ses services :
               </p>
               <ul className="list-disc pl-6 text-gray-700 space-y-2">
                 <li>Informations de compte (email, nom)</li>

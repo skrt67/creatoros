@@ -1,6 +1,6 @@
-# Contributing to CreatorOS
+# Contributing to Vidova
 
-Thank you for your interest in contributing to CreatorOS! This document provides guidelines and information for contributors.
+Thank you for your interest in contributing to Vidova! This document provides guidelines and information for contributors.
 
 ## 🤝 How to Contribute
 
@@ -44,8 +44,8 @@ Thank you for your interest in contributing to CreatorOS! This document provides
 
 1. **Clone your fork**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/CreatorOS.git
-   cd CreatorOS
+   git clone https://github.com/YOUR_USERNAME/Vidova.git
+   cd Vidova
    ```
 
 2. **Set up backend**
@@ -356,8 +356,8 @@ Contributors will be recognized in:
 
 ## 📄 License
 
-By contributing to CreatorOS, you agree that your contributions will be licensed under the MIT License.
+By contributing to Vidova, you agree that your contributions will be licensed under the MIT License.
 
 ---
 
-Thank you for contributing to CreatorOS! 🚀
+Thank you for contributing to Vidova! 🚀
