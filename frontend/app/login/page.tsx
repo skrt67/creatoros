@@ -56,63 +56,36 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex">
+    <div className="min-h-screen bg-white flex">
       {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-primary-600 via-purple-600 to-pink-600 p-12 flex-col justify-between relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        </div>
-
+      <div className="hidden lg:flex lg:w-1/2 bg-gray-900 p-12 flex-col justify-between">
         {/* Back Button */}
-        <div className="relative z-10">
-          <Link href="/" className="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors group">
-            <ArrowLeft className="h-4 w-4 group-hover:-translate-x-1 transition-transform" />
-            <span className="font-medium">Retour à l'accueil</span>
+        <div>
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+            <ArrowLeft className="h-4 w-4" />
+            <span className="text-sm">Retour</span>
           </Link>
         </div>
 
         {/* Main Content */}
-        <div className="relative z-10 space-y-6">
-          <div className="flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm">
-              <Zap className="h-8 w-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl font-black text-white">Vidova</h1>
-              <p className="text-white/80 text-sm">AI Content Studio</p>
-            </div>
+        <div className="space-y-8">
+          <div>
+            <h1 className="text-2xl font-bold text-white mb-2">Vidova</h1>
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-4xl font-black text-white leading-tight">
-              Transformez vos idées<br />en contenu viral
+          <div className="space-y-6">
+            <h2 className="text-5xl font-bold text-white leading-tight">
+              Transformez vos idées en contenu viral
             </h2>
-            <p className="text-lg text-white/90">
-              Rejoignez des milliers de créateurs qui utilisent l'IA pour générer du contenu de qualité en quelques secondes.
+            <p className="text-xl text-gray-400 leading-relaxed">
+              Rejoignez des milliers de créateurs qui utilisent l'IA pour générer du contenu de qualité.
             </p>
-          </div>
-
-          <div className="flex flex-wrap gap-4 pt-4">
-            <div className="flex items-center gap-2 text-white/90">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">10,000+ créateurs</span>
-            </div>
-            <div className="flex items-center gap-2 text-white/90">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">50,000+ vidéos</span>
-            </div>
-            <div className="flex items-center gap-2 text-white/90">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-              <span className="text-sm font-medium">120+ pays</span>
-            </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="relative z-10 text-white/60 text-sm">
-          © 2024 Vidova. Tous droits réservés.
+        <div className="text-gray-500 text-sm">
+          © 2024 Vidova
         </div>
       </div>
 
@@ -123,20 +96,17 @@ export default function LoginPage() {
           <div className="lg:hidden text-center space-y-4">
             <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
               <ArrowLeft className="h-4 w-4" />
-              <span>Retour</span>
+              <span className="text-sm">Retour</span>
             </Link>
-            <div className="flex items-center justify-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
-                <Zap className="h-6 w-6 text-white" />
-              </div>
-              <h1 className="text-2xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">Vidova</h1>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">Vidova</h1>
             </div>
           </div>
 
           {/* Form Header */}
           <div className="text-center lg:text-left">
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900">Bon retour !</h2>
-            <p className="mt-2 text-gray-600">Connectez-vous pour continuer votre création</p>
+            <h2 className="text-4xl font-bold text-gray-900">Connexion</h2>
+            <p className="mt-3 text-gray-600">Accédez à votre compte</p>
           </div>
 
           {/* Login Form */}
@@ -205,7 +175,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <>
@@ -213,39 +183,26 @@ export default function LoginPage() {
                   <span>Connexion...</span>
                 </>
               ) : (
-                <>
-                  <Sparkles className="h-5 w-5" />
-                  <span>Se connecter</span>
-                </>
+                <span>Se connecter</span>
               )}
             </button>
           </form>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-4 bg-gray-50 lg:bg-transparent text-gray-500 font-medium">OU</span>
-            </div>
-          </div>
-
           {/* Sign Up Link */}
-          <div className="text-center">
+          <div className="text-center pt-4">
             <p className="text-gray-600">
               Pas encore de compte ?{' '}
-              <Link href="/register" className="font-bold text-primary-600 hover:text-primary-700 transition-colors">
+              <Link href="/register" className="font-medium text-gray-900 hover:underline">
                 Créer un compte
               </Link>
             </p>
           </div>
 
           {/* Demo Info */}
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-4">
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <p className="text-sm text-gray-700">
-              <span className="font-semibold">✨ Compte démo pré-rempli</span><br />
-              Cliquez simplement sur "Se connecter" pour tester l'application !
+              <span className="font-semibold">Compte démo pré-rempli</span><br />
+              Cliquez sur "Se connecter" pour tester
             </p>
           </div>
         </div>

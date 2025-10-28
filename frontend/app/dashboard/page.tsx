@@ -202,33 +202,21 @@ export default function DashboardPage() {
   }
 
   return (
-    <div key={language} className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
-      {/* Premium Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-sm">
+    <div key={language} className="min-h-screen bg-white">
+      {/* Minimal Header */}
+      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             {/* Logo & Brand */}
-            <div className="flex items-center gap-4">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
-              </div>
-              <div className="hidden sm:block">
-                <h1 className="text-xl font-black tracking-tight bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">Vidova</h1>
-                <p className="text-xs text-gray-500 font-medium">AI Content Studio</p>
-              </div>
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-bold text-gray-900">Vidova</h1>
             </div>
 
             {/* Center - User Info */}
             {user?.email && (
-              <div className="hidden md:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-50 to-teal-50 rounded-full border border-emerald-200/50">
-                <div className="relative">
-                  <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
-                  <div className="absolute inset-0 w-2.5 h-2.5 bg-emerald-500 rounded-full animate-ping"></div>
-                </div>
-                <span className="text-sm font-semibold text-gray-700">{user.email}</span>
+              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-sm text-gray-700">{user.email}</span>
               </div>
             )}
 
@@ -236,21 +224,21 @@ export default function DashboardPage() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push('/help')}
-                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <HelpCircle className="h-4 w-4" />
                 <span>{t('help')}</span>
               </button>
               <button
                 onClick={() => router.push('/settings')}
-                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Settings className="h-4 w-4" />
                 <span>{t('settings')}</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 rounded-lg transition-all shadow-sm"
+                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <LogOut className="h-4 w-4" />
                 <span>{t('logout')}</span>
@@ -266,48 +254,30 @@ export default function DashboardPage() {
         {currentWorkspaceId ? (
           <div className="space-y-8">
             {/* Hero Section */}
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600 rounded-3xl opacity-10 blur-3xl"></div>
-              <div className="relative bg-gradient-to-br from-white via-primary-50/50 to-purple-50/50 rounded-3xl shadow-xl border border-white/20 overflow-hidden">
-                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-                <div className="relative p-8 md:p-12">
-                  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    <div className="flex-1">
-                      <div className="inline-flex items-center gap-2 px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm font-semibold mb-4">
-                        <Sparkles className="h-4 w-4" />
-                        <span>{t('yourStudio')}</span>
-                      </div>
-                      <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-3 leading-tight">
-                        {t('createAmazingContent')}<br />
-                        <span className="bg-gradient-to-r from-primary-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">{t('incredibleContent')}</span>
-                      </h2>
-                      <p className="text-lg text-gray-600 mb-6 max-w-2xl">
-                        {t('transformVideos')}
-                      </p>
-                      <div className="flex flex-wrap gap-3">
-                        <button
-                          onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white font-bold rounded-xl transition-all shadow-lg hover:shadow-xl hover:scale-105"
-                        >
-                          <Sparkles className="h-5 w-5" />
-                          <span>{showVideoSubmission ? 'Masquer' : t('newVideo')}</span>
-                        </button>
-                        <button
-                          onClick={() => router.push('/help')}
-                          className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl transition-all shadow-md border border-gray-200"
-                        >
-                          <HelpCircle className="h-5 w-5" />
-                          <span>{t('quickGuide')}</span>
-                        </button>
-                      </div>
-                    </div>
-                    <div className="hidden xl:block">
-                      <div className="relative w-64 h-64">
-                        <div className="absolute inset-0 bg-gradient-to-br from-primary-400 to-purple-600 rounded-full opacity-20 animate-pulse"></div>
-                        <div className="absolute inset-8 bg-gradient-to-br from-primary-500 to-purple-700 rounded-full opacity-30 animate-pulse" style={{ animationDelay: '0.5s' }}></div>
-                        <div className="absolute inset-16 bg-gradient-to-br from-primary-600 to-purple-800 rounded-full opacity-40 animate-pulse" style={{ animationDelay: '1s' }}></div>
-                      </div>
-                    </div>
+            <div className="bg-gray-50 rounded-2xl p-8 md:p-12 border border-gray-200">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="flex-1">
+                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
+                    {t('createAmazingContent')}
+                  </h2>
+                  <p className="text-lg text-gray-600 mb-6 max-w-2xl">
+                    {t('transformVideos')}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => setShowVideoSubmission(!showVideoSubmission)}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+                    >
+                      <Sparkles className="h-5 w-5" />
+                      <span>{showVideoSubmission ? 'Masquer' : t('newVideo')}</span>
+                    </button>
+                    <button
+                      onClick={() => router.push('/help')}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors border border-gray-300"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                      <span>{t('quickGuide')}</span>
+                    </button>
                   </div>
                 </div>
               </div>
