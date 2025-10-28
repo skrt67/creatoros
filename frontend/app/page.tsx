@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight, Video, FileText, Sparkles, CheckCircle } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
 
@@ -32,22 +33,34 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="px-6 lg:px-12 pt-24 pb-32">
-        <div className="max-w-6xl mx-auto">
-          <div className="max-w-4xl">
-            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-              Le nouveau standard
-              <span className="block">de création de contenu</span>
-            </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-2xl leading-relaxed">
-              Conçu pour convertir. Construit pour scaler.
-            </p>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors"
-            >
-              Commencer gratuitement
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h1 className="text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
+                Le nouveau standard
+                <span className="block">de création de contenu</span>
+              </h1>
+              <p className="text-xl lg:text-2xl text-gray-600 mb-12 leading-relaxed">
+                Conçu pour convertir. Construit pour scaler.
+              </p>
+              <Link
+                href="/register"
+                className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                Commencer gratuitement
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="relative">
+              <Image
+                src="/hero-image.png"
+                alt="Vidova Platform"
+                width={800}
+                height={600}
+                className="rounded-2xl shadow-2xl"
+                priority
+              />
+            </div>
           </div>
         </div>
       </section>
