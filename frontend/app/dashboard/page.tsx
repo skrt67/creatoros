@@ -198,15 +198,15 @@ export default function DashboardPage() {
             </a>
             <a href="/videos" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <Video className="h-5 w-5" />
-              Videos
+              {t('videos')}
             </a>
             <a href="/content" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <FileText className="h-5 w-5" />
-              Content
+              Contenu
             </a>
             <a href="/settings" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <Settings className="h-5 w-5" />
-              Settings
+              {t('settings')}
             </a>
           </nav>
 
@@ -218,7 +218,7 @@ export default function DashboardPage() {
               className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors w-full"
             >
               <LogOut className="h-5 w-5" />
-              Logout
+              {t('logout')}
             </button>
           </div>
         </div>
@@ -231,14 +231,14 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center">
             <div>
               <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
-              <p className="text-sm text-gray-600 mt-1">Welcome back, {user?.email?.split('@')[0]}</p>
+              <p className="text-sm text-gray-600 mt-1">Bienvenue, {user?.email?.split('@')[0]}</p>
             </div>
             <button
               onClick={() => setShowVideoSubmission(!showVideoSubmission)}
               className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
             >
               <Plus className="h-5 w-5" />
-              New Video
+              {t('newVideo')}
             </button>
           </div>
         </header>
@@ -267,7 +267,7 @@ export default function DashboardPage() {
                     <TrendingUp className="h-5 w-5 text-green-600" />
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-1">12</h3>
-                  <p className="text-sm text-gray-600">Videos Processed</p>
+                  <p className="text-sm text-gray-600">Vidéos traitées</p>
                 </div>
 
                 <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -278,7 +278,7 @@ export default function DashboardPage() {
                     <TrendingUp className="h-5 w-5 text-blue-600" />
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-1">3</h3>
-                  <p className="text-sm text-gray-600">In Progress</p>
+                  <p className="text-sm text-gray-600">En cours</p>
                 </div>
 
                 <div className="bg-white rounded-xl border border-gray-200 p-6">
@@ -289,13 +289,13 @@ export default function DashboardPage() {
                     <TrendingUp className="h-5 w-5 text-purple-600" />
                   </div>
                   <h3 className="text-3xl font-bold text-gray-900 mb-1">48</h3>
-                  <p className="text-sm text-gray-600">Content Generated</p>
+                  <p className="text-sm text-gray-600">Contenu généré</p>
                 </div>
               </div>
 
               {/* Recent Videos */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Videos</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Vidéos récentes</h3>
                 <VideoList
                   workspaceId={currentWorkspaceId}
                   refreshTrigger={refreshTrigger}
@@ -304,8 +304,8 @@ export default function DashboardPage() {
             </div>
           ) : (
             <div className="text-center py-20">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Select a workspace</h3>
-              <p className="text-gray-600">Choose a workspace to get started</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Sélectionnez un espace de travail</h3>
+              <p className="text-gray-600">Choisissez un espace de travail pour commencer</p>
             </div>
           )}
         </div>
