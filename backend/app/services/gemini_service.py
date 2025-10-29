@@ -571,18 +571,24 @@ GÉNÈRE LE RÉSUMÉ COMPLET."""
             blog = await self.generate_blog_post(transcript, video_title)
             twitter = await self.generate_twitter_thread(transcript, video_title)
             linkedin = await self.generate_linkedin_post(transcript, video_title)
+            tiktok = await self.generate_tiktok(transcript, video_title)
+            instagram = await self.generate_instagram_caption(transcript, video_title)
             
             return {
                 "BLOG_POST": blog.get("content", ""),
                 "TWITTER_THREAD": twitter.get("content", ""),
-                "LINKEDIN_POST": linkedin.get("content", "")
+                "LINKEDIN_POST": linkedin.get("content", ""),
+                "TIKTOK": tiktok.get("content", ""),
+                "INSTAGRAM": instagram.get("content", "")
             }
         except Exception as e:
             logger.error(f"Error in generate_content: {e}")
             return {
                 "BLOG_POST": f"Blog post for: {video_title}",
                 "TWITTER_THREAD": f"Twitter thread for: {video_title}",
-                "LINKEDIN_POST": f"LinkedIn post for: {video_title}"
+                "LINKEDIN_POST": f"LinkedIn post for: {video_title}",
+                "TIKTOK": f"TikTok script for: {video_title}",
+                "INSTAGRAM": f"Instagram caption for: {video_title}"
             }
     
     def _generate_demo_content(self, content_type: str, transcript: str, video_title: str) -> Dict[str, Any]:
