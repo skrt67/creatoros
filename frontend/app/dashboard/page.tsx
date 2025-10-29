@@ -2,11 +2,19 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { LogOut, Settings, Sparkles } from 'lucide-react';
+import { Zap, LogOut, HelpCircle, Sparkles, Settings } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
 import { VideoList } from '@/components/dashboard/VideoList';
 import { WorkspaceManager } from '@/components/dashboard/WorkspaceManager';
+import { DashboardStats } from '@/components/dashboard/DashboardStats';
+import { QuickActions } from '@/components/dashboard/QuickActions';
+import { DemoMode } from '@/components/dashboard/DemoMode';
+import { MobileNav } from '@/components/layout/MobileNav';
+import { FloatingActionButton } from '@/components/layout/FloatingActionButton';
+import { ScrollToTop } from '@/components/ui/ScrollToTop';
+import { CommandPalette } from '@/components/ui/CommandPalette';
+import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 interface User {
   id: string;
@@ -35,7 +43,30 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showVideoSubmission, setShowVideoSubmission] = useState(false);
+  const [showCommandPalette, setShowCommandPalette] = useState(false);
   const router = useRouter();
+
+  // Keyboard shortcuts
+  useKeyboardShortcuts([
+    {
+      key: 'k',
+      ctrl: true,
+      action: () => setShowCommandPalette(true),
+      description: 'Ouvrir la palette de commandes',
+    },
+    {
+      key: 'n',
+      ctrl: true,
+      action: () => setShowVideoSubmission(true),
+      description: 'Nouvelle vidéo',
+    },
+    {
+      key: 'h',
+      ctrl: true,
+      action: () => router.push('/help'),
+      description: t('help'),
+    },
+  ]);
 
   useEffect(() => {
     const initDashboard = async () => {
@@ -192,17 +223,27 @@ export default function DashboardPage() {
             {/* Right Actions */}
             <div className="flex items-center gap-2">
               <button
+                onClick={() => router.push('/help')}
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <HelpCircle className="h-4 w-4" />
+                <span>{t('help')}</span>
+              </button>
+              <button
                 onClick={() => router.push('/settings')}
-                className="inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
+                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
               >
                 <Settings className="h-4 w-4" />
+                <span>{t('settings')}</span>
               </button>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
+                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
               >
                 <LogOut className="h-4 w-4" />
+                <span>{t('logout')}</span>
               </button>
+              <MobileNav onLogout={handleLogout} userEmail={user?.email} />
             </div>
           </div>
         </div>
@@ -222,13 +263,22 @@ export default function DashboardPage() {
                   <p className="text-lg text-gray-600 mb-6 max-w-2xl">
                     {t('transformVideos')}
                   </p>
-                  <button
-                    onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-                    className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-                  >
-                    <Sparkles className="h-5 w-5" />
-                    <span>{showVideoSubmission ? 'Masquer' : t('newVideo')}</span>
-                  </button>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      onClick={() => setShowVideoSubmission(!showVideoSubmission)}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+                    >
+                      <Sparkles className="h-5 w-5" />
+                      <span>{showVideoSubmission ? 'Masquer' : t('newVideo')}</span>
+                    </button>
+                    <button
+                      onClick={() => router.push('/help')}
+                      className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors border border-gray-300"
+                    >
+                      <HelpCircle className="h-5 w-5" />
+                      <span>{t('quickGuide')}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -244,31 +294,86 @@ export default function DashboardPage() {
             )}
 
             {/* Main Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-              {/* Left Column - Workspace */}
-              <aside className="lg:col-span-1">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* Left Column - Workspaces + Stats */}
+              <aside className="lg:col-span-1 space-y-6">
                 <WorkspaceManager
                   currentWorkspaceId={currentWorkspaceId}
                   onWorkspaceChange={handleWorkspaceSelect}
                   onWorkspaceCreated={handleWorkspaceCreated}
                 />
+                <div className="hidden lg:block">
+                  <DashboardStats workspaceId={currentWorkspaceId} />
+                </div>
               </aside>
 
-              {/* Main Column - Video List */}
-              <div className="lg:col-span-3">
+              {/* Center Column - Demo Mode + Video List */}
+              <div className="lg:col-span-2 space-y-6">
+                {/* Demo Mode - Shows for first-time users */}
+                <DemoMode 
+                  workspaceId={currentWorkspaceId || ''}
+                  onVideoSubmitted={handleVideoSubmitted}
+                />
+                
                 <VideoList
                   workspaceId={currentWorkspaceId}
                   refreshTrigger={refreshTrigger}
                 />
               </div>
             </div>
+
+            {/* Quick Actions Bar (Mobile) */}
+            <div className="lg:hidden">
+              <QuickActions 
+                workspaceId={currentWorkspaceId}
+                onNewVideoClick={() => setShowVideoSubmission(!showVideoSubmission)}
+              />
+            </div>
+
+            {/* Stats (Mobile) */}
+            <div className="lg:hidden">
+              <DashboardStats workspaceId={currentWorkspaceId} />
+            </div>
           </div>
         ) : (
-          <div className="text-center py-20">
-            <p className="text-gray-600">{t('workspaceSelect')}</p>
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="text-center max-w-md">
+              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-100 to-purple-100 rounded-2xl mb-6 animate-bounce-subtle">
+                <Sparkles className="h-10 w-10 text-primary-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                {t('workspaceSelect')}
+              </h3>
+              <p className="text-gray-600 mb-6">
+                {t('workspaceSelectDescription')}
+              </p>
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium">
+                <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
+                {t('selectWorkspaceStart')}
+              </div>
+            </div>
           </div>
         )}
       </main>
+
+      {/* Floating Action Button (Mobile & Tablet) */}
+      {currentWorkspaceId && (
+        <div className="lg:hidden">
+          <FloatingActionButton
+            onClick={() => setShowVideoSubmission(!showVideoSubmission)}
+            isActive={showVideoSubmission}
+          />
+        </div>
+      )}
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
+
+      {/* Command Palette */}
+      <CommandPalette
+        isOpen={showCommandPalette}
+        onClose={() => setShowCommandPalette(false)}
+      />
     </div>
   );
 }

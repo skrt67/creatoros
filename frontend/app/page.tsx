@@ -2,7 +2,8 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Video, FileText, Sparkles, CheckCircle } from 'lucide-react';
+import { Footer } from '@/components/layout/Footer';
 
 export default function HomePage() {
 
@@ -38,10 +39,10 @@ export default function HomePage() {
             src="/hero-image.png"
             alt="Vidova Platform"
             fill
-            className="object-cover opacity-70"
+            className="object-cover opacity-20"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-white/40 to-white/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white"></div>
         </div>
 
         {/* Content */}
@@ -65,6 +66,94 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Value Props Section */}
+      <section id="features" className="px-6 lg:px-12 py-32 bg-gray-50">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid lg:grid-cols-3 gap-16">
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Augmentez vos revenus</h3>
+              <p className="text-gray-600 leading-relaxed">
+                La plateforme Vidova est conçue pour aider les créateurs à grandir. Optimisée pour éliminer les frictions et générer instantanément plus de conversions.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Création à l'épreuve du temps</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Un moteur IA puissant traduit vos vidéos en contenu multiformat — permettant les workflows de création les plus détaillés du secteur.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Réduisez les coûts</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Éliminez les vérifications manuelles, les emails sans fin et les révisions interminables — en automatisant les tâches répétitives et les workflows de création.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Detail */}
+      <section className="px-6 lg:px-12 py-32">
+        <div className="max-w-6xl mx-auto space-y-32">
+          {/* Feature 1 */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Transformez vos vidéos en contenu viral
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Notre IA analyse automatiquement vos vidéos YouTube et génère du contenu optimisé pour chaque plateforme. Articles de blog, posts LinkedIn, threads Twitter — tout est prêt en quelques minutes.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Transcription intelligente avec timestamps</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Génération multi-format automatique</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Optimisation SEO intégrée</span>
+                </li>
+              </ul>
+            </div>
+            <div className="bg-gray-100 rounded-2xl aspect-square flex items-center justify-center">
+              <Video className="h-24 w-24 text-gray-400" />
+            </div>
+          </div>
+
+          {/* Feature 2 */}
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="bg-gray-100 rounded-2xl aspect-square flex items-center justify-center lg:order-first">
+              <FileText className="h-24 w-24 text-gray-400" />
+            </div>
+            <div>
+              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                Automatisez votre workflow de création
+              </h2>
+              <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+                Gagnez des heures chaque semaine. Vidova automatise les tâches répétitives pour que vous puissiez vous concentrer sur la création et la stratégie.
+              </p>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Traitement vidéo 24/7</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Export en un clic vers vos plateformes</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle className="h-6 w-6 text-gray-900 flex-shrink-0 mt-0.5" />
+                  <span className="text-gray-700">Templates personnalisables</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="px-6 lg:px-12 py-32 bg-gray-900">
@@ -85,6 +174,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
