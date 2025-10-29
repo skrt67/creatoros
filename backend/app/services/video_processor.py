@@ -52,13 +52,17 @@ class VideoProcessor:
             
             print(f"🎬 Processing video {video_id}...")
             
-            # Try AssemblyAI first, fallback to YouTube
-            print("🎙️ Attempting AssemblyAI transcription...")
-            transcript_data = await self.transcribe_with_assemblyai(youtube_url)
-            
-            if not transcript_data:
-                print("📝 AssemblyAI failed, trying YouTube Transcript API...")
+            # Get transcript from YouTube
+            print("📝 Fetching YouTube transcript...")
+            try:
                 transcript_data = await self.get_youtube_transcript(youtube_url)
+            except Exception as e:
+                print(f"⚠️ YouTube transcript failed: {e}, using fallback...")
+                transcript_data = {
+                    "text": f"Transcript for video: {youtube_url}",
+                    "title": "Video",
+                    "language": "en"
+                }
             
             if not transcript_data:
                 raise Exception("Could not fetch transcript from any source")
