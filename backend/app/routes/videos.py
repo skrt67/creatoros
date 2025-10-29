@@ -3,10 +3,10 @@
 import uuid
 import os
 import shutil
+import asyncio
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from prisma import Prisma
-from temporalio.client import Client
 
 from ..models import (
     VideoSubmit,
@@ -15,17 +15,9 @@ from ..models import (
     APIResponse
 )
 from ..auth import get_current_active_user
-from temporal_workflows.workflows import ProcessVideoWorkflow
+from ..services.video_processor import VideoProcessor
 
 router = APIRouter(tags=["videos"])
-
-# Temporal client (will be initialized in main app)
-temporal_client: Client = None
-
-def set_temporal_client(client: Client):
-    """Set the temporal client instance."""
-    global temporal_client
-    temporal_client = client
 
 @router.post("/workspaces/{workspace_id}/videos", response_model=APIResponse)
 async def submit_video_for_processing(
@@ -77,17 +69,13 @@ async def submit_video_for_processing(
             }
         )
         
-        # Start Temporal workflow
-        if temporal_client:
-            await temporal_client.start_workflow(
-                ProcessVideoWorkflow.run,
-                args=[video_source.id, video_data.youtube_url, job_id],
-                id=workflow_id,
-                task_queue="video-processing"
-            )
-        else:
-            # Fallback for development/testing
-            print(f"Temporal client not available. Would start workflow: {workflow_id}")
+        # Process video asynchronously (without Temporal)
+        asyncio.create_task(process_video_async(
+            video_source.id,
+            video_data.youtube_url,
+            job_id,
+            workspace_id
+        ))
         
         return APIResponse(
             success=True,
@@ -98,7 +86,6 @@ async def submit_video_for_processing(
                 "workflow_id": workflow_id
             }
         )
-        
     except HTTPException:
         raise
     except Exception as e:
@@ -108,6 +95,14 @@ async def submit_video_for_processing(
         )
     finally:
         await prisma.disconnect()
+
+async def process_video_async(video_id: str, youtube_url: str, job_id: str, workspace_id: str):
+    """Process video asynchronously without Temporal."""
+    try:
+        processor = VideoProcessor()
+        await processor.process_video(video_id, youtube_url, job_id)
+    except Exception as e:
+        print(f"Error processing video {video_id}: {str(e)}")
 
 @router.get("/workspaces/{workspace_id}/videos", response_model=List[VideoSourceResponse])
 async def list_workspace_videos(
