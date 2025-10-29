@@ -30,32 +30,33 @@ export default function HomePage() {
         </nav>
       </header>
 
-      {/* Hero Section - Full Background Gradient */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 z-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
+      {/* Hero Section - Duna Style */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Gradient (Duna-like landscape) */}
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-orange-200 via-yellow-100 to-green-100"></div>
+        
+        {/* Decorative blobs (mountains/landscape effect) */}
+        <div className="absolute inset-0 z-1 opacity-40">
+          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-green-300 to-transparent rounded-t-full"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-t from-purple-200 to-transparent rounded-full blur-3xl"></div>
         </div>
 
         {/* Content */}
-        <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10 text-center">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white mb-8 leading-[1.1] tracking-tight">
-              Transformez vos vidéos
-              <span className="block">en contenu viral</span>
-            </h1>
-            <p className="text-xl lg:text-2xl text-gray-200 mb-12 leading-relaxed">
-              Créez du contenu multi-format avec l'IA. Blog, Twitter, LinkedIn, TikTok, Instagram en quelques secondes.
-            </p>
-            <Link
-              href="/register"
-              className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-gray-100 text-gray-900 text-lg font-bold rounded-lg transition-colors"
-            >
-              Commencer gratuitement
-              <ArrowRight className="h-5 w-5" />
-            </Link>
-          </div>
+        <div className="max-w-4xl mx-auto px-6 lg:px-12 relative z-10 text-center">
+          <h1 className="text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+            Transformez vos vidéos
+            <span className="block">en contenu viral</span>
+          </h1>
+          <p className="text-lg lg:text-xl text-gray-700 mb-10 leading-relaxed max-w-2xl mx-auto">
+            Créez du contenu multi-format avec l'IA. Blog, Twitter, LinkedIn, TikTok, Instagram en quelques secondes.
+          </p>
+          <Link
+            href="/register"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-full transition-colors"
+          >
+            Commencer gratuitement
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
