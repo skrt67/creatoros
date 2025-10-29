@@ -104,21 +104,21 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Side - Gradient */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900 relative overflow-hidden flex-col items-center justify-center p-12">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+      {/* Left Side - Duna Gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-b from-orange-200 via-yellow-100 to-green-100 relative overflow-hidden flex-col items-center justify-center p-12">
+        {/* Decorative blobs */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-green-300 to-transparent rounded-t-full"></div>
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-gradient-to-t from-purple-200 to-transparent rounded-full blur-3xl"></div>
         </div>
         
         {/* Content */}
         <div className="relative z-10 text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
-            Rejoignez des milliers de créateurs
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight mb-4">
+            Rejoignez des milliers
           </h2>
-          <p className="text-xl text-purple-100">
-            Commencez votre aventure créative dès aujourd'hui
+          <p className="text-lg text-gray-700">
+            de créateurs
           </p>
         </div>
       </div>
