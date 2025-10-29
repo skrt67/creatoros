@@ -52,10 +52,16 @@ class VideoProcessor:
             
             print(f"🎬 Processing video {video_id}...")
             
-            # Get transcript from YouTube
-            transcript_data = await self.get_youtube_transcript(youtube_url)
+            # Try AssemblyAI first, fallback to YouTube
+            print("🎙️ Attempting AssemblyAI transcription...")
+            transcript_data = await self.transcribe_with_assemblyai(youtube_url)
+            
             if not transcript_data:
-                raise Exception("Could not fetch transcript")
+                print("📝 AssemblyAI failed, trying YouTube Transcript API...")
+                transcript_data = await self.get_youtube_transcript(youtube_url)
+            
+            if not transcript_data:
+                raise Exception("Could not fetch transcript from any source")
             
             transcript_text = transcript_data.get("text", "")
             video_title = transcript_data.get("title", "Video")
@@ -77,10 +83,20 @@ class VideoProcessor:
             
             # Create content assets
             if generated_content:
+                # Map content types to valid AssetType enum values
+                type_mapping = {
+                    "BLOG_POST": "BLOG_POST",
+                    "TWITTER_THREAD": "TWITTER_THREAD",
+                    "LINKEDIN_POST": "LINKEDIN_POST",
+                    "TIKTOK": "TIKTOK",
+                    "INSTAGRAM": "VIDEO_HIGHLIGHTS"  # Map Instagram to VIDEO_HIGHLIGHTS
+                }
+                
                 for asset_type, content in generated_content.items():
+                    mapped_type = type_mapping.get(asset_type, "BLOG_POST")
                     await prisma.contentasset.create(
                         data={
-                            "type": asset_type.upper(),
+                            "type": mapped_type,
                             "content": content,
                             "status": "GENERATED",
                             "jobId": job_id
