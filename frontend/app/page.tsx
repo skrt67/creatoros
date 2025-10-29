@@ -169,18 +169,18 @@ export default function HomePage() {
       {/* Spacing */}
       <div className="h-16 bg-white"></div>
 
-      {/* CTA Section - Blue Gradient */}
-      <section className="px-6 lg:px-12 py-32 bg-gradient-to-r from-blue-600 to-blue-800">
+      {/* CTA Section - White */}
+      <section className="px-6 lg:px-12 py-32 bg-white">
         <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-4xl lg:text-5xl font-bold text-white mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
             Prêt à transformer votre création de contenu ?
           </h2>
-          <p className="text-xl text-blue-100 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-600 mb-12 max-w-2xl mx-auto">
             Rejoignez des milliers de créateurs qui utilisent Vidova pour scaler leur contenu.
           </p>
           <Link
             href="/register"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white hover:bg-gray-100 text-blue-600 font-semibold rounded-full transition-colors"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white font-semibold rounded-full transition-colors"
           >
             Commencer gratuitement
             <ArrowRight className="h-4 w-4" />
