@@ -246,15 +246,6 @@ export default function RegisterPage() {
               <span>Google</span>
             </button>
 
-            <button
-              type="button"
-              className="w-full px-6 py-3 border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
-            >
-              <svg className="h-5 w-5 fill-gray-900" viewBox="0 0 24 24">
-                <path d="M17.05 13.5c-.91 0-1.64.46-2.05 1.14h-.02c-.3-.67-1.04-1.14-2.05-1.14-1.81 0-3.24 1.43-3.24 3.24s1.43 3.24 3.24 3.24c1.01 0 1.75-.47 2.05-1.14h.02c.41.68 1.14 1.14 2.05 1.14 1.81 0 3.24-1.43 3.24-3.24s-1.43-3.24-3.24-3.24zm0 5.28c-1.12 0-2.04-.92-2.04-2.04s.92-2.04 2.04-2.04 2.04.92 2.04 2.04-.92 2.04-2.04 2.04zm-4.1 0c-1.12 0-2.04-.92-2.04-2.04s.92-2.04 2.04-2.04 2.04.92 2.04 2.04-.92 2.04-2.04 2.04zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/>
-              </svg>
-              <span>Apple</span>
-            </button>
           </div>
 
           {/* Sign In Link */}
