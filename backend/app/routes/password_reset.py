@@ -58,7 +58,7 @@ async def forgot_password(request: ForgotPasswordRequest):
                 resend.api_key = resend_api_key
                 resend.Emails.send(
                     {
-                        "from": "noreply@creatoros.com",
+                        "from": "onboarding@resend.dev",  # Use Resend's test domain
                         "to": request.email,
                         "subject": "Réinitialiser votre mot de passe Vidova",
                         "html": f"""
@@ -72,8 +72,9 @@ async def forgot_password(request: ForgotPasswordRequest):
                         """
                     }
                 )
+                print(f"✅ Password reset email sent to {request.email}")
             except Exception as e:
-                print(f"Error sending email: {e}")
+                print(f"❌ Error sending email: {e}")
         
         return {
             "success": True,
