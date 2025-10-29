@@ -190,3 +190,66 @@ async def forgot_password(data: dict):
         )
     finally:
         await prisma.disconnect()
+
+@router.post("/google", response_model=APIResponse)
+async def google_auth(
+    email: str,
+    name: str,
+    image: str = None,
+    googleId: str = None
+):
+    """Authenticate or register user with Google OAuth."""
+    prisma = Prisma()
+    await prisma.connect()
+    
+    try:
+        # Check if user exists
+        user = await prisma.user.find_unique(
+            where={"email": email}
+        )
+        
+        if not user:
+            # Create new user from Google
+            user = await prisma.user.create(
+                data={
+                    "email": email,
+                    "hashedPassword": get_password_hash(googleId or "google_oauth"),
+                    "name": name
+                }
+            )
+            
+            # Create default workspace for new user
+            await prisma.workspace.create(
+                data={
+                    "name": f"{name}'s Workspace",
+                    "ownerId": user.id
+                }
+            )
+        
+        # Generate JWT token
+        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token = create_access_token(
+            data={"sub": user.email},
+            expires_delta=access_token_expires
+        )
+        
+        return APIResponse(
+            success=True,
+            message="Google authentication successful",
+            data={
+                "access_token": access_token,
+                "token_type": "bearer",
+                "user": {
+                    "id": user.id,
+                    "email": user.email,
+                    "name": user.name
+                }
+            }
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Google authentication failed: {str(e)}"
+        )
+    finally:
+        await prisma.disconnect()

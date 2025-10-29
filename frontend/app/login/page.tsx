@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { signIn } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
 import { Eye, EyeOff, Zap, ArrowLeft, Sparkles, Mail, Lock } from 'lucide-react';
 
@@ -50,6 +51,23 @@ export default function LoginPage() {
       }
     } catch (error) {
       toast.error('Erreur de connexion');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    try {
+      setIsLoading(true);
+      const result = await signIn('google', { redirect: false });
+      if (result?.error) {
+        toast.error('Erreur Google: ' + result.error);
+      } else if (result?.ok) {
+        toast.success('Connexion Google réussie ! 👋');
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      toast.error('Erreur lors de la connexion Google');
     } finally {
       setIsLoading(false);
     }
@@ -174,7 +192,9 @@ export default function LoginPage() {
           <div className="space-y-3">
             <button
               type="button"
-              className="w-full px-6 py-3 border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2"
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="w-full px-6 py-3 border border-gray-300 hover:border-gray-400 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
