@@ -2,19 +2,21 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Zap, LogOut, HelpCircle, Sparkles, Settings } from 'lucide-react';
+import { 
+  LayoutDashboard, 
+  Video, 
+  FileText, 
+  Settings, 
+  LogOut,
+  Plus,
+  TrendingUp,
+  Clock,
+  CheckCircle2,
+  XCircle
+} from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
 import { VideoList } from '@/components/dashboard/VideoList';
-import { WorkspaceManager } from '@/components/dashboard/WorkspaceManager';
-import { DashboardStats } from '@/components/dashboard/DashboardStats';
-import { QuickActions } from '@/components/dashboard/QuickActions';
-import { DemoMode } from '@/components/dashboard/DemoMode';
-import { MobileNav } from '@/components/layout/MobileNav';
-import { FloatingActionButton } from '@/components/layout/FloatingActionButton';
-import { ScrollToTop } from '@/components/ui/ScrollToTop';
-import { CommandPalette } from '@/components/ui/CommandPalette';
-import { useKeyboardShortcuts } from '@/hooks/useKeyboardShortcuts';
 
 interface User {
   id: string;
@@ -43,30 +45,7 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showVideoSubmission, setShowVideoSubmission] = useState(false);
-  const [showCommandPalette, setShowCommandPalette] = useState(false);
   const router = useRouter();
-
-  // Keyboard shortcuts
-  useKeyboardShortcuts([
-    {
-      key: 'k',
-      ctrl: true,
-      action: () => setShowCommandPalette(true),
-      description: 'Ouvrir la palette de commandes',
-    },
-    {
-      key: 'n',
-      ctrl: true,
-      action: () => setShowVideoSubmission(true),
-      description: 'Nouvelle vidéo',
-    },
-    {
-      key: 'h',
-      ctrl: true,
-      action: () => router.push('/help'),
-      description: t('help'),
-    },
-  ]);
 
   useEffect(() => {
     const initDashboard = async () => {
@@ -202,109 +181,135 @@ export default function DashboardPage() {
   }
 
   return (
-    <div key={language} className="min-h-screen bg-white">
-      {/* Ultra Minimal Header - Duna Style */}
-      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-          <div className="flex justify-between items-center h-20">
-            {/* Logo - Simple & Bold */}
-            <h1 className="text-2xl font-bold tracking-tight text-gray-900">CreatorOS</h1>
+    <div key={language} className="min-h-screen bg-gray-50">
+      {/* Sidebar - Duna Style */}
+      <aside className="fixed left-0 top-0 h-full w-64 bg-white border-r border-gray-200 p-6 hidden lg:block">
+        <div className="flex flex-col h-full">
+          {/* Logo */}
+          <div className="mb-12">
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">Vidova</h1>
+          </div>
 
-            {/* Right - Minimal Actions */}
-            <div className="flex items-center gap-4">
-              <button
-                onClick={handleLogout}
-                className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
-              >
-                {t('logout')}
-              </button>
-              <MobileNav onLogout={handleLogout} userEmail={user?.email} />
-            </div>
+          {/* Navigation */}
+          <nav className="flex-1 space-y-2">
+            <a href="/dashboard" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-900 bg-gray-100 rounded-lg">
+              <LayoutDashboard className="h-5 w-5" />
+              Dashboard
+            </a>
+            <a href="/videos" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+              <Video className="h-5 w-5" />
+              Videos
+            </a>
+            <a href="/content" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+              <FileText className="h-5 w-5" />
+              Content
+            </a>
+            <a href="/settings" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+              <Settings className="h-5 w-5" />
+              Settings
+            </a>
+          </nav>
+
+          {/* User & Logout */}
+          <div className="pt-6 border-t border-gray-200">
+            <div className="text-sm text-gray-600 mb-3 px-4">{user?.email}</div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors w-full"
+            >
+              <LogOut className="h-5 w-5" />
+              Logout
+            </button>
           </div>
         </div>
-      </header>
+      </aside>
 
-      {/* Main Content - Duna Style: Spacious & Bold */}
-      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 lg:py-24">
-        {currentWorkspaceId ? (
-          <div className="space-y-20">
-            {/* Hero Section - Ultra Bold Typography */}
-            <section className="py-12">
-              <div className="max-w-4xl">
-                <h2 className="text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-                  {t('createAmazingContent')}
-                </h2>
-                <p className="text-xl lg:text-2xl text-gray-600 mb-12 leading-relaxed max-w-2xl">
-                  {t('transformVideos')}
-                </p>
-                <button
-                  onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-                  className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white text-lg font-medium rounded-xl transition-all hover:scale-[1.02]"
-                >
-                  {showVideoSubmission ? 'Masquer' : t('newVideo')}
-                </button>
+      {/* Main Content */}
+      <main className="lg:ml-64 min-h-screen">
+        {/* Header */}
+        <header className="bg-white border-b border-gray-200 px-8 py-6">
+          <div className="flex justify-between items-center">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900">Dashboard</h2>
+              <p className="text-sm text-gray-600 mt-1">Welcome back, {user?.email?.split('@')[0]}</p>
+            </div>
+            <button
+              onClick={() => setShowVideoSubmission(!showVideoSubmission)}
+              className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+            >
+              <Plus className="h-5 w-5" />
+              New Video
+            </button>
+          </div>
+        </header>
+
+        {/* Stats & Content */}
+        <div className="p-8">
+          {currentWorkspaceId ? (
+            <div className="space-y-8">
+              {/* Video Submission Form */}
+              {showVideoSubmission && (
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                  <VideoSubmission
+                    workspaceId={currentWorkspaceId}
+                    onVideoSubmitted={handleVideoSubmitted}
+                  />
+                </div>
+              )}
+
+              {/* Stats Cards - Duna Style */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2 bg-green-100 rounded-lg">
+                      <CheckCircle2 className="h-6 w-6 text-green-600" />
+                    </div>
+                    <TrendingUp className="h-5 w-5 text-green-600" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">12</h3>
+                  <p className="text-sm text-gray-600">Videos Processed</p>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2 bg-blue-100 rounded-lg">
+                      <Clock className="h-6 w-6 text-blue-600" />
+                    </div>
+                    <TrendingUp className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">3</h3>
+                  <p className="text-sm text-gray-600">In Progress</p>
+                </div>
+
+                <div className="bg-white rounded-xl border border-gray-200 p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-2 bg-purple-100 rounded-lg">
+                      <FileText className="h-6 w-6 text-purple-600" />
+                    </div>
+                    <TrendingUp className="h-5 w-5 text-purple-600" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">48</h3>
+                  <p className="text-sm text-gray-600">Content Generated</p>
+                </div>
               </div>
-            </section>
 
-            {/* Video Submission Form */}
-            {showVideoSubmission && (
-              <div className="animate-scale-in">
-                <VideoSubmission
+              {/* Recent Videos */}
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Recent Videos</h3>
+                <VideoList
                   workspaceId={currentWorkspaceId}
-                  onVideoSubmitted={handleVideoSubmitted}
+                  refreshTrigger={refreshTrigger}
                 />
               </div>
-            )}
-
-            {/* Workspace Selector - Minimal */}
-            <section>
-              <WorkspaceManager
-                currentWorkspaceId={currentWorkspaceId}
-                onWorkspaceChange={handleWorkspaceSelect}
-                onWorkspaceCreated={handleWorkspaceCreated}
-              />
-            </section>
-
-            {/* Video List - Full Width */}
-            <section>
-              <VideoList
-                workspaceId={currentWorkspaceId}
-                refreshTrigger={refreshTrigger}
-              />
-            </section>
-          </div>
-        ) : (
-          <div className="flex items-center justify-center min-h-[70vh]">
-            <div className="text-center max-w-2xl">
-              <h3 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                {t('workspaceSelect')}
-              </h3>
-              <p className="text-xl text-gray-600">
-                {t('workspaceSelectDescription')}
-              </p>
             </div>
-          </div>
-        )}
-      </main>
-
-      {/* Floating Action Button (Mobile & Tablet) */}
-      {currentWorkspaceId && (
-        <div className="lg:hidden">
-          <FloatingActionButton
-            onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-            isActive={showVideoSubmission}
-          />
+          ) : (
+            <div className="text-center py-20">
+              <h3 className="text-2xl font-bold text-gray-900 mb-2">Select a workspace</h3>
+              <p className="text-gray-600">Choose a workspace to get started</p>
+            </div>
+          )}
         </div>
-      )}
-
-      {/* Scroll to Top Button */}
-      <ScrollToTop />
-
-      {/* Command Palette */}
-      <CommandPalette
-        isOpen={showCommandPalette}
-        onClose={() => setShowCommandPalette(false)}
-      />
+      </main>
     </div>
   );
 }
