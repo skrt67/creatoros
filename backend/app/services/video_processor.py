@@ -67,9 +67,10 @@ class VideoProcessor:
             generated_content = await self.gemini.generate_content(transcript_text)
             
             # Create transcript record
+            import json
             await prisma.transcript.create(
                 data={
-                    "fullTranscript": {"text": transcript_text, "language": transcript_data.get("language")},
+                    "fullTranscript": json.dumps({"text": transcript_text, "language": transcript_data.get("language")}),
                     "jobId": job_id
                 }
             )
