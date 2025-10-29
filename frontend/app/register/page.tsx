@@ -103,24 +103,40 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        {/* Back Link */}
-        <div className="mb-8">
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
-            <ArrowLeft className="h-4 w-4" />
-            <span className="text-sm">Retour</span>
-          </Link>
+    <div className="min-h-screen bg-white flex">
+      {/* Left Side - Image */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-900 via-green-800 to-green-900 relative overflow-hidden rounded-3xl m-4">
+        <img
+          src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=900&fit=crop"
+          alt="Create"
+          className="w-full h-full object-cover opacity-90"
+        />
+        <div className="absolute inset-0 bg-black/30"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-8">
+          <h2 className="text-2xl font-bold text-white leading-tight">
+            REJOIGNEZ DES MILLIERS DE CRÉATEURS
+          </h2>
         </div>
+      </div>
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-3">Vidova</h1>
-          <p className="text-gray-600">Créez votre compte</p>
-        </div>
+      {/* Right Side - Form */}
+      <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
+        <div className="w-full max-w-md">
+          {/* Back Link */}
+          <div className="mb-8">
+            <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
+              <ArrowLeft className="h-4 w-4" />
+              <span className="text-sm">Retour</span>
+            </Link>
+          </div>
 
-        {/* Form Card - Duna Style */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-8">
+          {/* Header */}
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 mb-2">Créer un compte</h1>
+            <p className="text-gray-600">Commencez votre aventure créative</p>
+          </div>
+
+          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
