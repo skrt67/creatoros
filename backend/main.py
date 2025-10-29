@@ -5,7 +5,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
-from temporalio.client import Client
+# from temporalio.client import Client
 from prisma import Prisma
 import uvicorn
 
@@ -17,7 +17,6 @@ from app.routes.billing import router as billing_router
 from app.routes.processing import router as processing_router
 from app.routes.progress import router as progress_router, set_prisma_client
 from app.routes.simple_processing import router as simple_processing_router
-from app.routes.videos import set_temporal_client
 
 # Global variables
 prisma_client: Prisma = None
@@ -25,7 +24,7 @@ prisma_client: Prisma = None
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
-    global temporal_client, prisma_client
+    global prisma_client
     
     # Startup
     print("🚀 Starting Vidova Backend...")
@@ -68,15 +67,8 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"⚠️ Erreur création utilisateur demo: {e}")
     
-    # Initialize Temporal client
-    temporal_server_url = os.getenv("TEMPORAL_SERVER_URL", "localhost:7233")
-    try:
-        temporal_client = await Client.connect(temporal_server_url)
-        set_temporal_client(temporal_client)
-        print(f"✅ Temporal client connected to {temporal_server_url}")
-    except Exception as e:
-        print(f"⚠️  Temporal client connection failed: {e}")
-        print("   Continuing without Temporal (development mode)")
+    # Temporal disabled - videos will be processed asynchronously without Temporal
+    print("⚠️  Temporal disabled - videos will process asynchronously")
     
     print("🎉 Vidova Backend started successfully!")
     
@@ -84,9 +76,6 @@ async def lifespan(app: FastAPI):
     
     # shutdown
     print("🛑 Shutting down Vidova Backend...")
-    if 'temporal_client' in globals() and temporal_client:
-        await temporal_client.close()
-        print("✅ Temporal client disconnected")
     
     if prisma_client:
         await prisma_client.disconnect()
@@ -154,7 +143,7 @@ async def health_check():
         "status": "healthy",
         "service": "Vidova API",
         "version": "1.0.0",
-        "temporal_connected": 'temporal_client' in globals() and temporal_client is not None,
+        "temporal_connected": False,
         "database_connected": prisma_client is not None
     }
 
