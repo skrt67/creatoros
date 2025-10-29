@@ -56,97 +56,53 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-white flex">
-      {/* Left Side - Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gray-900 p-12 flex-col justify-between">
-        {/* Back Button */}
-        <div>
-          <Link href="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+      <div className="w-full max-w-md">
+        {/* Back Link */}
+        <div className="mb-8">
+          <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors">
             <ArrowLeft className="h-4 w-4" />
             <span className="text-sm">Retour</span>
           </Link>
         </div>
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-2">Vidova</h1>
-          </div>
-
-          <div className="space-y-6">
-            <h2 className="text-5xl font-bold text-white leading-tight">
-              Transformez vos idées en contenu viral
-            </h2>
-            <p className="text-xl text-gray-400 leading-relaxed">
-              Rejoignez des milliers de créateurs qui utilisent l'IA pour générer du contenu de qualité.
-            </p>
-          </div>
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-3">Vidova</h1>
+          <p className="text-gray-600">Connexion à votre espace</p>
         </div>
 
-        {/* Footer */}
-        <div className="text-gray-500 text-sm">
-          © 2024 Vidova
-        </div>
-      </div>
-
-      {/* Right Side - Form */}
-      <div className="flex-1 flex items-center justify-center p-8 lg:p-12">
-        <div className="w-full max-w-md space-y-8">
-          {/* Mobile Logo */}
-          <div className="lg:hidden text-center space-y-4">
-            <Link href="/" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="text-sm">Retour</span>
-            </Link>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">Vidova</h1>
-            </div>
-          </div>
-
-          {/* Form Header */}
-          <div className="text-center lg:text-left">
-            <h2 className="text-4xl font-bold text-gray-900">Connexion</h2>
-            <p className="mt-3 text-gray-600">Accédez à votre compte</p>
-          </div>
-
-          {/* Login Form */}
+        {/* Form Card - Duna Style */}
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Email Field */}
             <div>
-              <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
               </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-gray-900"
-                  placeholder="votre@email.com"
-                  required
-                />
-              </div>
+              <input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-gray-900"
+                placeholder="votre@email.com"
+                required
+              />
             </div>
 
             {/* Password Field */}
             <div>
-              <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                 Mot de passe
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
                 <input
                   id="password"
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  className="w-full pl-12 pr-12 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all text-gray-900"
+                  className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-gray-900 pr-12"
                   placeholder="••••••••"
                   required
                 />
@@ -160,13 +116,9 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Remember & Forgot */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input type="checkbox" className="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
-                <span className="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
-              </label>
-              <Link href="/forgot-password" className="text-sm font-semibold text-primary-600 hover:text-primary-700">
+            {/* Forgot Password Link */}
+            <div className="text-right">
+              <Link href="/forgot-password" className="text-sm font-medium text-gray-600 hover:text-gray-900">
                 Mot de passe oublié ?
               </Link>
             </div>
@@ -189,22 +141,21 @@ export default function LoginPage() {
           </form>
 
           {/* Sign Up Link */}
-          <div className="text-center pt-4">
-            <p className="text-gray-600">
+          <div className="text-center pt-6 border-t border-gray-200 mt-8">
+            <p className="text-sm text-gray-600">
               Pas encore de compte ?{' '}
               <Link href="/register" className="font-medium text-gray-900 hover:underline">
                 Créer un compte
               </Link>
             </p>
           </div>
+        </div>
 
-          {/* Demo Info */}
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <p className="text-sm text-gray-700">
-              <span className="font-semibold">Compte démo pré-rempli</span><br />
-              Cliquez sur "Se connecter" pour tester
-            </p>
-          </div>
+        {/* Demo Info */}
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            <span className="font-medium">Compte démo pré-rempli</span> · Cliquez sur "Se connecter" pour tester
+          </p>
         </div>
       </div>
     </div>
