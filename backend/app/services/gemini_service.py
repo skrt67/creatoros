@@ -44,7 +44,7 @@ Pour LinkedIn : Phrase d'ouverture forte → 3-4 paragraphes à valeur ajoutée 
     
     def __init__(self, api_key: Optional[str] = None):
         """Initialize Gemini service with improved configuration."""
-        self.api_key = api_key or os.getenv("GOOGLE_GEMINI_API_KEY")
+        self.api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_GEMINI_API_KEY")
         
         if not self.api_key:
             logger.warning("No Gemini API key found. Content generation will be limited.")
