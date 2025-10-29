@@ -70,7 +70,14 @@ class VideoProcessor:
             transcript_text = transcript_data.get("text", "")
             video_title = transcript_data.get("title", "Video")
             
+            # Save the video title to database
+            await prisma.videosource.update(
+                where={"id": video_id},
+                data={"title": video_title}
+            )
+            
             print(f"📝 Transcript fetched: {len(transcript_text)} characters")
+            print(f"💾 Video title saved: {video_title}")
             
             # Generate content using Gemini
             print("🤖 Generating content with Gemini...")
