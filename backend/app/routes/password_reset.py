@@ -6,13 +6,17 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from prisma import Prisma
-from resend import Resend
+
+try:
+    import resend
+except ImportError:
+    resend = None
 
 router = APIRouter(tags=["password"])
 
 # Initialize Resend
 resend_api_key = os.getenv("RESEND_API_KEY")
-resend_client = Resend(api_key=resend_api_key) if resend_api_key else None
+resend_client = resend if resend_api_key else None
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -49,9 +53,10 @@ async def forgot_password(request: ForgotPasswordRequest):
         # For now, we'll just send the email
         
         # Send email with Resend
-        if resend_client:
+        if resend_client and resend_api_key:
             try:
-                resend_client.emails.send(
+                resend.api_key = resend_api_key
+                resend.Emails.send(
                     {
                         "from": "noreply@creatoros.com",
                         "to": request.email,
