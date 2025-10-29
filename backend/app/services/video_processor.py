@@ -39,7 +39,7 @@ class VideoProcessor:
         self.gemini = GeminiService()
     
     async def process_video(self, video_id: str, youtube_url: str, job_id: str):
-        """Process video asynchronously - simplified version."""
+        """Process video asynchronously with full transcription and content generation."""
         prisma = Prisma()
         await prisma.connect()
         
@@ -50,6 +50,42 @@ class VideoProcessor:
                 data={"status": "PROCESSING"}
             )
             
+            print(f"🎬 Processing video {video_id}...")
+            
+            # Get transcript from YouTube
+            transcript_data = await self.get_youtube_transcript(youtube_url)
+            if not transcript_data:
+                raise Exception("Could not fetch transcript")
+            
+            transcript_text = transcript_data.get("text", "")
+            video_title = transcript_data.get("title", "Video")
+            
+            print(f"📝 Transcript fetched: {len(transcript_text)} characters")
+            
+            # Generate content using Gemini
+            print("🤖 Generating content with Gemini...")
+            generated_content = await self.gemini.generate_content(transcript_text)
+            
+            # Create transcript record
+            await prisma.transcript.create(
+                data={
+                    "fullTranscript": {"text": transcript_text, "language": transcript_data.get("language")},
+                    "jobId": job_id
+                }
+            )
+            
+            # Create content assets
+            if generated_content:
+                for asset_type, content in generated_content.items():
+                    await prisma.contentasset.create(
+                        data={
+                            "type": asset_type.upper(),
+                            "content": content,
+                            "status": "GENERATED",
+                            "jobId": job_id
+                        }
+                    )
+            
             # Update job status
             await prisma.processingjob.update(
                 where={"id": job_id},
@@ -59,7 +95,7 @@ class VideoProcessor:
             # Update video status to COMPLETED
             await prisma.videosource.update(
                 where={"id": video_id},
-                data={"status": "COMPLETED", "title": f"Processed: {youtube_url}"}
+                data={"status": "COMPLETED", "title": video_title}
             )
             
             print(f"✅ Video {video_id} processed successfully")
