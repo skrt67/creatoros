@@ -1,16 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowRight, Video, FileText, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowRight, Video, FileText, Sparkles, CheckCircle, Zap, Rocket, TrendingUp } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
 
 export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Minimal Header */}
-      <header className="border-b border-gray-100">
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <nav className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="text-2xl font-bold text-gray-900 tracking-tight">
@@ -31,61 +30,74 @@ export default function HomePage() {
         </nav>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative px-6 lg:px-12 pt-32 pb-48 overflow-hidden">
+      {/* Hero Section - Full Background Image */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <Image
-            src="/hero-image.png"
-            alt="Vidova Platform"
-            fill
-            className="object-cover opacity-20"
-            priority
+          <div
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: 'url(https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=1600&h=900&fit=crop)',
+              backgroundAttachment: 'fixed'
+            }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-white/60 to-white"></div>
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
 
         {/* Content */}
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="max-w-4xl">
-            <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
-              Le nouveau standard
-              <span className="block">de création de contenu</span>
+        <div className="max-w-6xl mx-auto px-6 lg:px-12 relative z-10 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h1 className="text-5xl lg:text-7xl xl:text-8xl font-bold text-white mb-8 leading-[1.1] tracking-tight">
+              Transformez vos vidéos
+              <span className="block">en contenu viral</span>
             </h1>
-            <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-2xl leading-relaxed">
-              Conçu pour convertir. Construit pour scaler.
+            <p className="text-xl lg:text-2xl text-gray-200 mb-12 leading-relaxed">
+              Créez du contenu multi-format avec l'IA. Blog, Twitter, LinkedIn, TikTok, Instagram en quelques secondes.
             </p>
             <Link
               href="/register"
-              className="inline-flex items-center gap-2 px-6 py-3.5 bg-gray-900 hover:bg-gray-800 text-white text-sm font-medium rounded-lg transition-colors"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white hover:bg-gray-100 text-gray-900 text-lg font-bold rounded-lg transition-colors"
             >
               Commencer gratuitement
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-5 w-5" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Value Props Section */}
-      <section id="features" className="px-6 lg:px-12 py-32 bg-gray-50">
+      <section id="features" className="px-6 lg:px-12 py-32 bg-white">
         <div className="max-w-6xl mx-auto">
-          <div className="grid lg:grid-cols-3 gap-16">
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Augmentez vos revenus</h3>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4">Pourquoi Vidova ?</h2>
+            <p className="text-xl text-gray-600">Tout ce dont vous avez besoin pour créer du contenu viral</p>
+          </div>
+          <div className="grid lg:grid-cols-3 gap-12">
+            <div className="p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <TrendingUp className="h-6 w-6 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Augmentez vos revenus</h3>
               <p className="text-gray-600 leading-relaxed">
                 La plateforme Vidova est conçue pour aider les créateurs à grandir. Optimisée pour éliminer les frictions et générer instantanément plus de conversions.
               </p>
             </div>
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Création à l'épreuve du temps</h3>
+            <div className="p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-6">
+                <Zap className="h-6 w-6 text-purple-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Création à l'épreuve du temps</h3>
               <p className="text-gray-600 leading-relaxed">
                 Un moteur IA puissant traduit vos vidéos en contenu multiformat — permettant les workflows de création les plus détaillés du secteur.
               </p>
             </div>
-            <div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Réduisez les coûts</h3>
+            <div className="p-8 bg-gray-50 rounded-2xl border border-gray-200 hover:border-gray-300 transition-colors">
+              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-6">
+                <Rocket className="h-6 w-6 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Réduisez les coûts</h3>
               <p className="text-gray-600 leading-relaxed">
-                Éliminez les vérifications manuelles, les emails sans fin et les révisions interminables — en automatisant les tâches répétitives et les workflows de création.
+                Éliminez les vérifications manuelles, les emails sans fin et les révisions interminables — en automatisant les tâches répétitives.
               </p>
             </div>
           </div>
@@ -119,15 +131,19 @@ export default function HomePage() {
                 </li>
               </ul>
             </div>
-            <div className="bg-gray-100 rounded-2xl aspect-square flex items-center justify-center">
-              <Video className="h-24 w-24 text-gray-400" />
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl aspect-square flex items-center justify-center border border-blue-200">
+              <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center">
+                <Video className="h-12 w-12 text-blue-600" />
+              </div>
             </div>
           </div>
 
           {/* Feature 2 */}
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <div className="bg-gray-100 rounded-2xl aspect-square flex items-center justify-center lg:order-first">
-              <FileText className="h-24 w-24 text-gray-400" />
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl aspect-square flex items-center justify-center lg:order-first border border-purple-200">
+              <div className="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center">
+                <FileText className="h-12 w-12 text-purple-600" />
+              </div>
             </div>
             <div>
               <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6 leading-tight">
