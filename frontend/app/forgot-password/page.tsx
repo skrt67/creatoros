@@ -44,97 +44,81 @@ export default function ForgotPasswordPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-purple-50 flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <div className="bg-white rounded-2xl shadow-2xl p-8 text-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-md text-center">
+          <div className="mb-8">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <Mail className="w-8 h-8 text-green-600" />
             </div>
-            
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-              Email envoyé !
-            </h2>
-            
-            <p className="text-gray-600 mb-8">
-              Si un compte existe avec l'adresse <strong>{email}</strong>, vous recevrez un email 
-              avec les instructions pour réinitialiser votre mot de passe.
+            <h2 className="text-3xl font-bold text-gray-900 mb-3">Email envoyé !</h2>
+            <p className="text-gray-600">
+              Si un compte existe avec <strong>{email}</strong>, vous recevrez un email avec les instructions.
             </p>
-            
-            <Link
-              href="/login"
-              className="inline-flex items-center justify-center w-full px-6 py-3 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-lg hover:opacity-90 transition-opacity"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour à la connexion
-            </Link>
           </div>
+          
+          <Link
+            href="/login"
+            className="inline-flex items-center justify-center w-full px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+          >
+            Retour à la connexion
+          </Link>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
       <div className="w-full max-w-md">
-        <Link 
-          href="/login"
-          className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-8"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Retour à la connexion
-        </Link>
+        <div className="mb-8">
+          <Link 
+            href="/login"
+            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span className="text-sm">Retour</span>
+          </Link>
+        </div>
 
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl border border-gray-200 p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary-600 to-purple-600 bg-clip-text text-transparent">
-              Mot de passe oublié ?
-            </h1>
-            <p className="text-gray-600">
-              Entrez votre email pour recevoir un lien de réinitialisation
-            </p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">Mot de passe oublié ?</h1>
+            <p className="text-gray-600">Entrez votre email pour recevoir un lien de réinitialisation</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
-                  placeholder="votre@email.com"
-                  required
-                  disabled={isLoading}
-                />
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-gray-900"
+                placeholder="votre@email.com"
+                required
+                disabled={isLoading}
+              />
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-gradient-to-r from-primary-600 to-purple-600 text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="w-full py-3 px-4 bg-gray-900 hover:bg-gray-800 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               {isLoading ? (
                 <>
                   <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  Envoi en cours...
+                  Envoi...
                 </>
               ) : (
-                <>
-                  <Mail className="w-5 h-5 mr-2" />
-                  Envoyer le lien
-                </>
+                'Envoyer le lien'
               )}
             </button>
           </form>
 
           <div className="mt-6 text-center text-sm text-gray-600">
             Vous vous souvenez de votre mot de passe ?{' '}
-            <Link href="/login" className="text-primary-600 hover:text-primary-700 font-medium">
+            <Link href="/login" className="text-gray-900 hover:underline font-medium">
               Se connecter
             </Link>
           </div>
