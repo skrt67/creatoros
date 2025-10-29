@@ -54,16 +54,10 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true);
-      const result = await signIn('google', { redirect: false });
-      if (result?.error) {
-        toast.error('Erreur Google: ' + result.error);
-      } else if (result?.ok) {
-        toast.success('Inscription Google réussie ! 🎉');
-        router.push('/dashboard');
-      }
+      await signIn('google', { callbackUrl: '/dashboard' });
     } catch (error) {
+      console.error('Google sign in error:', error);
       toast.error('Erreur lors de l\'inscription Google');
-    } finally {
       setIsLoading(false);
     }
   };
