@@ -57,18 +57,22 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=800&h=900&fit=crop"
-          alt="Video Creation"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-black/40"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-12">
-          <h2 className="text-3xl font-bold text-white leading-tight">
-            TRANSFORMEZ VOS VIDÉOS EN CONTENU VIRAL
+      {/* Left Side - Gradient */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 relative overflow-hidden flex-col items-center justify-center p-12">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+        </div>
+        
+        {/* Content */}
+        <div className="relative z-10 text-center">
+          <h2 className="text-4xl lg:text-5xl font-bold text-white leading-tight mb-6">
+            Transformez vos vidéos en contenu viral
           </h2>
+          <p className="text-xl text-blue-100">
+            Créez du contenu multi-format avec l'IA en quelques secondes
+          </p>
         </div>
       </div>
 
