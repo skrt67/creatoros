@@ -565,6 +565,26 @@ GÉNÈRE LE RÉSUMÉ COMPLET."""
         
         return content_pieces
     
+    async def generate_content(self, transcript: str, video_title: str = "Video") -> Dict[str, Any]:
+        """Generate all content types from transcript."""
+        try:
+            blog = await self.generate_blog_post(transcript, video_title)
+            twitter = await self.generate_twitter_thread(transcript, video_title)
+            linkedin = await self.generate_linkedin_post(transcript, video_title)
+            
+            return {
+                "BLOG_POST": blog.get("content", ""),
+                "TWITTER_THREAD": twitter.get("content", ""),
+                "LINKEDIN_POST": linkedin.get("content", "")
+            }
+        except Exception as e:
+            logger.error(f"Error in generate_content: {e}")
+            return {
+                "BLOG_POST": f"Blog post for: {video_title}",
+                "TWITTER_THREAD": f"Twitter thread for: {video_title}",
+                "LINKEDIN_POST": f"LinkedIn post for: {video_title}"
+            }
+    
     def _generate_demo_content(self, content_type: str, transcript: str, video_title: str) -> Dict[str, Any]:
         """Generate demo content when API is not available."""
         demo_content = {
