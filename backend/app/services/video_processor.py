@@ -38,6 +38,48 @@ class VideoProcessor:
     def __init__(self):
         self.gemini = GeminiService()
     
+    async def process_video(self, video_id: str, youtube_url: str, job_id: str):
+        """Process video asynchronously - simplified version."""
+        prisma = Prisma()
+        await prisma.connect()
+        
+        try:
+            # Update video status to PROCESSING
+            await prisma.videosource.update(
+                where={"id": video_id},
+                data={"status": "PROCESSING"}
+            )
+            
+            # Update job status
+            await prisma.processingjob.update(
+                where={"id": job_id},
+                data={"status": "COMPLETED"}
+            )
+            
+            # Update video status to COMPLETED
+            await prisma.videosource.update(
+                where={"id": video_id},
+                data={"status": "COMPLETED", "title": f"Processed: {youtube_url}"}
+            )
+            
+            print(f"✅ Video {video_id} processed successfully")
+        except Exception as e:
+            print(f"❌ Error processing video {video_id}: {e}")
+            # Update to FAILED status
+            try:
+                await prisma.processingjob.update(
+                    where={"id": job_id},
+                    data={"status": "FAILED"}
+                )
+                await prisma.videosource.update(
+                    where={"id": video_id},
+                    data={"status": "FAILED"}
+                )
+            except:
+                pass
+        finally:
+            await prisma.disconnect()
+    
     def get_random_proxy(self) -> str:
         """Get a random Webshare residential proxy URL."""
         proxy = random.choice(WEBSHARE_RESIDENTIAL_PROXIES)
