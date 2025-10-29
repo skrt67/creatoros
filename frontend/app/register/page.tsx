@@ -107,14 +107,14 @@ export default function RegisterPage() {
       {/* Left Side - Image */}
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=900&fit=crop"
-          alt="Content Creation"
+          src="https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=800&h=900&fit=crop"
+          alt="Video Creation"
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/40"></div>
         <div className="absolute bottom-0 left-0 right-0 p-12">
           <h2 className="text-3xl font-bold text-white leading-tight">
-            REJOIGNEZ DES MILLIERS DE CRÉATEURS
+            TRANSFORMEZ VOS VIDÉOS EN CONTENU VIRAL
           </h2>
         </div>
       </div>
