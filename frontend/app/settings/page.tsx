@@ -30,11 +30,12 @@ export default function SettingsPage() {
       {/* Main Content */}
       <div className="max-w-4xl mx-auto px-8 py-12">
         {/* Tabs */}
-        <div className="flex gap-8 mb-12 border-b border-gray-200">
+        <div className="flex gap-8 mb-12 border-b border-gray-200 overflow-x-auto">
           {[
             { id: 'profile', label: 'Profil', icon: User },
             { id: 'notifications', label: 'Notifications', icon: Bell },
             { id: 'security', label: 'Sécurité', icon: Shield },
+            { id: 'preferences', label: 'Préférences', icon: Bell },
           ].map(tab => (
             <button
               key={tab.id}
@@ -76,13 +77,26 @@ export default function SettingsPage() {
             <div>
               <h3 className="text-lg font-bold text-gray-900 mb-4">Préférences de notifications</h3>
               <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="w-4 h-4" />
-                  <span className="text-sm text-gray-700">Notifications par email</span>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Notifications par email</span>
+                    <p className="text-xs text-gray-500">Recevez des mises à jour par email</p>
+                  </div>
                 </label>
-                <label className="flex items-center gap-3">
-                  <input type="checkbox" defaultChecked className="w-4 h-4" />
-                  <span className="text-sm text-gray-700">Notifications vidéo</span>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Vidéos traitées</span>
+                    <p className="text-xs text-gray-500">Notification quand une vidéo est prête</p>
+                  </div>
+                </label>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <div>
+                    <span className="text-sm font-medium text-gray-900">Rapport hebdomadaire</span>
+                    <p className="text-xs text-gray-500">Résumé hebdomadaire de vos activités</p>
+                  </div>
                 </label>
               </div>
             </div>
@@ -105,6 +119,52 @@ export default function SettingsPage() {
                   <LogOut className="h-4 w-4" />
                   Se déconnecter
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Preferences Tab */}
+        {activeTab === 'preferences' && (
+          <div className="space-y-8">
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Préférences de contenu</h3>
+              <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Ton du contenu</label>
+                  <select className="w-full px-4 py-2 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-gray-900">
+                    <option>Professionnel</option>
+                    <option>Casual</option>
+                    <option>Enthousiaste</option>
+                    <option>Éducatif</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-3">Longueur du contenu</label>
+                  <select className="w-full px-4 py-2 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-gray-900">
+                    <option>Court</option>
+                    <option>Moyen</option>
+                    <option>Long</option>
+                  </select>
+                </div>
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" defaultChecked className="w-4 h-4 rounded" />
+                  <span className="text-sm text-gray-700">Inclure des emojis</span>
+                </label>
+              </div>
+            </div>
+
+            <div>
+              <h3 className="text-lg font-bold text-gray-900 mb-4">Paramètres de région</h3>
+              <div className="bg-white rounded-lg border border-gray-200 p-6 space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Fuseau horaire</label>
+                  <select className="w-full px-4 py-2 border border-gray-200 rounded-lg text-gray-900 focus:ring-2 focus:ring-gray-900">
+                    <option>Europe/Paris</option>
+                    <option>Europe/London</option>
+                    <option>America/New_York</option>
+                  </select>
+                </div>
               </div>
             </div>
           </div>

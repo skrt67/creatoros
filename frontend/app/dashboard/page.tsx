@@ -196,11 +196,11 @@ export default function DashboardPage() {
               <LayoutDashboard className="h-5 w-5" />
               Dashboard
             </a>
-            <a href="/videos" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+            <a href="/dashboard/videos" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <Video className="h-5 w-5" />
-              {t('videos')}
+              Vidéos
             </a>
-            <a href="/content" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+            <a href="/dashboard/content" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <FileText className="h-5 w-5" />
               Contenu
             </a>
