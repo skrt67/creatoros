@@ -14,6 +14,11 @@ import { useLanguage } from '@/contexts/LanguageContext';
 export default function SettingsPage() {
   const { language, setLanguage } = useLanguage();
   const [activeTab, setActiveTab] = useState('profile');
+  
+  // Redirect to dashboard for now - Settings page will be built later
+  useEffect(() => {
+    // Settings page is under construction
+  }, []);
   const [saved, setSaved] = useState(false);
   const [geminiApiKey, setGeminiApiKey] = useState('');
   const [youtubeApiKey, setYoutubeApiKey] = useState('');
