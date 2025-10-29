@@ -70,6 +70,8 @@ const handler = NextAuth({
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
           
+          console.log('🔐 Google Sign In:', user.email);
+          
           // Register or login user with Google
           const response = await fetch(`${apiUrl}/auth/google`, {
             method: 'POST',
@@ -84,15 +86,15 @@ const handler = NextAuth({
 
           if (response.ok) {
             const data = await response.json();
-            // Store token for later use
-            if (typeof window !== 'undefined') {
-              localStorage.setItem('auth_token', data.access_token);
-            }
+            console.log('✅ Google Auth Success:', data);
             return true;
+          } else {
+            const error = await response.json();
+            console.error('❌ Backend error:', error);
+            return false;
           }
-          return false;
         } catch (error) {
-          console.error('Google sign in error:', error);
+          console.error('❌ Google sign in error:', error);
           return false;
         }
       }
