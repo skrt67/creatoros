@@ -165,13 +165,15 @@ export default function LoginPage() {
               </Link>
             </p>
           </div>
-        </div>
 
-        {/* Demo Info */}
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            <span className="font-medium">Compte démo pré-rempli</span> · Cliquez sur "Se connecter" pour tester
-          </p>
+          {/* Demo Info */}
+          <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <p className="text-sm text-blue-900 text-center">
+              <span className="font-medium">💡 Compte démo pré-rempli</span>
+              <br />
+              <span className="text-blue-700">Cliquez sur "Se connecter" pour tester</span>
+            </p>
+          </div>
         </div>
       </div>
     </div>
