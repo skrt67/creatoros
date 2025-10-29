@@ -105,15 +105,15 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-green-900 via-green-800 to-green-900 relative overflow-hidden rounded-3xl m-4">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=900&fit=crop"
-          alt="Create"
-          className="w-full h-full object-cover opacity-90"
+          src="https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=900&fit=crop"
+          alt="Content Creation"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <h2 className="text-2xl font-bold text-white leading-tight">
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-12">
+          <h2 className="text-3xl font-bold text-white leading-tight">
             REJOIGNEZ DES MILLIERS DE CRÉATEURS
           </h2>
         </div>

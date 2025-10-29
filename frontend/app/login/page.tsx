@@ -58,15 +58,15 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-white flex">
       {/* Left Side - Image */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 relative overflow-hidden rounded-3xl m-4">
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 relative overflow-hidden">
         <img
-          src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&h=900&fit=crop"
-          alt="Travel"
-          className="w-full h-full object-cover opacity-90"
+          src="https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=800&h=900&fit=crop"
+          alt="Video Creation"
+          className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/30"></div>
-        <div className="absolute bottom-0 left-0 right-0 p-8">
-          <h2 className="text-2xl font-bold text-white leading-tight">
+        <div className="absolute inset-0 bg-black/40"></div>
+        <div className="absolute bottom-0 left-0 right-0 p-12">
+          <h2 className="text-3xl font-bold text-white leading-tight">
             TRANSFORMEZ VOS VIDÉOS EN CONTENU VIRAL
           </h2>
         </div>
