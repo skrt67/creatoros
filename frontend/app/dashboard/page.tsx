@@ -203,45 +203,20 @@ export default function DashboardPage() {
 
   return (
     <div key={language} className="min-h-screen bg-white">
-      {/* Minimal Header */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            {/* Logo & Brand */}
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-gray-900">Vidova</h1>
-            </div>
+      {/* Ultra Minimal Header - Duna Style */}
+      <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
+          <div className="flex justify-between items-center h-20">
+            {/* Logo - Simple & Bold */}
+            <h1 className="text-2xl font-bold tracking-tight text-gray-900">CreatorOS</h1>
 
-            {/* Center - User Info */}
-            {user?.email && (
-              <div className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gray-100 rounded-lg">
-                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                <span className="text-sm text-gray-700">{user.email}</span>
-              </div>
-            )}
-
-            {/* Right Actions */}
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => router.push('/help')}
-                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <HelpCircle className="h-4 w-4" />
-                <span>{t('help')}</span>
-              </button>
-              <button
-                onClick={() => router.push('/settings')}
-                className="hidden lg:inline-flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <Settings className="h-4 w-4" />
-                <span>{t('settings')}</span>
-              </button>
+            {/* Right - Minimal Actions */}
+            <div className="flex items-center gap-4">
               <button
                 onClick={handleLogout}
-                className="hidden lg:inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors"
+                className="hidden lg:inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors"
               >
-                <LogOut className="h-4 w-4" />
-                <span>{t('logout')}</span>
+                {t('logout')}
               </button>
               <MobileNav onLogout={handleLogout} userEmail={user?.email} />
             </div>
@@ -249,39 +224,27 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content - Duna Style: Spacious & Bold */}
+      <main className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16 lg:py-24">
         {currentWorkspaceId ? (
-          <div className="space-y-8">
-            {/* Hero Section */}
-            <div className="bg-gray-50 rounded-2xl p-8 md:p-12 border border-gray-200">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div className="flex-1">
-                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4 leading-tight">
-                    {t('createAmazingContent')}
-                  </h2>
-                  <p className="text-lg text-gray-600 mb-6 max-w-2xl">
-                    {t('transformVideos')}
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    <button
-                      onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-                    >
-                      <Sparkles className="h-5 w-5" />
-                      <span>{showVideoSubmission ? 'Masquer' : t('newVideo')}</span>
-                    </button>
-                    <button
-                      onClick={() => router.push('/help')}
-                      className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors border border-gray-300"
-                    >
-                      <HelpCircle className="h-5 w-5" />
-                      <span>{t('quickGuide')}</span>
-                    </button>
-                  </div>
-                </div>
+          <div className="space-y-20">
+            {/* Hero Section - Ultra Bold Typography */}
+            <section className="py-12">
+              <div className="max-w-4xl">
+                <h2 className="text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-[1.1] tracking-tight">
+                  {t('createAmazingContent')}
+                </h2>
+                <p className="text-xl lg:text-2xl text-gray-600 mb-12 leading-relaxed max-w-2xl">
+                  {t('transformVideos')}
+                </p>
+                <button
+                  onClick={() => setShowVideoSubmission(!showVideoSubmission)}
+                  className="inline-flex items-center gap-3 px-8 py-4 bg-gray-900 hover:bg-gray-800 text-white text-lg font-medium rounded-xl transition-all hover:scale-[1.02]"
+                >
+                  {showVideoSubmission ? 'Masquer' : t('newVideo')}
+                </button>
               </div>
-            </div>
+            </section>
 
             {/* Video Submission Form */}
             {showVideoSubmission && (
@@ -293,64 +256,32 @@ export default function DashboardPage() {
               </div>
             )}
 
-            {/* Main Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Left Column - Workspaces + Stats */}
-              <aside className="lg:col-span-1 space-y-6">
-                <WorkspaceManager
-                  currentWorkspaceId={currentWorkspaceId}
-                  onWorkspaceChange={handleWorkspaceSelect}
-                  onWorkspaceCreated={handleWorkspaceCreated}
-                />
-                <div className="hidden lg:block">
-                  <DashboardStats workspaceId={currentWorkspaceId} />
-                </div>
-              </aside>
-
-              {/* Center Column - Demo Mode + Video List */}
-              <div className="lg:col-span-2 space-y-6">
-                {/* Demo Mode - Shows for first-time users */}
-                <DemoMode 
-                  workspaceId={currentWorkspaceId || ''}
-                  onVideoSubmitted={handleVideoSubmitted}
-                />
-                
-                <VideoList
-                  workspaceId={currentWorkspaceId}
-                  refreshTrigger={refreshTrigger}
-                />
-              </div>
-            </div>
-
-            {/* Quick Actions Bar (Mobile) */}
-            <div className="lg:hidden">
-              <QuickActions 
-                workspaceId={currentWorkspaceId}
-                onNewVideoClick={() => setShowVideoSubmission(!showVideoSubmission)}
+            {/* Workspace Selector - Minimal */}
+            <section>
+              <WorkspaceManager
+                currentWorkspaceId={currentWorkspaceId}
+                onWorkspaceChange={handleWorkspaceSelect}
+                onWorkspaceCreated={handleWorkspaceCreated}
               />
-            </div>
+            </section>
 
-            {/* Stats (Mobile) */}
-            <div className="lg:hidden">
-              <DashboardStats workspaceId={currentWorkspaceId} />
-            </div>
+            {/* Video List - Full Width */}
+            <section>
+              <VideoList
+                workspaceId={currentWorkspaceId}
+                refreshTrigger={refreshTrigger}
+              />
+            </section>
           </div>
         ) : (
-          <div className="flex items-center justify-center min-h-[60vh]">
-            <div className="text-center max-w-md">
-              <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary-100 to-purple-100 rounded-2xl mb-6 animate-bounce-subtle">
-                <Sparkles className="h-10 w-10 text-primary-600" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">
+          <div className="flex items-center justify-center min-h-[70vh]">
+            <div className="text-center max-w-2xl">
+              <h3 className="text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
                 {t('workspaceSelect')}
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-xl text-gray-600">
                 {t('workspaceSelectDescription')}
               </p>
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 text-primary-700 rounded-lg text-sm font-medium">
-                <span className="w-2 h-2 bg-primary-500 rounded-full animate-pulse"></span>
-                {t('selectWorkspaceStart')}
-              </div>
             </div>
           </div>
         )}
