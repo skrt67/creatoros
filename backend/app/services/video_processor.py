@@ -93,7 +93,7 @@ class VideoProcessor:
                     "TWITTER_THREAD": "TWITTER_THREAD",
                     "LINKEDIN_POST": "LINKEDIN_POST",
                     "TIKTOK": "TIKTOK",
-                    "INSTAGRAM": "VIDEO_HIGHLIGHTS"  # Map Instagram to VIDEO_HIGHLIGHTS
+                    "INSTAGRAM": "TIKTOK"  # Map Instagram to TIKTOK
                 }
                 
                 for asset_type, content in generated_content.items():
