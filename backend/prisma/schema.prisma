@@ -38,7 +38,7 @@ model VideoSource {
   id             String          @id @default(cuid())
   youtubeUrl     String
   title          String?
-  status         VideoStatus     @default(PENDING)
+  status         String          @default("PENDING")
   createdAt      DateTime        @default(now())
   updatedAt      DateTime        @updatedAt
   workspaceId    String
@@ -51,7 +51,7 @@ model VideoSource {
 model ProcessingJob {
   id            String         @id @default(cuid())
   temporalWorkflowId String    @unique
-  status        JobStatus      @default(STARTED)
+  status        String         @default("STARTED")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   videoSourceId String         @unique
@@ -75,9 +75,9 @@ model Transcript {
 
 model ContentAsset {
   id        String     @id @default(cuid())
-  type      AssetType
+  type      String
   content   String
-  status    AssetStatus @default(GENERATED)
+  status    String     @default("GENERATED")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
   jobId     String
@@ -99,29 +99,4 @@ model Subscription {
   @@map("subscriptions")
 }
 
-enum VideoStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-}
-
-enum JobStatus {
-  STARTED
-  COMPLETED
-  FAILED
-}
-
-enum AssetType {
-  BLOG_POST
-  TWITTER_THREAD
-  LINKEDIN_POST
-  TIKTOK
-  VIDEO_HIGHLIGHTS
-}
-
-enum AssetStatus {
-  GENERATED
-  PUBLISHED
-  ARCHIVED
-}
+// Enums removed - using strings instead for compatibility with PostgreSQL types
