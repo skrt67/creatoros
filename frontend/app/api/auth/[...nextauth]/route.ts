@@ -66,38 +66,7 @@ const handler = NextAuth({
       return session;
     },
     async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-          
-          console.log('🔐 Google Sign In:', user.email);
-          
-          // Register or login user with Google
-          const response = await fetch(`${apiUrl}/auth/google`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: user.email,
-              name: user.name,
-              image: user.image,
-              googleId: account.providerAccountId
-            })
-          });
-
-          if (response.ok) {
-            const data = await response.json();
-            console.log('✅ Google Auth Success:', data);
-            return true;
-          } else {
-            const error = await response.json();
-            console.error('❌ Backend error:', error);
-            return false;
-          }
-        } catch (error) {
-          console.error('❌ Google sign in error:', error);
-          return false;
-        }
-      }
+      // Allow Google sign in without backend validation
       return true;
     }
   },
