@@ -30,18 +30,12 @@ export default function HomePage() {
         </nav>
       </header>
 
-      {/* Hero Section - Full Background Image */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-        {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{
-              backgroundImage: 'url(https://images.unsplash.com/photo-1516321318423-f06f70d504f0?w=1600&h=900&fit=crop)',
-              backgroundAttachment: 'fixed'
-            }}
-          />
-          <div className="absolute inset-0 bg-black/50"></div>
+      {/* Hero Section - Full Background Gradient */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 z-0 opacity-20">
+          <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500 rounded-full blur-3xl"></div>
         </div>
 
         {/* Content */}
