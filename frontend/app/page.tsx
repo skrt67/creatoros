@@ -300,7 +300,7 @@ export default function HomePage() {
               <h3 className="text-sm font-medium text-gray-900 mb-4">Légal</h3>
               <ul className="space-y-3">
                 <li><Link href="/legal/privacy" className="text-sm text-gray-600 hover:text-gray-900 font-light">Confidentialité</Link></li>
-                <li><Link href="/terms" className="text-sm text-gray-600 hover:text-gray-900 font-light">Conditions</Link></li>
+                <li><Link href="/legal/terms" className="text-sm text-gray-600 hover:text-gray-900 font-light">Conditions</Link></li>
                 <li><Link href="/legal/mentions" className="text-sm text-gray-600 hover:text-gray-900 font-light">Mentions légales</Link></li>
               </ul>
             </div>

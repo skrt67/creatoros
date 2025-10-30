@@ -84,11 +84,10 @@ export default function AuthCallbackPage() {
   }, [session, status, router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="text-center">
-        <div className="inline-block w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">Connexion en cours...</h2>
-        <p className="text-gray-600">Veuillez patienter</p>
+        <div className="inline-block w-12 h-12 border-3 border-gray-300 border-t-gray-900 rounded-full animate-spin mb-4"></div>
+        <h2 className="text-lg font-light text-gray-900 tracking-tight">Connexion en cours</h2>
       </div>
     </div>
   );

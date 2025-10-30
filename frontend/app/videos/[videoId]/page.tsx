@@ -1,10 +1,10 @@
 'use client';
-import Cookies from 'js-cookie';
 
+import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Play, Download, Clock, CheckCircle, AlertCircle, FileText, Share2, Copy, ExternalLink, Zap, Sparkles } from 'lucide-react';
+import { ArrowLeft, Play, Clock, CheckCircle, AlertCircle, FileText, Copy, ExternalLink, Video } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface VideoDetails {
@@ -97,7 +97,7 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success('Copié dans le presse-papiers ! 📋');
+    toast.success('Copié !');
   };
 
   const formatTime = (seconds: number) => {
@@ -113,40 +113,40 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
         return {
           icon: CheckCircle,
           label: 'Terminée',
-          color: 'text-emerald-600',
-          bg: 'bg-emerald-100',
-          border: 'border-emerald-200',
+          color: 'text-green-700',
+          bg: 'bg-green-50',
+          border: 'border-green-200',
         };
       case 'processing':
         return {
           icon: Clock,
           label: 'En cours',
-          color: 'text-blue-600',
-          bg: 'bg-blue-100',
+          color: 'text-blue-700',
+          bg: 'bg-blue-50',
           border: 'border-blue-200',
         };
       case 'pending':
         return {
           icon: Clock,
           label: 'En attente',
-          color: 'text-yellow-600',
-          bg: 'bg-yellow-100',
+          color: 'text-yellow-700',
+          bg: 'bg-yellow-50',
           border: 'border-yellow-200',
         };
       case 'failed':
         return {
           icon: AlertCircle,
           label: 'Échec',
-          color: 'text-red-600',
-          bg: 'bg-red-100',
+          color: 'text-red-700',
+          bg: 'bg-red-50',
           border: 'border-red-200',
         };
       default:
         return {
           icon: Clock,
           label: status,
-          color: 'text-gray-600',
-          bg: 'bg-gray-100',
+          color: 'text-gray-700',
+          bg: 'bg-gray-50',
           border: 'border-gray-200',
         };
     }
@@ -154,10 +154,10 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 font-medium">Chargement...</p>
+          <div className="w-12 h-12 border-3 border-gray-300 border-t-gray-900 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 font-light">Chargement...</p>
         </div>
       </div>
     );
@@ -165,11 +165,11 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
 
   if (!video) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20 flex items-center justify-center">
+      <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <AlertCircle className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Vidéo non trouvée</h2>
-          <Link href="/dashboard" className="text-primary-600 hover:text-primary-700 font-semibold">
+          <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" strokeWidth={1.5} />
+          <h2 className="text-2xl font-light text-gray-900 mb-4 tracking-tight">Vidéo non trouvée</h2>
+          <Link href="/dashboard" className="text-gray-900 hover:underline font-medium">
             Retour au dashboard
           </Link>
         </div>
@@ -181,223 +181,198 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
   const StatusIcon = statusConfig.icon;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/dashboard" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/60 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/dashboard" className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                <Video className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">
-                Vidova
-              </span>
+              <span className="text-xl font-medium tracking-tight text-gray-900">Vidova</span>
             </Link>
 
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Retour</span>
+              <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+              <span className="font-light">Retour</span>
             </Link>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Video Info Header */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 mb-6">
-          <div className="flex flex-col lg:flex-row gap-6">
-            {/* Thumbnail */}
-            <div className="lg:w-80 flex-shrink-0">
-              <div className="relative aspect-video rounded-xl overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200">
+      <main className="pt-32 pb-20 px-6 lg:px-12">
+        <div className="max-w-5xl mx-auto">
+          {/* Video Info Header */}
+          <div className="mb-12">
+            <div className="flex items-start justify-between mb-6">
+              <div className="flex-1">
+                <h1 className="text-4xl lg:text-5xl font-light text-gray-900 mb-4 tracking-tight">
+                  {video.title || 'Sans titre'}
+                </h1>
                 {video.youtube_url && (
-                  <img
-                    src={`https://img.youtube.com/vi/${video.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1]}/maxresdefault.jpg`}
-                    alt={video.title || 'Video'}
-                    className="w-full h-full object-cover"
-                  />
+                  <a
+                    href={video.youtube_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                  >
+                    <ExternalLink className="h-4 w-4" strokeWidth={1.5} />
+                    <span className="font-light">Voir sur YouTube</span>
+                  </a>
                 )}
-                <div className="absolute inset-0 flex items-center justify-center bg-black/20 group hover:bg-black/40 transition-colors">
-                  <Play className="h-16 w-16 text-white opacity-75 group-hover:opacity-100 transition-opacity" />
-                </div>
+              </div>
+              <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg ${statusConfig.bg} ${statusConfig.color} border ${statusConfig.border} font-medium`}>
+                <StatusIcon className="h-4 w-4" strokeWidth={1.5} />
+                <span>{statusConfig.label}</span>
               </div>
             </div>
 
-            {/* Info */}
-            <div className="flex-1">
-              <div className="flex items-start justify-between mb-4">
-                <h1 className="text-3xl font-black text-gray-900">{video.title || 'Sans titre'}</h1>
-                <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full ${statusConfig.bg} ${statusConfig.color} border ${statusConfig.border} font-semibold`}>
-                  <StatusIcon className="h-5 w-5" />
-                  <span>{statusConfig.label}</span>
+            {/* Thumbnail */}
+            {video.youtube_url && (
+              <div className="relative aspect-video rounded-2xl overflow-hidden bg-gray-100 mb-6">
+                <img
+                  src={`https://img.youtube.com/vi/${video.youtube_url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&\n?#]+)/)?.[1]}/maxresdefault.jpg`}
+                  alt={video.title || 'Video'}
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/30 transition-colors cursor-pointer">
+                  <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+                    <Play className="h-8 w-8 text-gray-900 ml-1" strokeWidth={1.5} />
+                  </div>
                 </div>
               </div>
+            )}
 
-              {video.youtube_url && (
-                <a
-                  href={video.youtube_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 font-medium mb-4"
-                >
-                  <ExternalLink className="h-4 w-4" />
-                  <span className="truncate">{video.youtube_url}</span>
-                </a>
-              )}
-
-              <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="p-4 bg-gray-50 rounded-xl">
-                  <p className="text-sm text-gray-500 mb-1">Créée le</p>
-                  <p className="font-semibold text-gray-900">
-                    {new Date(video.created_at).toLocaleDateString('fr-FR')}
-                  </p>
-                </div>
-                <div className="p-4 bg-gray-50 rounded-xl">
-                  <p className="text-sm text-gray-500 mb-1">Mise à jour</p>
-                  <p className="font-semibold text-gray-900">
-                    {new Date(video.updated_at).toLocaleDateString('fr-FR')}
-                  </p>
-                </div>
+            {/* Metadata */}
+            <div className="flex gap-6 text-sm text-gray-600 font-light">
+              <div>
+                <span className="text-gray-900 font-medium">Créée le</span>{' '}
+                {new Date(video.created_at).toLocaleDateString('fr-FR')}
               </div>
-
-              {video.youtube_url && (
-                <a
-                  href={video.youtube_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-6 inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                >
-                  <Play className="h-5 w-5" />
-                  <span>Regarder sur YouTube</span>
-                </a>
-              )}
+              <div>
+                <span className="text-gray-900 font-medium">Mise à jour</span>{' '}
+                {new Date(video.updated_at).toLocaleDateString('fr-FR')}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Tabs & Content */}
-        {video.status.toLowerCase() === 'completed' && (
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
-            {/* Tabs */}
-            <div className="border-b border-gray-200">
-              <div className="flex">
-                <button
-                  onClick={() => setActiveTab('transcript')}
-                  className={`flex-1 px-6 py-4 font-semibold transition-all ${
-                    activeTab === 'transcript'
-                      ? 'text-primary-600 border-b-2 border-primary-600 bg-primary-50/50'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <FileText className="h-5 w-5" />
-                    <span>Transcription</span>
-                  </div>
-                </button>
-                <button
-                  onClick={() => setActiveTab('content')}
-                  className={`flex-1 px-6 py-4 font-semibold transition-all ${
-                    activeTab === 'content'
-                      ? 'text-primary-600 border-b-2 border-primary-600 bg-primary-50/50'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center justify-center gap-2">
-                    <Sparkles className="h-5 w-5" />
-                    <span>Contenu Généré ({contentAssets.length})</span>
-                  </div>
-                </button>
-              </div>
-            </div>
-
-            {/* Tab Content */}
-            <div className="p-6">
-              {activeTab === 'transcript' ? (
-                transcript ? (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-lg font-bold text-gray-900">Transcription complète</h3>
-                      <button
-                        onClick={() => copyToClipboard(transcript.content)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-primary-50 hover:bg-primary-100 text-primary-700 font-semibold rounded-lg transition-all"
-                      >
-                        <Copy className="h-4 w-4" />
-                        <span>Copier</span>
-                      </button>
+          {/* Tabs & Content */}
+          {video.status.toLowerCase() === 'completed' && (
+            <div>
+              {/* Tabs */}
+              <div className="border-b border-gray-200 mb-8">
+                <div className="flex gap-8">
+                  <button
+                    onClick={() => setActiveTab('transcript')}
+                    className={`pb-4 font-medium transition-all ${
+                      activeTab === 'transcript'
+                        ? 'text-gray-900 border-b-2 border-gray-900'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" strokeWidth={1.5} />
+                      <span>Transcription</span>
                     </div>
-                    {transcript.segments && transcript.segments.length > 0 ? (
-                      <div className="space-y-3">
-                        {transcript.segments.map((segment, index) => (
-                          <div key={index} className="flex gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
-                            <span className="text-sm font-mono text-primary-600 font-semibold whitespace-nowrap">
-                              {formatTime(segment.start)}
-                            </span>
-                            <p className="text-gray-700 flex-1">{segment.text}</p>
-                          </div>
-                        ))}
+                  </button>
+                  <button
+                    onClick={() => setActiveTab('content')}
+                    className={`pb-4 font-medium transition-all ${
+                      activeTab === 'content'
+                        ? 'text-gray-900 border-b-2 border-gray-900'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2">
+                      <FileText className="h-4 w-4" strokeWidth={1.5} />
+                      <span>Contenu ({contentAssets.length})</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Tab Content */}
+              <div>
+                {activeTab === 'transcript' ? (
+                  transcript ? (
+                    <div className="space-y-6">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-2xl font-light text-gray-900 tracking-tight">Transcription complète</h3>
+                        <button
+                          onClick={() => copyToClipboard(transcript.content)}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
+                        >
+                          <Copy className="h-4 w-4" strokeWidth={1.5} />
+                          <span>Copier</span>
+                        </button>
                       </div>
-                    ) : (
-                      <div className="prose max-w-none">
-                        <p className="text-gray-700 whitespace-pre-wrap">{transcript.content}</p>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">Transcription non disponible</p>
-                  </div>
-                )
-              ) : (
-                contentAssets.length > 0 ? (
-                  <div className="space-y-4">
-                    {contentAssets.map((asset) => (
-                      <div key={asset.id} className="border border-gray-200 rounded-xl overflow-hidden">
-                        <div className="bg-gradient-to-r from-primary-50 to-purple-50 px-6 py-4 flex items-center justify-between border-b border-gray-200">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-white rounded-lg">
-                              <FileText className="h-5 w-5 text-primary-600" />
+                      {transcript.segments && transcript.segments.length > 0 ? (
+                        <div className="space-y-3">
+                          {transcript.segments.map((segment, index) => (
+                            <div key={index} className="flex gap-4 p-4 hover:bg-gray-50 rounded-lg transition-colors">
+                              <span className="text-sm font-mono text-gray-900 font-medium whitespace-nowrap">
+                                {formatTime(segment.start)}
+                              </span>
+                              <p className="text-gray-600 flex-1 font-light leading-relaxed">{segment.text}</p>
                             </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="prose max-w-none">
+                          <p className="text-gray-600 font-light leading-relaxed whitespace-pre-wrap">{transcript.content}</p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-center py-16">
+                      <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" strokeWidth={1.5} />
+                      <p className="text-gray-600 font-light">Transcription non disponible</p>
+                    </div>
+                  )
+                ) : (
+                  contentAssets.length > 0 ? (
+                    <div className="space-y-6">
+                      {contentAssets.map((asset) => (
+                        <div key={asset.id} className="border border-gray-200 rounded-2xl overflow-hidden">
+                          <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-b border-gray-200">
                             <div>
-                              <h4 className="font-bold text-gray-900">{asset.type}</h4>
-                              <p className="text-xs text-gray-500">
+                              <h4 className="font-medium text-gray-900">{asset.type}</h4>
+                              <p className="text-xs text-gray-600 font-light mt-1">
                                 {new Date(asset.createdAt).toLocaleDateString('fr-FR')}
                               </p>
                             </div>
+                            <button
+                              onClick={() => copyToClipboard(asset.content)}
+                              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
+                            >
+                              <Copy className="h-4 w-4" strokeWidth={1.5} />
+                              <span>Copier</span>
+                            </button>
                           </div>
-                          <button
-                            onClick={() => copyToClipboard(asset.content)}
-                            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-primary-700 font-semibold rounded-lg border border-primary-200 transition-all"
-                          >
-                            <Copy className="h-4 w-4" />
-                            <span>Copier</span>
-                          </button>
-                        </div>
-                        <div className="p-6">
-                          <div className="prose max-w-none">
-                            <div className="text-gray-700 whitespace-pre-wrap">{asset.content}</div>
+                          <div className="p-6">
+                            <div className="prose max-w-none">
+                              <div className="text-gray-600 font-light leading-relaxed whitespace-pre-wrap">{asset.content}</div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <Sparkles className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">Aucun contenu généré</p>
-                  </div>
-                )
-              )}
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-16">
+                      <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" strokeWidth={1.5} />
+                      <p className="text-gray-600 font-light">Aucun contenu généré</p>
+                    </div>
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </main>
     </div>
   );
