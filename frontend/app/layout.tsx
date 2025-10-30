@@ -63,16 +63,18 @@ export const metadata: Metadata = {
     apple: '/apple-touch-icon.png',
   },
   manifest: '/site.webmanifest',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 5,
-  },
+  category: 'technology',
+};
+
+// Viewport configuration (Next.js 14+ requires separate export)
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
   themeColor: [
     { media: '(prefers-color-scheme: light)', color: '#0ea5e9' },
     { media: '(prefers-color-scheme: dark)', color: '#0284c7' },
   ],
-  category: 'technology',
 };
 
 export default function RootLayout({

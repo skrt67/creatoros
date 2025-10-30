@@ -1,18 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   output: 'standalone',
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003',
-  },
-  // Disable Next.js CSP to allow NextAuth
-  experimental: {
-    cspNonce: false,
   },
   // Image optimization
   images: {
@@ -30,8 +26,9 @@ const nextConfig = {
   // Production optimizations
   productionBrowserSourceMaps: false,
   poweredByHeader: false,
-  // Experimental features for better performance
+  // Experimental features
   experimental: {
+    cspNonce: false,
     optimizePackageImports: ['lucide-react', '@/components/ui'],
   },
   // Headers for security and performance
