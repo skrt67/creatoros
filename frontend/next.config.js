@@ -52,10 +52,6 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
           },
-          {
-            key: 'Content-Security-Policy',
-            value: "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com; frame-src 'self' https://accounts.google.com;"
-          },
         ],
       },
       {
