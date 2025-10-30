@@ -97,7 +97,7 @@ export default function RegisterPage() {
   const handleGoogleSignIn = async () => {
     try {
       await signIn('google', {
-        callbackUrl: '/dashboard',
+        callbackUrl: '/auth/callback',
         redirect: true
       });
     } catch (error) {
