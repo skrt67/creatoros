@@ -32,9 +32,7 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem('auth_token', data.access_token);
         toast.success('Bienvenue ! 👋');
-        setTimeout(() => {
-          window.location.href = '/dashboard';
-        }, 500);
+        router.push('/dashboard');
       } else {
         const error = await response.json();
         
