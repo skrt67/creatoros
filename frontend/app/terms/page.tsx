@@ -99,8 +99,8 @@ export default function TermsPage() {
               <h2 className="text-2xl font-semibold text-gray-900 mb-4">8. Contact</h2>
               <p className="text-gray-700">
                 Pour toute question, contactez-nous à{' '}
-                <a href="mailto:support@creatoros.com" className="text-primary-600 hover:underline">
-                  support@creatoros.com
+                <a href="mailto:contact.vidova@gmail.com" className="text-primary-600 hover:underline">
+                  contact.vidova@gmail.com
                 </a>
               </p>
             </section>

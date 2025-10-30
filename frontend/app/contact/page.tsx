@@ -20,8 +20,8 @@ export default function ContactPage() {
       icon: Mail,
       title: 'Email',
       description: 'Notre équipe vous répond sous 24h',
-      value: 'contact@creatoros.com',
-      link: 'mailto:contact@creatoros.com'
+      value: 'contact.vidova@gmail.com',
+      link: 'mailto:contact.vidova@gmail.com'
     },
     {
       icon: Phone,

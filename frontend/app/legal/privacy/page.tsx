@@ -270,8 +270,8 @@ export default function PolitiqueConfidentialite() {
               <div className="space-y-2">
                 <p className="text-gray-700">
                   <strong className="text-gray-900">Email :</strong>{' '}
-                  <a href="mailto:privacy@creatoros.com" className="text-primary-600 hover:text-primary-700 font-semibold">
-                    privacy@creatoros.com
+                  <a href="mailto:contact.vidova@gmail.com" className="text-primary-600 hover:text-primary-700 font-semibold">
+                    contact.vidova@gmail.com
                   </a>
                 </p>
                 <p className="text-gray-700">

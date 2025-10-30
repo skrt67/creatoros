@@ -80,8 +80,8 @@ export default function MentionsLegales() {
                 <Mail className="h-5 w-5 text-primary-600 mt-1 flex-shrink-0" />
                 <div>
                   <p className="font-semibold text-gray-900">Email</p>
-                  <a href="mailto:contact@creatoros.com" className="text-primary-600 hover:text-primary-700">
-                    contact@creatoros.com
+                  <a href="mailto:contact.vidova@gmail.com" className="text-primary-600 hover:text-primary-700">
+                    contact.vidova@gmail.com
                   </a>
                 </div>
               </div>

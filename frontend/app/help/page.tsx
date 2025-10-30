@@ -231,7 +231,7 @@ export default function HelpPage() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="mailto:support@creatoros.com"
+                  href="mailto:contact.vidova@gmail.com"
                   className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-primary-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105"
                 >
                   <Mail className="h-5 w-5" />
