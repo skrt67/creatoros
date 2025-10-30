@@ -38,9 +38,10 @@ export default function AuthCallbackPage() {
             console.log('Backend response status:', response.status);
 
             if (response.ok) {
-              const data = await response.json();
-              console.log('Backend response has token:', !!data.access_token);
-              accessToken = data.access_token;
+              const result = await response.json();
+              console.log('Backend response:', result);
+              // Backend returns APIResponse with data.access_token structure
+              accessToken = result.data?.access_token || result.access_token;
             } else {
               const errorText = await response.text();
               console.error('Backend error:', errorText);
