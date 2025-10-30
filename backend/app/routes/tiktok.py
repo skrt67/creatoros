@@ -4,7 +4,7 @@ import httpx
 import os
 from datetime import datetime
 from app.dependencies import get_current_user
-from app.database import prisma
+from app.routes.progress import get_prisma_client
 
 router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 
@@ -67,6 +67,7 @@ async def tiktok_callback(
                 raise HTTPException(status_code=400, detail="No TikTok user ID in response")
 
             # Save or update TikTok account
+            prisma = get_prisma_client()
             tiktok_account = await prisma.tiktokaccount.upsert(
                 where={"userId": current_user["id"]},
                 data={
@@ -115,6 +116,7 @@ async def get_tiktok_stats(current_user: dict = Depends(get_current_user)):
     Get TikTok stats for current user
     """
     try:
+        prisma = get_prisma_client()
         tiktok_account = await prisma.tiktokaccount.find_unique(
             where={"userId": current_user["id"]}
         )
@@ -144,6 +146,7 @@ async def sync_tiktok_stats(current_user: dict = Depends(get_current_user)):
     Sync TikTok stats from API
     """
     try:
+        prisma = get_prisma_client()
         tiktok_account = await prisma.tiktokaccount.find_unique(
             where={"userId": current_user["id"]}
         )
