@@ -6,7 +6,7 @@ import httpx
 import os
 import jwt
 from datetime import datetime
-from app.routes.progress import get_prisma_client
+from app.routes.progress import prisma_client
 
 security = HTTPBearer()
 JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key")
@@ -86,8 +86,7 @@ async def tiktok_callback(
                 raise HTTPException(status_code=400, detail="No TikTok user ID in response")
 
             # Save or update TikTok account
-            prisma = get_prisma_client()
-            tiktok_account = await prisma.tiktokaccount.upsert(
+            tiktok_account = await prisma_client.tiktokaccount.upsert(
                 where={"userId": current_user["id"]},
                 data={
                     "create": {
@@ -135,8 +134,7 @@ async def get_tiktok_stats(current_user: dict = Depends(get_current_user)):
     Get TikTok stats for current user
     """
     try:
-        prisma = get_prisma_client()
-        tiktok_account = await prisma.tiktokaccount.find_unique(
+        tiktok_account = await prisma_client.tiktokaccount.find_unique(
             where={"userId": current_user["id"]}
         )
 
@@ -165,8 +163,7 @@ async def sync_tiktok_stats(current_user: dict = Depends(get_current_user)):
     Sync TikTok stats from API
     """
     try:
-        prisma = get_prisma_client()
-        tiktok_account = await prisma.tiktokaccount.find_unique(
+        tiktok_account = await prisma_client.tiktokaccount.find_unique(
             where={"userId": current_user["id"]}
         )
 
@@ -202,7 +199,7 @@ async def sync_tiktok_stats(current_user: dict = Depends(get_current_user)):
                 total_views = sum(video.get("view_count", 0) for video in videos)
 
             # Update TikTok account
-            updated_account = await prisma.tiktokaccount.update(
+            updated_account = await prisma_client.tiktokaccount.update(
                 where={"userId": current_user["id"]},
                 data={
                     "followers": user_info.get("follower_count", tiktok_account.followers),
