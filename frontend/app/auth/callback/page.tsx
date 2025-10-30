@@ -26,16 +26,14 @@ export default function AuthCallbackPage() {
 
             console.log('No token in session, calling backend...');
 
-            // Récupérer le token depuis le backend
-            const response = await fetch(`${apiUrl}/auth/google`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                email: session.user.email,
-                name: session.user.name || session.user.email.split('@')[0],
-                google_id: (session.user as any).googleId || session.user.email,
-              }),
-            });
+            const googleId = (session.user as any).googleId || session.user.email;
+            const userName = session.user.name || session.user.email.split('@')[0];
+
+            // Récupérer le token depuis le backend (en query params)
+            const response = await fetch(
+              `${apiUrl}/auth/google?email=${encodeURIComponent(session.user.email)}&name=${encodeURIComponent(userName)}&google_id=${encodeURIComponent(googleId)}`,
+              { method: 'POST' }
+            );
 
             console.log('Backend response status:', response.status);
 

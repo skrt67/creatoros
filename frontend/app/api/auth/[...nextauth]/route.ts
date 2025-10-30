@@ -40,22 +40,20 @@ const handler = NextAuth({
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
 
+          const userName = user.name || user.email.split('@')[0];
+          const googleId = account.providerAccountId;
+
           console.log('SignIn callback - calling backend with:', {
             email: user.email,
-            name: user.name,
-            google_id: account.providerAccountId,
+            name: userName,
+            google_id: googleId,
           });
 
-          // Créer ou récupérer l'utilisateur depuis le backend
-          const response = await fetch(`${apiUrl}/auth/google`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: user.email,
-              name: user.name || user.email.split('@')[0],
-              google_id: account.providerAccountId,
-            }),
-          });
+          // Créer ou récupérer l'utilisateur depuis le backend (en query params)
+          const response = await fetch(
+            `${apiUrl}/auth/google?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(userName)}&google_id=${encodeURIComponent(googleId)}`,
+            { method: 'POST' }
+          );
 
           console.log('Backend response status:', response.status);
 
