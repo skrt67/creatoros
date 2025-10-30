@@ -5,7 +5,7 @@ const TIKTOK_REDIRECT_URI = `${process.env.NEXTAUTH_URL || 'https://creatoros-he
 
 export async function POST(request: NextRequest) {
   try {
-    const authUrl = new URL('https://www.tiktok.com/v1/oauth/authorize');
+    const authUrl = new URL('https://www.tiktok.com/v2/auth/authorize/');
     authUrl.searchParams.append('client_key', TIKTOK_CLIENT_KEY || '');
     authUrl.searchParams.append('redirect_uri', TIKTOK_REDIRECT_URI);
     authUrl.searchParams.append('response_type', 'code');
