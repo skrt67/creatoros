@@ -1,10 +1,28 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
+from fastapi.security import HTTPBearer, HTTPAuthCredentials
 import httpx
 import os
+import jwt
 from datetime import datetime
-from app.dependencies import get_current_user
 from app.routes.progress import get_prisma_client
+
+security = HTTPBearer()
+JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key")
+
+async def get_current_user(credentials: HTTPAuthCredentials = Depends(security)):
+    """Get current user from JWT token"""
+    try:
+        token = credentials.credentials
+        payload = jwt.decode(token, JWT_SECRET, algorithms=["HS256"])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        return {"id": user_id, "email": payload.get("email")}
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    except Exception as e:
+        raise HTTPException(status_code=401, detail="Unauthorized")
 
 router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 
