@@ -15,7 +15,7 @@ export async function autoLogin(): Promise<string | null> {
   // Éviter les double-refresh
   if (isRefreshing) {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    return Cookies.get('access_token');
+    return Cookies.get('access_token') || null;
   }
 
   try {
@@ -51,9 +51,9 @@ export async function autoLogin(): Promise<string | null> {
 export async function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
   const fullUrl = url.startsWith('http') ? url : `${apiUrl}${url}`;
-  
+
   // Essayer avec le token actuel
-  let token = Cookies.get('access_token');
+  let token: string | null | undefined = Cookies.get('access_token');
   
   const requestOptions: RequestInit = {
     ...options,
