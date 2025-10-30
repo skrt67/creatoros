@@ -12,7 +12,8 @@ import {
   TrendingUp,
   Clock,
   CheckCircle2,
-  XCircle
+  XCircle,
+  BarChart3
 } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
@@ -203,6 +204,10 @@ export default function DashboardPage() {
             <a href="/dashboard/content" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <FileText className="h-5 w-5" />
               Contenu
+            </a>
+            <a href="/dashboard/analytics" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+              <BarChart3 className="h-5 w-5" />
+              Analytics
             </a>
             <a href="/settings" className="flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
               <Settings className="h-5 w-5" />
