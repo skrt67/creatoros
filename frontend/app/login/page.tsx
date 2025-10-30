@@ -32,8 +32,8 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem('auth_token', data.access_token);
         toast.success('Bienvenue ! 👋');
-        // Ne pas désactiver le loading, on redirige
-        router.replace('/dashboard');
+        // Force un rechargement complet de la page
+        window.location.replace('/dashboard');
         return;
       } else {
         const error = await response.json();
