@@ -51,8 +51,15 @@ export default function RegisterPage() {
     return isValid;
   };
 
-  const handleGoogleSignIn = () => {
-    signIn('google', { callbackUrl: '/dashboard' });
+  const handleGoogleSignIn = async () => {
+    const result = await signIn('google', { redirect: false });
+    console.log('Google sign in result:', result);
+    if (result?.ok) {
+      router.push('/dashboard');
+    } else {
+      console.error('Sign in failed:', result?.error);
+      toast.error('Erreur lors de l\'inscription Google');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
