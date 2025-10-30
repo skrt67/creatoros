@@ -2,6 +2,11 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function middleware(request: NextRequest) {
+  // Ne pas vérifier le token pour la page de callback
+  if (request.nextUrl.pathname === '/auth/callback') {
+    return NextResponse.next();
+  }
+
   // Check for access_token in cookies
   const token = request.cookies.get('access_token');
 
@@ -14,5 +19,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/settings/:path*'],
+  matcher: ['/dashboard/:path*', '/settings/:path*', '/auth/callback'],
 };

@@ -15,38 +15,65 @@ export default function AuthCallbackPage() {
 
       if (status === 'authenticated' && session?.user?.email) {
         try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+          console.log('Session user:', session.user);
+          console.log('Backend token from session:', (session.user as any).backendToken);
 
-          // Récupérer le token depuis le backend
-          const response = await fetch(`${apiUrl}/auth/google`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              email: session.user.email,
-              name: session.user.name || session.user.email.split('@')[0],
-              google_id: (session.user as any).googleId,
-            }),
-          });
+          let accessToken = (session.user as any).backendToken;
 
-          if (response.ok) {
-            const data = await response.json();
+          // Si pas de token dans la session, appeler le backend
+          if (!accessToken) {
+            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
 
-            // Stocker le token dans les cookies
-            if (data.access_token) {
-              Cookies.set('access_token', data.access_token, {
-                expires: 7,
-                sameSite: 'lax',
-                secure: window.location.protocol === 'https:'
-              });
+            console.log('No token in session, calling backend...');
+
+            // Récupérer le token depuis le backend
+            const response = await fetch(`${apiUrl}/auth/google`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                email: session.user.email,
+                name: session.user.name || session.user.email.split('@')[0],
+                google_id: (session.user as any).googleId || session.user.email,
+              }),
+            });
+
+            console.log('Backend response status:', response.status);
+
+            if (response.ok) {
+              const data = await response.json();
+              console.log('Backend response has token:', !!data.access_token);
+              accessToken = data.access_token;
+            } else {
+              const errorText = await response.text();
+              console.error('Backend error:', errorText);
             }
           }
 
-          // Rediriger vers le dashboard
-          window.location.replace('/dashboard');
+          // Stocker le token dans les cookies
+          if (accessToken) {
+            Cookies.set('access_token', accessToken, {
+              expires: 7,
+              sameSite: 'lax',
+              secure: window.location.protocol === 'https:',
+              path: '/'
+            });
+
+            // Vérifier que le cookie est bien défini
+            console.log('Cookie set, value:', Cookies.get('access_token'));
+
+            // Attendre un peu pour être sûr que le cookie est propagé
+            await new Promise(resolve => setTimeout(resolve, 500));
+
+            // Rediriger vers le dashboard
+            window.location.replace('/dashboard');
+          } else {
+            console.error('No access token available');
+            router.push('/login');
+          }
         } catch (error) {
           console.error('Error in callback:', error);
-          // Rediriger quand même
-          window.location.replace('/dashboard');
+          // Rediriger vers login en cas d'erreur
+          router.push('/login');
         }
       } else if (status === 'unauthenticated') {
         // Pas authentifié, rediriger vers login

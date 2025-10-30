@@ -19,6 +19,11 @@ const handler = NextAuth({
         token.email = user.email;
         token.name = user.name;
         token.googleId = account.providerAccountId;
+
+        // Stocker le backend token dans le JWT
+        if ((user as any).backendToken) {
+          token.backendToken = (user as any).backendToken;
+        }
       }
       return token;
     },
@@ -26,6 +31,7 @@ const handler = NextAuth({
       if (session.user) {
         (session.user as any).id = token.id;
         (session.user as any).googleId = token.googleId;
+        (session.user as any).backendToken = token.backendToken;
       }
       return session;
     },
@@ -33,6 +39,12 @@ const handler = NextAuth({
       if (account?.provider === 'google' && user.email) {
         try {
           const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+
+          console.log('SignIn callback - calling backend with:', {
+            email: user.email,
+            name: user.name,
+            google_id: account.providerAccountId,
+          });
 
           // Créer ou récupérer l'utilisateur depuis le backend
           const response = await fetch(`${apiUrl}/auth/google`, {
@@ -45,12 +57,19 @@ const handler = NextAuth({
             }),
           });
 
+          console.log('Backend response status:', response.status);
+
           if (response.ok) {
             const data = await response.json();
-            // Stocker le token dans le token JWT pour le récupérer côté client
+            console.log('Backend returned token:', !!data.access_token);
+
+            // Stocker le token dans le user object pour le passer au JWT
             if (data.access_token) {
               (user as any).backendToken = data.access_token;
             }
+          } else {
+            const errorText = await response.text();
+            console.error('Backend error:', errorText);
           }
 
           return true;
