@@ -69,13 +69,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
           onPause={() => setPlaying(false)}
           controls={false}
           config={{
-            youtube: {
-              playerVars: {
-                showinfo: 0,
-                controls: 0,
-                modestbranding: 1,
-                rel: 0,
-              },
+            playerVars: {
+              showinfo: 0,
+              controls: 0,
+              modestbranding: 1,
+              rel: 0,
             },
           }}
         />

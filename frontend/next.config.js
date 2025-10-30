@@ -28,7 +28,6 @@ const nextConfig = {
   poweredByHeader: false,
   // Experimental features
   experimental: {
-    cspNonce: false,
     optimizePackageImports: ['lucide-react', '@/components/ui'],
   },
   // Headers for security and performance

@@ -412,5 +412,10 @@ export type Language = 'fr' | 'en';
 export type TranslationKey = keyof typeof translations.fr;
 
 export function getTranslation(lang: Language, key: TranslationKey): string {
-  return translations[lang][key] || translations.fr[key] || key;
+  const value = translations[lang][key] || translations.fr[key];
+  // If value is an object (like toneOptions), return empty string as fallback
+  if (typeof value === 'object') {
+    return '';
+  }
+  return (value as string) || key;
 }

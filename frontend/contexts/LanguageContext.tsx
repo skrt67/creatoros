@@ -37,7 +37,13 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   };
 
   const t = (key: TranslationKey): string => {
-    return translations[language][key] || translations.fr[key] || key;
+    const value = translations[language][key] || translations.fr[key];
+    // If value is an object (like toneOptions), return empty string as fallback
+    // Components should access these directly through translations object
+    if (typeof value === 'object') {
+      return '';
+    }
+    return (value as string) || key;
   };
 
   return (

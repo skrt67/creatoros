@@ -9,20 +9,20 @@ interface LanguageSwitcherProps {
 }
 
 export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
-  const { locale, setLocale } = useLanguage();
+  const { language, setLanguage } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
-  const changeLanguage = (newLocale: 'fr' | 'en') => {
-    setLocale(newLocale);
+  const changeLanguage = (newLanguage: 'fr' | 'en') => {
+    setLanguage(newLanguage);
     setIsOpen(false);
-    
+
     // Show a brief notification
     if (typeof window !== 'undefined') {
       const notification = document.createElement('div');
       notification.className = 'fixed top-4 right-4 z-50 bg-primary-600 text-white px-4 py-2 rounded-lg shadow-lg animate-slide-in';
-      notification.textContent = newLocale === 'fr' ? '🇫🇷 Langue changée en Français' : '🇬🇧 Language changed to English';
+      notification.textContent = newLanguage === 'fr' ? '🇫🇷 Langue changée en Français' : '🇬🇧 Language changed to English';
       document.body.appendChild(notification);
-      
+
       setTimeout(() => {
         notification.remove();
       }, 2000);
@@ -43,7 +43,7 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
       >
         <Languages className="h-4 w-4 text-gray-600" />
         <span className="text-sm font-semibold text-gray-700">
-          {locale.toUpperCase()}
+          {language.toUpperCase()}
         </span>
       </button>
 
@@ -54,7 +54,7 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          
+
           {/* Dropdown */}
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
             {languages.map((lang) => (
@@ -67,7 +67,7 @@ export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
                   <span className="text-lg">{lang.flag}</span>
                   <span className="text-gray-700">{lang.name}</span>
                 </div>
-                {locale === lang.code && (
+                {language === lang.code && (
                   <Check className="h-4 w-4 text-primary-600" />
                 )}
               </button>
