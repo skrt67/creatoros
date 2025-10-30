@@ -32,7 +32,9 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem('auth_token', data.access_token);
         toast.success('Bienvenue ! 👋');
-        router.push('/dashboard');
+        // Ne pas désactiver le loading, on redirige
+        router.replace('/dashboard');
+        return;
       } else {
         const error = await response.json();
         
@@ -48,10 +50,10 @@ export default function LoginPage() {
         }
         
         toast.error(errorMessage);
+        setIsLoading(false);
       }
     } catch (error) {
       toast.error('Erreur de connexion');
-    } finally {
       setIsLoading(false);
     }
   };
