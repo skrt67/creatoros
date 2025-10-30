@@ -12,11 +12,10 @@ const handler = NextAuth({
     signIn: '/login',
   },
   callbacks: {
-    async signIn({ user, account }) {
-      // Allow all Google sign-ins
+    async signIn({ user }) {
       return true;
     },
-    async session({ session, token }) {
+    async session({ session }) {
       return session;
     },
   },
