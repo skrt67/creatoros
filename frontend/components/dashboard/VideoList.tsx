@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Play, AlertCircle, Sparkles } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { VideoItem } from './VideoItem';
 import { VideoFilters } from './VideoFilters';
@@ -47,7 +48,7 @@ export function VideoList({ workspaceId, refreshTrigger }: VideoListProps) {
     try {
       if (!silent) setLoading(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       const response = await fetch(`${apiUrl}/workspaces/${workspaceId}/videos`, {
         headers: {

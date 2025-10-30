@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState, useEffect } from 'react';
 import { Clock, Download, FileText, Sparkles, CheckCircle, Loader2 } from 'lucide-react';
@@ -62,7 +63,7 @@ export function VideoProgressTracker({ videoId, status, onStatusChange }: VideoP
   const fetchProgress = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      let token = localStorage.getItem('auth_token');
+      let token = Cookies.get('access_token');
 
       // Si pas de token, essayer de se connecter
       if (!token) {
@@ -76,7 +77,7 @@ export function VideoProgressTracker({ videoId, status, onStatusChange }: VideoP
           const newToken = loginData.access_token;
           if (newToken && typeof newToken === 'string') {
             token = newToken;
-            localStorage.setItem('auth_token', newToken);
+            Cookies.set('access_token', newToken);
           } else {
             console.error('No token received');
             return;
@@ -103,7 +104,7 @@ export function VideoProgressTracker({ videoId, status, onStatusChange }: VideoP
           const newToken = loginData.access_token;
           if (newToken && typeof newToken === 'string') {
             token = newToken;
-            localStorage.setItem('auth_token', newToken);
+            Cookies.set('access_token', newToken);
             
             // Réessayer
             const retryResponse = await fetch(`${apiUrl}/videos/${videoId}/progress`, {

@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
@@ -25,7 +26,7 @@ export default function SimpleDashboard() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
         
         // Check if we have a token
-        let token = localStorage.getItem('auth_token');
+        let token = Cookies.get('access_token');
         
         if (!token) {
           // Try to login with demo credentials
@@ -41,7 +42,7 @@ export default function SimpleDashboard() {
           if (loginResponse.ok) {
             const loginData = await loginResponse.json();
             token = loginData.access_token;
-            if (token) localStorage.setItem('auth_token', token);
+            if (token) Cookies.set('access_token', token);
           } else {
             throw new Error('Login failed');
           }
@@ -84,7 +85,7 @@ export default function SimpleDashboard() {
   }, [router]);
 
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
+    Cookies.remove('access_token');
     router.push('/login');
   };
 

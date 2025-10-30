@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState, useEffect } from 'react';
 import { Video, Clock, CheckCircle, TrendingUp, FileText, Download, ArrowUp, ArrowDown, Activity, Zap } from 'lucide-react';
@@ -60,7 +61,7 @@ export function DashboardStats({ workspaceId }: StatsProps) {
     try {
       setLoading(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       // Fetch videos to calculate stats
       const response = await fetch(`${apiUrl}/workspaces/${workspaceId}/videos`, {

@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState } from 'react';
 import { Play, Clock, CheckCircle, AlertCircle, Eye, Download, Trash2, ExternalLink } from 'lucide-react';
@@ -90,7 +91,7 @@ export function VideoItem({ video, onViewVideo, onVideoDeleted }: VideoItemProps
     setIsDeleting(true);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
       const response = await fetch(`${apiUrl}/videos/${video.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }

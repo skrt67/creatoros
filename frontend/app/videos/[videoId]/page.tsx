@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -51,7 +52,7 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
     try {
       setLoading(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       const videoResponse = await fetch(`${apiUrl}/videos/${params.videoId}`, {
         headers: { 'Authorization': `Bearer ${token}` }

@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState, useEffect } from 'react';
 import { Plus, Video, FileText, Download, Share2, Settings, Sparkles, ExternalLink } from 'lucide-react';
@@ -23,7 +24,7 @@ export function QuickActions({ workspaceId, onNewVideoClick }: QuickActionsProps
       if (!workspaceId) return;
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-        const token = localStorage.getItem('auth_token');
+        const token = Cookies.get('access_token');
         const response = await fetch(`${apiUrl}/workspaces/${workspaceId}/videos`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -66,7 +67,7 @@ export function QuickActions({ workspaceId, onNewVideoClick }: QuickActionsProps
     
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
       const response = await fetch(`${apiUrl}/workspaces/${workspaceId}/videos`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });

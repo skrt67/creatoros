@@ -2,6 +2,8 @@
  * Auto-login utility pour gérer l'authentification automatique
  */
 
+import Cookies from 'js-cookie';
+
 const DEMO_CREDENTIALS = {
   email: 'demo@creatoros.com',
   password: 'demo123456'
@@ -13,7 +15,7 @@ export async function autoLogin(): Promise<string | null> {
   // Éviter les double-refresh
   if (isRefreshing) {
     await new Promise(resolve => setTimeout(resolve, 1000));
-    return localStorage.getItem('auth_token');
+    return Cookies.get('access_token');
   }
 
   try {
@@ -31,7 +33,7 @@ export async function autoLogin(): Promise<string | null> {
     if (response.ok) {
       const data = await response.json();
       const token = data.access_token;
-      localStorage.setItem('auth_token', token);
+      Cookies.set('access_token', token);
       console.log('✅ Auto-login réussi');
       return token;
     } else {
@@ -51,7 +53,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
   const fullUrl = url.startsWith('http') ? url : `${apiUrl}${url}`;
   
   // Essayer avec le token actuel
-  let token = localStorage.getItem('auth_token');
+  let token = Cookies.get('access_token');
   
   const requestOptions: RequestInit = {
     ...options,
@@ -84,7 +86,7 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}): Pro
 // Hook pour initialiser l'auth au chargement
 export function useAutoLogin() {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('auth_token');
+    const token = Cookies.get('access_token');
     if (!token) {
       autoLogin();
     }

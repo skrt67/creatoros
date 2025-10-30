@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { Folder, Plus, Check, Sparkles } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { toast } from 'react-hot-toast';
@@ -29,7 +30,7 @@ export function WorkspaceManager({ onWorkspaceChange, currentWorkspaceId, onWork
   const fetchWorkspaces = async () => {
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       const response = await fetch(`${apiUrl}/workspaces`, {
         headers: { 'Authorization': `Bearer ${token}` }
@@ -61,7 +62,7 @@ export function WorkspaceManager({ onWorkspaceChange, currentWorkspaceId, onWork
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       const response = await fetch(`${apiUrl}/workspaces`, {
         method: 'POST',

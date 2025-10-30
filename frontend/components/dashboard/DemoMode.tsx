@@ -1,4 +1,5 @@
 'use client';
+import Cookies from 'js-cookie';
 
 import { useState } from 'react';
 import { Play, Sparkles, ArrowRight, X } from 'lucide-react';
@@ -36,7 +37,7 @@ export function DemoMode({ workspaceId, onVideoSubmitted }: DemoModeProps) {
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       const response = await fetch(`${apiUrl}/workspaces/${workspaceId}/videos`, {
         method: 'POST',

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 import { ArrowLeft, User, Bell, Shield, LogOut } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +11,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
 
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
+    Cookies.remove('access_token');
     router.push('/login');
   };
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Cookies from 'js-cookie';
 import { Upload, Youtube, AlertCircle, CheckCircle, Video } from 'lucide-react';
 
 interface VideoSubmissionProps {
@@ -66,7 +67,7 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-      const token = localStorage.getItem('auth_token');
+      const token = Cookies.get('access_token');
 
       if (uploadMode === 'url') {
         // Mode URL
