@@ -157,6 +157,45 @@ async def get_tiktok_stats(current_user: dict = Depends(get_current_user)):
         raise HTTPException(status_code=500, detail="Internal server error")
 
 
+@router.get("/dashboard-stats")
+async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
+    """
+    Get general dashboard stats for current user
+    """
+    try:
+        # Get video sources count (processed videos)
+        video_sources_count = await prisma_client.videosource.count(
+            where={"workspace": {"ownerId": current_user["id"]}}
+        )
+
+        # Get processing jobs count (videos in progress)
+        in_progress_count = await prisma_client.processingjob.count(
+            where={
+                "videoSource": {"workspace": {"ownerId": current_user["id"]}},
+                "status": {"not": "COMPLETED"}
+            }
+        )
+
+        # Get content assets count (generated content)
+        content_count = await prisma_client.contentasset.count(
+            where={
+                "job": {
+                    "videoSource": {"workspace": {"ownerId": current_user["id"]}}
+                }
+            }
+        )
+
+        return {
+            "videosProcessed": video_sources_count,
+            "videosInProgress": in_progress_count,
+            "contentGenerated": content_count,
+        }
+
+    except Exception as e:
+        print(f"Error in dashboard stats: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
 @router.post("/sync")
 async def sync_tiktok_stats(current_user: dict = Depends(get_current_user)):
     """

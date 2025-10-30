@@ -47,6 +47,11 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showVideoSubmission, setShowVideoSubmission] = useState(false);
+  const [dashboardStats, setDashboardStats] = useState({
+    videosProcessed: 0,
+    videosInProgress: 0,
+    contentGenerated: 0,
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -88,6 +93,18 @@ export default function DashboardPage() {
           }
         } else {
           throw new Error(`Failed to fetch workspaces: ${workspacesResponse.status}`);
+        }
+
+        // Get dashboard stats
+        const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setDashboardStats(statsData);
+        } else {
+          console.warn('Failed to fetch dashboard stats, using defaults');
         }
         
       } catch (err: any) {
@@ -271,7 +288,7 @@ export default function DashboardPage() {
                     </div>
                     <TrendingUp className="h-5 w-5 text-green-600" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-1">12</h3>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">{dashboardStats.videosProcessed}</h3>
                   <p className="text-sm text-gray-600">Vidéos traitées</p>
                 </div>
 
@@ -282,7 +299,7 @@ export default function DashboardPage() {
                     </div>
                     <TrendingUp className="h-5 w-5 text-blue-600" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-1">3</h3>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">{dashboardStats.videosInProgress}</h3>
                   <p className="text-sm text-gray-600">En cours</p>
                 </div>
 
@@ -293,7 +310,7 @@ export default function DashboardPage() {
                     </div>
                     <TrendingUp className="h-5 w-5 text-purple-600" />
                   </div>
-                  <h3 className="text-3xl font-bold text-gray-900 mb-1">48</h3>
+                  <h3 className="text-3xl font-bold text-gray-900 mb-1">{dashboardStats.contentGenerated}</h3>
                   <p className="text-sm text-gray-600">Contenu généré</p>
                 </div>
               </div>
