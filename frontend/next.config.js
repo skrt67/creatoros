@@ -10,6 +10,10 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003',
   },
+  // Disable Next.js CSP to allow NextAuth
+  experimental: {
+    cspNonce: false,
+  },
   // Image optimization
   images: {
     domains: ['i.ytimg.com', 'img.youtube.com'],
