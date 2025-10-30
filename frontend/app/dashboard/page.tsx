@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 import { 
   LayoutDashboard, 
   Video, 
@@ -55,7 +56,7 @@ export default function DashboardPage() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
         
         // Check if user is already logged in
-        let token = localStorage.getItem('auth_token');
+        let token = Cookies.get('auth_token');
         
         // If no token, redirect to login page
         if (!token) {
@@ -105,8 +106,7 @@ export default function DashboardPage() {
 
   const handleLogout = () => {
     // Clear all auth data
-    localStorage.removeItem('auth_token');
-    localStorage.clear(); // Clear all localStorage
+    Cookies.remove('auth_token');
     
     // Force redirect to login page
     window.location.href = '/login';
@@ -122,7 +122,7 @@ export default function DashboardPage() {
     const refetchWorkspaces = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-        const token = localStorage.getItem('auth_token');
+        const token = Cookies.get('auth_token');
         if (!token) return;
 
         const response = await fetch(`${apiUrl}/workspaces`, {

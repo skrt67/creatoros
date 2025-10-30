@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { signIn } from 'next-auth/react';
 import { toast } from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import { Eye, EyeOff, Zap, ArrowLeft, Sparkles, Mail, Lock } from 'lucide-react';
 
 export default function LoginPage() {
@@ -30,7 +31,12 @@ export default function LoginPage() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('auth_token', data.access_token);
+        // Stocker le token dans les cookies (expire dans 7 jours)
+        Cookies.set('auth_token', data.access_token, { 
+          expires: 7,
+          sameSite: 'lax',
+          secure: window.location.protocol === 'https:'
+        });
         toast.success('Bienvenue ! 👋');
         // Force un rechargement complet de la page
         window.location.replace('/dashboard');
