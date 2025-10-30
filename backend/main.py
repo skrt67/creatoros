@@ -101,6 +101,8 @@ allowed_origins = [
     "http://localhost:5173",
     "https://creatoros-henna.vercel.app",
     "https://creatoros.vercel.app",
+    "https://vidova.me",
+    "https://www.vidova.me",
 ]
 
 app.add_middleware(
