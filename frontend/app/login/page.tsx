@@ -32,7 +32,7 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem('auth_token', data.access_token);
         toast.success('Bienvenue ! 👋');
-        router.push('/dashboard');
+        window.location.href = '/dashboard';
       } else {
         const error = await response.json();
         
