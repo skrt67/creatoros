@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { Upload, Youtube, AlertCircle, CheckCircle, Video } from 'lucide-react';
+import { Upload, Youtube, AlertCircle, CheckCircle, Video, Link as LinkIcon } from 'lucide-react';
 
 interface VideoSubmissionProps {
   workspaceId: string;
@@ -31,7 +31,6 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
   };
 
   const validateVideoUrl = (url: string) => {
-    // Support YouTube, TikTok, Instagram, Twitter, etc. (toutes les plateformes supportées par yt-dlp)
     const urlRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be|tiktok\.com|instagram\.com|twitter\.com|x\.com|facebook\.com|twitch\.tv)\/.+/;
     return urlRegex.test(url);
   };
@@ -40,12 +39,11 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
     setVideoUrl(url);
     setError('');
     setPreview(null);
-    
+
     if (validateVideoUrl(url)) {
       const videoId = extractVideoId(url);
       if (videoId) {
         setLoadingPreview(true);
-        // Simuler le chargement puis afficher preview
         setTimeout(() => {
           setPreview({
             videoId,
@@ -60,7 +58,7 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     setIsSubmitting(true);
     setError('');
     setSuccess('');
@@ -70,7 +68,6 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
       const token = Cookies.get('access_token');
 
       if (uploadMode === 'url') {
-        // Mode URL
         if (!videoUrl.trim()) {
           setError('Veuillez entrer une URL de vidéo');
           return;
@@ -94,7 +91,7 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
 
         if (response.ok) {
           const result = await response.json();
-          setSuccess(`Vidéo soumise avec succès ! 🎉`);
+          setSuccess(`Vidéo soumise avec succès !`);
           setVideoUrl('');
           setPreview(null);
           onVideoSubmitted();
@@ -103,7 +100,6 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
           throw new Error(errorData.message || 'Échec de la soumission');
         }
       } else {
-        // Mode Upload de fichier
         if (!selectedFile) {
           setError('Veuillez sélectionner un fichier vidéo');
           return;
@@ -122,7 +118,7 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
 
         if (response.ok) {
           const result = await response.json();
-          setSuccess(`Fichier uploadé avec succès ! 🎉 (${result.data.filename})`);
+          setSuccess(`Fichier uploadé avec succès !`);
           setSelectedFile(null);
           onVideoSubmitted();
         } else {
@@ -138,187 +134,155 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center">
-          <Video className="h-6 w-6 text-primary-600 mr-2" />
-          <h3 className="text-lg font-semibold text-gray-900">Soumettre une vidéo</h3>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-gray-500">
-          <Youtube className="h-4 w-4" />
-          <span>+ TikTok, Instagram, Twitter...</span>
-        </div>
+    <div className="bg-white rounded-2xl border border-gray-200 p-8">
+      <div className="mb-6">
+        <h3 className="text-2xl font-light text-gray-900 mb-2 tracking-tight">Ajouter une vidéo</h3>
+        <p className="text-sm text-gray-600 font-light">
+          Importez depuis YouTube, TikTok ou uploadez votre propre fichier
+        </p>
       </div>
 
-      {/* Mode Selection Tabs */}
-      <div className="flex gap-2 mb-4">
+      {/* Mode Selection */}
+      <div className="flex gap-3 mb-6">
         <button
           type="button"
           onClick={() => setUploadMode('url')}
-          className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+          className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
             uploadMode === 'url'
-              ? 'bg-primary-600 text-white shadow-md'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <Youtube className="h-4 w-4" />
-            <span>URL Vidéo</span>
+            <LinkIcon className="h-4 w-4" strokeWidth={1.5} />
+            <span>URL</span>
           </div>
         </button>
         <button
           type="button"
           onClick={() => setUploadMode('file')}
-          className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+          className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all ${
             uploadMode === 'file'
-              ? 'bg-primary-600 text-white shadow-md'
-              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-gray-900 text-white'
+              : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200'
           }`}
         >
           <div className="flex items-center justify-center gap-2">
-            <Upload className="h-4 w-4" />
-            <span>Upload Fichier</span>
+            <Upload className="h-4 w-4" strokeWidth={1.5} />
+            <span>Fichier</span>
           </div>
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {uploadMode === 'url' ? (
           <>
-            {/* Info Banner */}
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm text-blue-700">
-              <div className="flex items-start gap-2">
-                <Video className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold mb-1">Plateformes supportées :</p>
-                  <p className="text-blue-600">YouTube, TikTok, Instagram, Twitter/X, Facebook, Twitch et plus encore...</p>
-                </div>
-              </div>
-            </div>
-
-        <div>
-          <label htmlFor="video-url" className="block text-sm font-medium text-gray-700 mb-2">
-            URL de la vidéo
-          </label>
-          <div className="relative">
-            <input
-              id="video-url"
-              type="url"
-              value={videoUrl}
-              onChange={(e) => handleUrlChange(e.target.value)}
-              placeholder="https://www.youtube.com/... ou https://www.tiktok.com/..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              disabled={isSubmitting}
-            />
-            <Upload className="absolute right-3 top-2.5 h-5 w-5 text-gray-400" />
-          </div>
-          <p className="mt-2 text-xs text-gray-500">
-            💡 Collez simplement l'URL de la vidéo depuis votre plateforme préférée
-          </p>
-        </div>
-
-            {/* Preview Section */}
-        {loadingPreview && (
-          <div className="animate-pulse bg-gray-100 rounded-xl p-4">
-            <div className="w-full h-48 bg-gray-200 rounded-lg mb-3"></div>
-            <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-          </div>
-        )}
-
-        {preview && !loadingPreview && (
-          <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-xl p-4 border-2 border-primary-200">
-            <p className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600" />
-              Prévisualisation de la vidéo
-            </p>
-            <div className="relative group">
-              <img 
-                src={preview.thumbnail}
-                alt="Video thumbnail"
-                className="w-full rounded-lg shadow-md"
-                onError={(e) => {
-                  e.currentTarget.src = `https://img.youtube.com/vi/${preview.videoId}/mqdefault.jpg`;
-                }}
-              />
-              <div className="absolute inset-0 bg-black/20 rounded-lg group-hover:bg-black/40 transition-colors flex items-center justify-center">
-                <Youtube className="h-16 w-16 text-white opacity-75 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </div>
-            <a 
-              href={videoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
-            >
-              Voir sur YouTube →
-            </a>
-          </div>
-        )}
-          </>
-        ) : (
-          <>
-            {/* File Upload Mode */}
-            <div className="bg-purple-50 border border-purple-200 rounded-lg p-3 text-sm text-purple-700">
-              <div className="flex items-start gap-2">
-                <Upload className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-semibold mb-1">Formats supportés :</p>
-                  <p className="text-purple-600">MP4, AVI, MOV, MKV, WEBM, FLV, WMV, M4V</p>
-                </div>
-              </div>
+            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
+              <p className="text-sm text-gray-600 font-light leading-relaxed">
+                <span className="font-medium text-gray-900">Plateformes supportées :</span> YouTube, TikTok, Instagram, Twitter/X, Facebook, Twitch
+              </p>
             </div>
 
             <div>
-              <label htmlFor="video-file" className="block text-sm font-medium text-gray-700 mb-2">
-                Fichier vidéo
+              <label htmlFor="video-url" className="block text-sm font-medium text-gray-900 mb-2">
+                URL de la vidéo
               </label>
-              <div className="mb-2 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-yellow-700">
-                ⚠️ <strong>Important :</strong> La vidéo doit contenir une piste audio pour être transcrite.
+              <input
+                id="video-url"
+                type="url"
+                value={videoUrl}
+                onChange={(e) => handleUrlChange(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-gray-900 transition-colors font-light"
+                disabled={isSubmitting}
+              />
+            </div>
+
+            {loadingPreview && (
+              <div className="animate-pulse bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <div className="w-full h-48 bg-gray-200 rounded-lg mb-3"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4"></div>
               </div>
-              <div className="relative">
-                <input
-                  id="video-file"
-                  type="file"
-                  accept="video/*,.mp4,.avi,.mov,.mkv,.webm,.flv,.wmv,.m4v"
-                  onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
-                  className="hidden"
-                  disabled={isSubmitting}
-                />
-                <label
-                  htmlFor="video-file"
-                  className={`block w-full px-4 py-8 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
-                    selectedFile
-                      ? 'border-primary-500 bg-primary-50'
-                      : 'border-gray-300 hover:border-primary-400 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex flex-col items-center gap-2">
-                    <Upload className={`h-12 w-12 ${selectedFile ? 'text-primary-600' : 'text-gray-400'}`} />
-                    <div className="text-center">
-                      {selectedFile ? (
-                        <>
-                          <p className="font-semibold text-primary-700">{selectedFile.name}</p>
-                          <p className="text-sm text-primary-600 mt-1">
-                            {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
-                          </p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-semibold text-gray-700">Cliquez pour sélectionner</p>
-                          <p className="text-sm text-gray-500 mt-1">ou glissez-déposez votre vidéo ici</p>
-                        </>
-                      )}
+            )}
+
+            {preview && !loadingPreview && (
+              <div className="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                <p className="text-sm font-medium text-gray-900 mb-3 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" strokeWidth={1.5} />
+                  Prévisualisation
+                </p>
+                <div className="relative group">
+                  <img
+                    src={preview.thumbnail}
+                    alt="Video thumbnail"
+                    className="w-full rounded-lg"
+                    onError={(e) => {
+                      e.currentTarget.src = `https://img.youtube.com/vi/${preview.videoId}/mqdefault.jpg`;
+                    }}
+                  />
+                  <div className="absolute inset-0 bg-black/20 rounded-lg group-hover:bg-black/30 transition-colors flex items-center justify-center">
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center">
+                      <Youtube className="h-6 w-6 text-gray-900" strokeWidth={1.5} />
                     </div>
                   </div>
-                </label>
+                </div>
               </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="bg-gray-50 rounded-xl border border-gray-200 p-4">
+              <p className="text-sm text-gray-600 font-light leading-relaxed">
+                <span className="font-medium text-gray-900">Formats supportés :</span> MP4, AVI, MOV, MKV, WEBM, FLV, WMV, M4V
+              </p>
+            </div>
+
+            <div>
+              <label htmlFor="video-file" className="block text-sm font-medium text-gray-900 mb-2">
+                Fichier vidéo
+              </label>
+              <input
+                id="video-file"
+                type="file"
+                accept="video/*,.mp4,.avi,.mov,.mkv,.webm,.flv,.wmv,.m4v"
+                onChange={(e) => setSelectedFile(e.target.files?.[0] || null)}
+                className="hidden"
+                disabled={isSubmitting}
+              />
+              <label
+                htmlFor="video-file"
+                className={`block w-full px-4 py-12 border-2 border-dashed rounded-xl cursor-pointer transition-all ${
+                  selectedFile
+                    ? 'border-gray-900 bg-gray-50'
+                    : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+                }`}
+              >
+                <div className="flex flex-col items-center gap-3">
+                  <Upload className={`h-10 w-10 ${selectedFile ? 'text-gray-900' : 'text-gray-400'}`} strokeWidth={1.5} />
+                  <div className="text-center">
+                    {selectedFile ? (
+                      <>
+                        <p className="font-medium text-gray-900">{selectedFile.name}</p>
+                        <p className="text-sm text-gray-600 mt-1 font-light">
+                          {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <p className="font-medium text-gray-900">Cliquez pour sélectionner</p>
+                        <p className="text-sm text-gray-600 mt-1 font-light">ou glissez-déposez votre vidéo</p>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </label>
               {selectedFile && (
                 <button
                   type="button"
                   onClick={() => setSelectedFile(null)}
-                  className="mt-2 text-sm text-red-600 hover:text-red-700"
+                  className="mt-2 text-sm text-gray-600 hover:text-gray-900 font-light"
                 >
-                  ✕ Supprimer
+                  Supprimer
                 </button>
               )}
             </div>
@@ -326,46 +290,36 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
         )}
 
         {error && (
-          <div className="flex items-center p-3 bg-red-50 border border-red-200 rounded-md">
-            <AlertCircle className="h-5 w-5 text-red-600 mr-2" />
-            <span className="text-sm text-red-700">{error}</span>
+          <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" strokeWidth={1.5} />
+            <span className="text-sm text-red-700 font-light">{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="flex items-center p-3 bg-green-50 border border-green-200 rounded-md">
-            <CheckCircle className="h-5 w-5 text-green-600 mr-2" />
-            <span className="text-sm text-green-700">{success}</span>
+          <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" strokeWidth={1.5} />
+            <span className="text-sm text-green-700 font-light">{success}</span>
           </div>
         )}
 
         <button
           type="submit"
           disabled={isSubmitting || (uploadMode === 'url' ? !videoUrl.trim() : !selectedFile)}
-          className="w-full bg-gradient-to-r from-primary-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-primary-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-semibold shadow-md hover:shadow-lg transition-all"
+          className="w-full bg-gray-900 text-white py-3 px-4 rounded-lg hover:bg-gray-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-medium transition-colors"
         >
           {isSubmitting ? (
             <>
               <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
-              Traitement en cours...
+              Traitement en cours
             </>
           ) : (
             <>
-              {uploadMode === 'url' ? <Youtube className="h-5 w-5 mr-2" /> : <Upload className="h-5 w-5 mr-2" />}
-              {uploadMode === 'url' ? 'Soumettre la vidéo' : 'Uploader et transcrire'}
+              {uploadMode === 'url' ? 'Soumettre' : 'Uploader'}
             </>
           )}
         </button>
       </form>
-
-      <div className="mt-4 p-3 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg">
-        <p className="text-sm text-gray-700">
-          <strong className="text-primary-600">💡 Comment ça marche :</strong> {uploadMode === 'url' 
-            ? 'Collez une URL depuis YouTube, TikTok, Instagram, ou toute autre plateforme supportée.'
-            : 'Uploadez votre propre fichier vidéo (MP4, MOV, etc.).'
-          } Notre IA va automatiquement extraire l'audio, générer une transcription précise, et créer du contenu optimisé pour vos besoins marketing !
-        </p>
-      </div>
     </div>
   );
 }

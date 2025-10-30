@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
-import { ArrowLeft, Mail, Loader2 } from 'lucide-react';
+import { ArrowLeft, Mail, Video } from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ export default function ForgotPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email) {
       toast.error('Veuillez entrer votre email');
       return;
@@ -44,56 +44,92 @@ export default function ForgotPasswordPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="w-full max-w-md text-center">
-          <div className="mb-8">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Mail className="w-8 h-8 text-green-600" />
+      <div className="min-h-screen bg-white">
+        {/* Header */}
+        <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/60 z-50">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12">
+            <div className="flex items-center justify-between h-20">
+              <Link href="/" className="flex items-center gap-3">
+                <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                  <Video className="h-4 w-4 text-white" />
+                </div>
+                <span className="text-xl font-medium tracking-tight text-gray-900">Vidova</span>
+              </Link>
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-3">Email envoyé !</h2>
-            <p className="text-gray-600">
-              Si un compte existe avec <strong>{email}</strong>, vous recevrez un email avec les instructions.
-            </p>
           </div>
-          
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center w-full px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
-          >
-            Retour à la connexion
-          </Link>
-        </div>
+        </header>
+
+        {/* Content */}
+        <main className="pt-32 pb-20 px-6">
+          <div className="max-w-md mx-auto text-center">
+            <div className="mb-8">
+              <div className="w-16 h-16 bg-green-50 border border-green-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Mail className="w-8 h-8 text-green-600" strokeWidth={1.5} />
+              </div>
+              <h2 className="text-3xl font-light text-gray-900 mb-3 tracking-tight">Email envoyé</h2>
+              <p className="text-base text-gray-600 font-light leading-relaxed">
+                Si un compte existe avec <span className="font-medium text-gray-900">{email}</span>, vous recevrez un email avec les instructions de réinitialisation.
+              </p>
+            </div>
+
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center w-full px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+            >
+              Retour à la connexion
+            </Link>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-      <div className="w-full max-w-md">
-        <div className="mb-8">
-          <Link 
-            href="/login"
-            className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span className="text-sm">Retour</span>
-          </Link>
-        </div>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/60 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/" className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                <Video className="h-4 w-4 text-white" />
+              </div>
+              <span className="text-xl font-medium tracking-tight text-gray-900">Vidova</span>
+            </Link>
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">Mot de passe oublié ?</h1>
-            <p className="text-gray-600">Entrez votre email pour recevoir un lien de réinitialisation</p>
+            <Link
+              href="/login"
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+              <span className="font-light">Retour</span>
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="pt-32 pb-20 px-6">
+        <div className="max-w-md mx-auto">
+          <div className="text-center mb-12">
+            <h1 className="text-4xl lg:text-5xl font-light text-gray-900 mb-4 tracking-tight">
+              Mot de passe oublié
+            </h1>
+            <p className="text-base text-gray-600 font-light">
+              Entrez votre email pour recevoir un lien de réinitialisation
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+              <label className="block text-sm font-medium text-gray-900 mb-2">
+                Email
+              </label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent transition-all text-gray-900"
+                className="w-full px-4 py-3 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:border-gray-900 transition-colors"
                 placeholder="votre@email.com"
                 required
                 disabled={isLoading}
@@ -107,7 +143,7 @@ export default function ForgotPasswordPage() {
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                  <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent mr-2"></div>
                   Envoi...
                 </>
               ) : (
@@ -116,14 +152,14 @@ export default function ForgotPasswordPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="mt-8 text-center text-sm text-gray-600 font-light">
             Vous vous souvenez de votre mot de passe ?{' '}
             <Link href="/login" className="text-gray-900 hover:underline font-medium">
               Se connecter
             </Link>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
