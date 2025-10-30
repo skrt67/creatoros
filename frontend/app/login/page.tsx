@@ -32,7 +32,7 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json();
         // Stocker le token dans les cookies (expire dans 7 jours)
-        Cookies.set('auth_token', data.access_token, { 
+        Cookies.set('access_token', data.access_token, {
           expires: 7,
           sameSite: 'lax',
           secure: window.location.protocol === 'https:'

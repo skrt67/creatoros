@@ -56,8 +56,8 @@ export default function DashboardPage() {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
         
         // Check if user is already logged in
-        let token = Cookies.get('auth_token');
-        
+        let token = Cookies.get('access_token');
+
         // If no token, redirect to login page
         if (!token) {
           router.push('/login');
@@ -106,8 +106,8 @@ export default function DashboardPage() {
 
   const handleLogout = () => {
     // Clear all auth data
-    Cookies.remove('auth_token');
-    
+    Cookies.remove('access_token');
+
     // Force redirect to login page
     window.location.href = '/login';
   };
@@ -122,13 +122,13 @@ export default function DashboardPage() {
     const refetchWorkspaces = async () => {
       try {
         const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
-        const token = Cookies.get('auth_token');
+        const token = Cookies.get('access_token');
         if (!token) return;
 
         const response = await fetch(`${apiUrl}/workspaces`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
-        
+
         if (response.ok) {
           const workspacesData = await response.json();
           setWorkspaces(workspacesData);
