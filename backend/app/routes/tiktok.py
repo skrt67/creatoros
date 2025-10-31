@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Request
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import httpx
@@ -157,25 +157,28 @@ async def get_tiktok_stats(current_user: dict = Depends(get_current_user)):
 
 
 @router.get("/dashboard-stats")
-async def get_dashboard_stats(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
+async def get_dashboard_stats(request: Request):
     """
     Get general dashboard stats for current user
     """
     try:
-        # Try to get current user, but don't fail if token is invalid
-        if not credentials:
-            print("No credentials provided for dashboard stats")
+        # Get token from Authorization header
+        auth_header = request.headers.get("authorization", "")
+        if not auth_header.startswith("Bearer "):
+            print("No Bearer token provided for dashboard stats")
             return {
                 "videosProcessed": 0,
                 "videosInProgress": 0,
                 "contentGenerated": 0,
             }
 
+        token = auth_header.replace("Bearer ", "")
+
         try:
-            # Decode token manually to avoid raising exception
+            # Decode token manually
             from jose import jwt
             SECRET_KEY = "your-secret-key-change-in-production"  # Same as in auth.py
-            payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=["HS256"])
+            payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             email = payload.get("sub")
 
             if not email:
