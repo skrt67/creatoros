@@ -33,6 +33,8 @@ def load_tokens():
 
 def save_tokens(tokens):
     """Save tokens to file."""
+    print(f"🔄 save_tokens() called with {len(tokens)} tokens")
+    print(f"📁 Token file path: {TOKENS_FILE}")
     try:
         # Convert datetime to ISO string for JSON serialization
         data = {}
@@ -41,10 +43,21 @@ def save_tokens(tokens):
                 'email': token_data['email'],
                 'expires': token_data['expires'].isoformat()
             }
+        print(f"📝 Writing {len(data)} tokens to file...")
         with open(TOKENS_FILE, 'w') as f:
             json.dump(data, f)
+        print(f"✅ Successfully saved {len(data)} tokens to {TOKENS_FILE}")
+
+        # Verify file was created
+        if TOKENS_FILE.exists():
+            size = TOKENS_FILE.stat().st_size
+            print(f"✅ File exists, size: {size} bytes")
+        else:
+            print(f"❌ WARNING: File does not exist after write!")
     except Exception as e:
-        print(f"Error saving tokens: {e}")
+        print(f"❌ Error saving tokens: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -76,14 +89,21 @@ async def forgot_password(request: ForgotPasswordRequest):
         # Generate reset token
         reset_token = secrets.token_urlsafe(32)
         reset_token_expires = datetime.utcnow() + timedelta(hours=1)
+        print(f"🔑 Generated reset token: {reset_token[:10]}... for {request.email}")
 
         # Load existing tokens and add new one
+        print(f"📂 Loading existing tokens...")
         reset_tokens = load_tokens()
+        print(f"📋 Loaded {len(reset_tokens)} existing tokens")
+
         reset_tokens[reset_token] = {
             "email": request.email,
             "expires": reset_token_expires
         }
+        print(f"➕ Added new token, total now: {len(reset_tokens)}")
+        print(f"💾 Calling save_tokens()...")
         save_tokens(reset_tokens)
+        print(f"✅ Token save complete")
 
         # Send email using the email service
         try:
