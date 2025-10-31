@@ -2,6 +2,9 @@
 
 import Link from 'next/link';
 import { ArrowRight, Video, FileText, Sparkles, CheckCircle } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const Silk = dynamic(() => import('@/components/Silk'), { ssr: false });
 
 export default function HomePage() {
   return (
@@ -45,8 +48,20 @@ export default function HomePage() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-40 pb-32 px-6 lg:px-12">
-        <div className="max-w-5xl mx-auto text-center">
+      <section className="relative pt-40 pb-32 px-6 lg:px-12 overflow-hidden">
+        {/* Silk Background */}
+        <div className="absolute inset-0 opacity-[0.15]">
+          <Silk
+            speed={3}
+            scale={1.2}
+            color="#1f2937"
+            noiseIntensity={2}
+            rotation={0.2}
+          />
+        </div>
+
+        {/* Content */}
+        <div className="max-w-5xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-full border border-gray-200 mb-8">
             <Sparkles className="h-4 w-4 text-gray-900" strokeWidth={1.5} />
             <span className="text-sm font-light text-gray-700">Propulsé par l'IA</span>
