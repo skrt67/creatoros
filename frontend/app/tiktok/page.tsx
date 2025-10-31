@@ -40,22 +40,21 @@ export default function TikTokPage() {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
       let token = Cookies.get('access_token');
 
+      // If no token, allow access to TikTok page (user can connect TikTok without being logged in)
       if (!token) {
-        router.push('/login');
+        setLoading(false);
         return;
       }
 
-      // Get user info
+      // Get user info if token exists
       const userResponse = await fetch(`${apiUrl}/auth/me`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
-      if (!userResponse.ok) {
-        throw new Error('Failed to fetch user');
+      if (userResponse.ok) {
+        const userData = await userResponse.json();
+        setUser(userData);
       }
-
-      const userData = await userResponse.json();
-      setUser(userData);
 
       // Try to get TikTok stats
       const statsResponse = await fetch(`${apiUrl}/tiktok/stats`, {
