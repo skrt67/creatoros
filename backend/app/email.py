@@ -4,16 +4,17 @@ import os
 import resend
 import secrets
 
-resend.api_key = os.getenv("RESEND_API_KEY")
-
 def generate_reset_token():
     """Generate a secure reset token."""
     return secrets.token_urlsafe(32)
 
 def send_password_reset_email(email: str, reset_token: str):
     """Send password reset email."""
+    # Set API key at runtime to ensure it's fresh
+    resend.api_key = os.getenv("RESEND_API_KEY")
+
     reset_url = f"https://creatoros-henna.vercel.app/reset-password?token={reset_token}"
-    
+
     params = {
         "from": "Vidova <onboarding@resend.dev>",
         "to": [email],
@@ -31,7 +32,7 @@ def send_password_reset_email(email: str, reset_token: str):
         </div>
         """
     }
-    
+
     try:
         email_response = resend.Emails.send(params)
         print(f"✅ Email sent to {email}: {email_response}")
