@@ -179,10 +179,12 @@ async def get_dashboard_stats(request: Request):
             from jose import jwt
             SECRET_KEY = "your-secret-key-change-in-production"  # Same as in auth.py
             payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            print(f"🔑 Token decoded successfully, payload: {payload}")
             email = payload.get("sub")
+            print(f"📧 Email from token: {email}")
 
             if not email:
-                print("Invalid token payload for dashboard stats")
+                print("❌ Invalid token payload for dashboard stats - no email")
                 return {
                     "videosProcessed": 0,
                     "videosInProgress": 0,
@@ -191,8 +193,9 @@ async def get_dashboard_stats(request: Request):
 
             # Get user by email
             user = await prisma_client.user.find_unique(where={"email": email})
+            print(f"👤 User found: {user.id if user else 'None'}")
             if not user:
-                print(f"User not found for email: {email}")
+                print(f"❌ User not found for email: {email}")
                 return {
                     "videosProcessed": 0,
                     "videosInProgress": 0,
@@ -200,6 +203,7 @@ async def get_dashboard_stats(request: Request):
                 }
 
             user_id = user.id
+            print(f"✅ User ID for stats: {user_id}")
 
         except Exception as token_error:
             print(f"Token validation failed for dashboard stats: {token_error}")
