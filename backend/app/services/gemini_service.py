@@ -148,65 +148,78 @@ GÉNÈRE DIRECTEMENT LE TITRE, puis l'article, sans préambule."""
             return self._generate_demo_content("blog_post", transcript, video_title)
     
     async def generate_twitter_thread(self, transcript: str, video_title: str) -> Dict[str, Any]:
-        """Generate a viral-worthy Twitter thread."""
+        """Generate a viral-worthy Twitter thread like a real influencer."""
         if not self.model:
             return self._generate_demo_content("twitter_thread", transcript, video_title)
-        
+
         prompt = f"""{self.SYSTEM_CONTEXT}
 
-MISSION : Créer un thread Twitter COURT et PERCUTANT (5-7 tweets MAX)
+MISSION : Agis comme un VRAI INFLUENCEUR TWITTER avec 100K+ followers. Crée un thread VIRAL, authentique et engageant.
 
-ANALYSE D'ABORD CES EXEMPLES DE THREADS VIRAUX :
+TON STYLE D'INFLUENCEUR:
+- Parle comme si tu étais l'expert du domaine, pas quelqu'un qui rapporte l'info
+- Utilise "je", "j'ai", "voici ce que j'ai découvert" - montre ton expérience personnelle
+- Sois direct, confiant, parfois provocateur
+- Écris comme tu parles - conversationnel mais intelligent
+- N'aie pas peur d'avoir des opinions tranchées
+- Crée de la curiosité et du suspense entre les tweets
 
-Exemple 1 (Business - 6 tweets) :
-1/6 : J'ai passé 10 ans à étudier les meilleurs copywriters. Voici les 4 formules qu'ils utilisent tous 🧵
-2/6 : AIDA (Attention, Intérêt, Désir, Action). La plus connue, la plus efficace.
-3/6 : PAS (Problème, Agitation, Solution). Tu touches le point de douleur, tu amplifies, tu résous.
-4/6 : BAB (Before, After, Bridge). Tu montres le avant/après, puis comment y arriver.
-5/6 : 4P (Picture, Promise, Prove, Push). Tu peins l'image, tu promets, tu prouves, tu pousses à l'action.
-6/6 : Choisis UNE formule. Maîtrise-la. Les résultats suivront. RT si utile 🔄
+EXEMPLES DE VRAIS INFLUENCEURS:
 
-Exemple 2 (Tech - 5 tweets) :
-1/5 : ChatGPT vient de tout changer. Voici 3 prompts que 99% des gens ne connaissent pas 🧵
-2/5 : "Agis comme [expert]. Analyse [sujet]. Donne 3 insights contre-intuitifs." = Or pur.
-3/5 : "Explique [concept] à un enfant de 5 ans, puis à un expert." = Clarté maximale.
-4/5 : "Liste 10 questions que personne ne pose sur [sujet]." = Angles uniques garantis.
-5/5 : Sauvegarde ce thread. Tu me remercieras dans 6 mois. Partage si ça aide 🚀
+Exemple 1 (Style assertif):
+1/6 : J'ai passé 3 ans à tester 50+ outils d'IA. 90% sont de la merde. Voici les 4 qui valent vraiment le coup:
+2/6 : ChatGPT Pro. Ouais, 20€/mois ça pique. Mais ça m'a fait gagner 15h/semaine. ROI de malade.
+3/6 : Midjourney v6. Les images sont tellement réalistes que mes clients pensent que j'ai un photographe.
+4/6 : Claude AI pour le code. Meilleur que Copilot. Fight me.
+5/6 : ElevenLabs pour la voix. Hollywood quality, prix indie.
+6/6 : Sauvegarde ce thread. Tu vas y revenir dans 1 mois.
 
-TITRE VIDÉO : {video_title}
-TRANSCRIPTION : {transcript[:2000]}
+Exemple 2 (Style storytelling):
+1/5 : Il y a 2 ans, j'étais fauché. Aujourd'hui je facture 10K€/mois. Voici les 3 mindset shifts qui ont tout changé:
+2/5 : Arrête de vendre du temps. Vends des résultats. Un client paie pour un problème résolu, pas pour tes heures.
+3/5 : Ta niche ne doit PAS être large. Elle doit être rentable. Mieux vaut 100 clients qui paient 1000€ que 10000 qui paient 10€.
+4/5 : Le contenu gratuit n'est pas du travail perdu. C'est ton meilleur commercial. Il bosse 24/7 sans te coûter un centime.
+5/5 : RT si t'es prêt à passer à l'action. Commente "LET'S GO" et je t'envoie mes ressources en DM.
 
-STRUCTURE DU THREAD (5-7 tweets MAXIMUM) :
+VIDÉO ANALYSÉE : {video_title}
+CONTENU : {transcript[:2500]}
 
-Tweet 1 (HOOK) :
-- 1 phrase choc, affirmation provocante ou question
-- Promet une valeur claire en 1 ligne
-- Exemple : "Vous faites cette erreur sur Twitter. Voici comment la corriger 🧵"
+TA MISSION:
+1. Identifie l'insight le plus FORT de cette vidéo
+2. Trouve un angle unique, personnel, qui te positionne comme expert
+3. Crée un thread de 5-7 tweets max qui sonne comme TOI, pas comme une IA
 
-Tweets 2-5 (CONTENU - 3 à 4 tweets SEULEMENT) :
-- 1 idée = 1 tweet
+STRUCTURE:
+
+Tweet 1 (HOOK PUISSANT):
+- Affirmation choc OU résultat surprenant OU promesse bold
+- Doit donner envie de lire la suite immédiatement
+- Montre que TU as de l'autorité sur le sujet
+
+Tweets 2-5 (VALUE BOMBS):
+- 1 insight concret par tweet
+- Parle depuis ton expérience ("J'ai appris que...", "Voici ce qui marche...")
+- Sois spécifique, pas générique
+- Utilise des chiffres, des exemples réels
 - Maximum 2 lignes par tweet
-- 1 emoji par tweet max
-- Phrases ultra-courtes
-- Aller à l'essentiel, PAS de blabla
 
-Tweet Final (CTA) :
-- 1 phrase de conclusion
-- 1 appel à l'action simple
-- Exemple : "RT si ça t'a aidé 🔄"
+Tweet final (CTA ENGAGEANT):
+- Appel à l'action conversationnel
+- Crée l'interaction (RT, save, commente, follow)
 
-RÈGLES STRICTES :
-- MAXIMUM 7 tweets au total
-- Chaque tweet = 280 caractères MAX
-- Phrases de 10-15 mots maximum
-- Numérotation (1/6, 2/6, etc.)
-- Supprimer tout ce qui n'est pas essentiel
-- Aller DROIT AU BUT
+RÈGLES D'INFLUENCEUR:
+- PAS d'emojis (t'es pas un bot)
+- Phrases de 8-15 mots max
+- Ton confiant mais pas arrogant
+- Vrai, authentique, relatable
+- ZÉRO bullshit marketing
+- Numérotation (1/5, 2/5, etc.)
 
-IMPORTANT : GÉNÈRE UNIQUEMENT LES TWEETS.
-Ne dis PAS "Voici le thread" ou "Absolument".
-Ne parle PAS à l'utilisateur.
-COMMENCE DIRECTEMENT par "1/X :" sans préambule."""
+IMPORTANT : TU ES L'INFLUENCEUR.
+Parle à la première personne.
+Montre ton expertise.
+Sois mémorable.
+COMMENCE DIRECTEMENT par "1/X :" sans intro."""
 
         try:
             response = self.model.generate_content(prompt)
@@ -366,15 +379,42 @@ STYLE TIKTOK :
 - Énergie et authenticité > perfection
 - Parle comme à un pote
 
-IMPORTANT : GÉNÈRE UNIQUEMENT LE SCRIPT FINAL.
-Ne dis PAS "Voici le script" ou "Absolument".
-Ne parle PAS à l'utilisateur.
-COMMENCE DIRECTEMENT par [HOOK - 0:00-0:03] sans préambule."""
+IMPORTANT : GÉNÈRE LE SCRIPT PUIS LES RECOMMANDATIONS MUSICALES.
+
+FORMAT DE SORTIE:
+
+[SCRIPT]
+[HOOK - 0:00-0:03] ...
+[PROMISE - 0:03-0:08] ...
+etc.
+
+[RECOMMANDATIONS MUSICALES]
+
+SONS/MUSIQUES À UTILISER:
+
+1. [Type de son principal] - [Nom du son tendance ou style]
+   Exemple: "Original sound" ou "Trending audio - [nom]"
+   Pourquoi: [Raison stratégique - ambiance, énergie, trend]
+
+2. [Sons d'effets] - [Suggestions spécifiques]
+   Pour les transitions: [Type de son]
+   Pour les points clés: [Type de son]
+
+3. [Alternative] - [Autre option musicale]
+   Genre: [Style musical approprié]
+   BPM: [Tempo recommandé - ex: 120-140 pour énergique]
+
+CONSEILS:
+- [Conseil stratégique sur le choix de la musique]
+- [Conseil sur le timing audio-visuel]
+
+Ne dis PAS "Voici le script" ou préambule.
+COMMENCE DIRECTEMENT par [HOOK - 0:00-0:03]."""
 
         try:
             response = self.model.generate_content(prompt)
             content = response.text
-            
+
             return {
                 "type": "tiktok",
                 "content": content,

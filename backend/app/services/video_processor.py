@@ -225,25 +225,51 @@ class VideoProcessor:
             # Full text with paragraph breaks
             full_text = "\n\n".join([seg["text"] for seg in segments])
             
-            # Get video title using yt-dlp (more reliable than API)
+            # Get video title using HTTP request to YouTube page
             video_title = f"YouTube Video {video_id}"  # Fallback
             try:
+                import requests
+                import re
+
+                # Use proxy for the request
                 proxy_url = self.get_random_proxy()
-                title_cmd = [
-                    'yt-dlp',
-                    '--get-title',
-                    '--proxy', proxy_url,
-                    '--no-warnings',
-                    f'https://www.youtube.com/watch?v={video_id}'
-                ]
-                title_result = subprocess.run(title_cmd, capture_output=True, text=True, timeout=10)
-                if title_result.returncode == 0 and title_result.stdout.strip():
-                    video_title = title_result.stdout.strip()
-                    print(f"📺 Video title: {video_title}")
+                proxies_dict = {
+                    'http': proxy_url,
+                    'https': proxy_url
+                }
+
+                headers = {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+                    'Accept-Language': 'en-US,en;q=0.9,fr;q=0.8'
+                }
+
+                response = requests.get(
+                    f'https://www.youtube.com/watch?v={video_id}',
+                    headers=headers,
+                    proxies=proxies_dict,
+                    timeout=10
+                )
+
+                if response.status_code == 200:
+                    # Extract title from page HTML
+                    title_match = re.search(r'<title>(.+?)</title>', response.text)
+                    if title_match:
+                        full_title = title_match.group(1)
+                        # Remove " - YouTube" suffix
+                        video_title = full_title.replace(' - YouTube', '').strip()
+                        print(f"📺 Video title: {video_title}")
+                    else:
+                        # Try alternative meta tag
+                        meta_match = re.search(r'<meta name="title" content="(.+?)"', response.text)
+                        if meta_match:
+                            video_title = meta_match.group(1).strip()
+                            print(f"📺 Video title (from meta): {video_title}")
+                        else:
+                            print(f"⚠️ Could not extract title from page")
                 else:
-                    print(f"⚠️ Could not fetch title with yt-dlp, using fallback")
+                    print(f"⚠️ HTTP {response.status_code} when fetching YouTube page")
             except Exception as e:
-                print(f"⚠️ Could not fetch video title: {str(e)[:50]}")
+                print(f"⚠️ Could not fetch video title: {str(e)[:100]}")
             
             return {
                 "text": full_text,
