@@ -8,7 +8,11 @@ import {
   Settings,
   LogOut,
   Plus,
-  ArrowRight
+  ArrowRight,
+  CheckCircle2,
+  Clock,
+  FileText,
+  TrendingUp
 } from 'lucide-react';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
 import { VideoList } from '@/components/dashboard/VideoList';
@@ -31,6 +35,11 @@ export default function DashboardPage() {
   const [error, setError] = useState('');
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [showVideoSubmission, setShowVideoSubmission] = useState(false);
+  const [dashboardStats, setDashboardStats] = useState({
+    videosProcessed: 0,
+    videosInProgress: 0,
+    contentGenerated: 0,
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -72,6 +81,18 @@ export default function DashboardPage() {
           throw new Error('Failed to fetch workspace');
         }
 
+        // Get dashboard stats
+        const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setDashboardStats(statsData);
+        } else {
+          console.warn('Failed to fetch dashboard stats, using defaults');
+        }
+
       } catch (err: any) {
         console.error('Dashboard error:', err);
         setError(err?.message || 'Unknown error');
@@ -91,9 +112,28 @@ export default function DashboardPage() {
     window.location.href = '/login';
   };
 
-  const handleVideoSubmitted = () => {
+  const handleVideoSubmitted = async () => {
     setRefreshTrigger(prev => prev + 1);
     setShowVideoSubmission(false);
+
+    // Refresh dashboard stats
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+      const token = Cookies.get('access_token');
+
+      if (token) {
+        const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (statsResponse.ok) {
+          const statsData = await statsResponse.json();
+          setDashboardStats(statsData);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to refresh dashboard stats:', err);
+    }
   };
 
   if (loading) {
@@ -194,6 +234,42 @@ export default function DashboardPage() {
             <span className="text-base font-medium">Ajouter une vidéo</span>
             <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
           </button>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center">
+                <CheckCircle2 className="h-6 w-6 text-green-600" strokeWidth={1.5} />
+              </div>
+              <TrendingUp className="h-5 w-5 text-green-600" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.videosProcessed}</h3>
+            <p className="text-sm text-gray-600 font-light">Vidéos traitées</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center">
+                <Clock className="h-6 w-6 text-blue-600" strokeWidth={1.5} />
+              </div>
+              <TrendingUp className="h-5 w-5 text-blue-600" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.videosInProgress}</h3>
+            <p className="text-sm text-gray-600 font-light">En cours</p>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+            <div className="flex items-center justify-between mb-6">
+              <div className="w-12 h-12 bg-purple-50 border border-purple-200 rounded-xl flex items-center justify-center">
+                <FileText className="h-6 w-6 text-purple-600" strokeWidth={1.5} />
+              </div>
+              <TrendingUp className="h-5 w-5 text-purple-600" strokeWidth={1.5} />
+            </div>
+            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.contentGenerated}</h3>
+            <p className="text-sm text-gray-600 font-light">Contenu généré</p>
+          </div>
         </div>
 
         {/* Video Submission Form */}
