@@ -82,7 +82,7 @@ export default function DashboardPage() {
         }
 
         // Get dashboard stats
-        const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
+        const statsResponse = await fetch(`${apiUrl}/stats/dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -124,7 +124,7 @@ export default function DashboardPage() {
 
       if (token) {
         console.log('Refreshing dashboard stats after video submission...');
-        const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
+        const statsResponse = await fetch(`${apiUrl}/stats/dashboard`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 

@@ -19,6 +19,7 @@ from app.routes.progress import router as progress_router, set_prisma_client
 from app.routes.simple_processing import router as simple_processing_router
 from app.routes.password_reset import router as password_reset_router
 from app.routes.tiktok import router as tiktok_router
+from app.routes.stats import router as stats_router
 
 # Global variables
 prisma_client: Prisma = None
@@ -162,7 +163,7 @@ app.include_router(processing_router)
 app.include_router(progress_router)
 app.include_router(simple_processing_router)
 app.include_router(tiktok_router)
-# app.include_router(integrations_router)  # Disabled for now
+app.include_router(stats_router)
 
 # Root endpoint
 @app.get("/")
