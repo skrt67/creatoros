@@ -2,9 +2,6 @@
 
 import Link from 'next/link';
 import { ArrowRight, Video, FileText, Sparkles, CheckCircle } from 'lucide-react';
-import dynamic from 'next/dynamic';
-
-const Silk = dynamic(() => import('@/components/Silk'), { ssr: false });
 
 export default function HomePage() {
   return (
@@ -49,15 +46,10 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="relative pt-40 pb-32 px-6 lg:px-12 overflow-hidden">
-        {/* Silk Background */}
-        <div className="absolute inset-0 opacity-[0.15]">
-          <Silk
-            speed={3}
-            scale={1.2}
-            color="#1f2937"
-            noiseIntensity={2}
-            rotation={0.2}
-          />
+        {/* Animated Gradient Background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100 opacity-60">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(31,41,55,0.03),transparent_50%)]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,rgba(31,41,55,0.02),transparent_50%)]"></div>
         </div>
 
         {/* Content */}
