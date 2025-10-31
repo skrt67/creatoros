@@ -15,7 +15,7 @@ export default function TikTokDebugPage() {
   const fetchAuthUrl = async () => {
     try {
       setLoading(true);
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+      const apiUrl = 'https://api.vidova.me';
       
       const response = await fetch(`${apiUrl}/tiktok/auth-url`);
       

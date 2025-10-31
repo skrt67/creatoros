@@ -48,7 +48,7 @@ export default function TikTokCallbackPage() {
       const codeVerifier = localStorage.getItem('tiktok_code_verifier');
       
       // Send code and code_verifier to backend
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+      const apiUrl = 'https://api.vidova.me';
       const response = await fetch(`${apiUrl}/tiktok/callback`, {
         method: 'POST',
         headers: {
