@@ -13,7 +13,6 @@ from ..auth import (
     verify_password,
     ACCESS_TOKEN_EXPIRE_MINUTES
 )
-from ..email import send_password_reset_email, generate_reset_token
 
 router = APIRouter(prefix="/auth", tags=["authentication"])
 
@@ -150,42 +149,6 @@ async def change_password(data: dict, current_user = Depends(get_current_active_
         return APIResponse(
             success=True,
             message="Password updated successfully",
-            data={}
-        )
-    finally:
-        await prisma.disconnect()
-
-@router.post("/forgot-password", response_model=APIResponse)
-async def forgot_password(data: dict):
-    """Send password reset email."""
-    email = data.get('email')
-    
-    if not email:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email is required"
-        )
-    
-    prisma = Prisma()
-    await prisma.connect()
-    
-    try:
-        # Check if user exists
-        user = await prisma.user.find_unique(where={"email": email})
-        
-        if user:
-            # Generate reset token
-            reset_token = generate_reset_token()
-            
-            # TODO: Store token in database with expiry
-            # For now, just send email
-            send_password_reset_email(email, reset_token)
-            print(f"📧 Password reset email sent to: {email}")
-        
-        # Always return success for security (don't reveal if email exists)
-        return APIResponse(
-            success=True,
-            message="If an account exists, a password reset link has been sent",
             data={}
         )
     finally:
