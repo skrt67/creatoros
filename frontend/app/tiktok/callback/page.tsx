@@ -35,15 +35,6 @@ export default function TikTokCallbackPage() {
         return;
       }
 
-      // Get access token from cookies
-      const token = Cookies.get('access_token');
-      if (!token) {
-        setStatus('error');
-        setMessage('Session expirée. Veuillez vous reconnecter.');
-        setTimeout(() => router.push('/login'), 3000);
-        return;
-      }
-
       // Get code_verifier from localStorage
       const codeVerifier = localStorage.getItem('tiktok_code_verifier');
       
@@ -52,8 +43,7 @@ export default function TikTokCallbackPage() {
       const response = await fetch(`${apiUrl}/tiktok/callback`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({ 
           code,

@@ -73,12 +73,9 @@ async def get_tiktok_auth_url():
 
 
 @router.post("/callback")
-async def tiktok_callback(
-    data: dict,
-    current_user: dict = Depends(get_current_user)
-):
+async def tiktok_callback(data: dict):
     """
-    Handle TikTok OAuth callback
+    Handle TikTok OAuth callback (no authentication required)
     """
     try:
         code = data.get("code")
