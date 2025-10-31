@@ -488,3 +488,107 @@ async def upload_video_file(
         )
     finally:
         await prisma.disconnect()
+
+
+@router.post("/content/{asset_id}/regenerate", response_model=APIResponse)
+async def regenerate_content(
+    asset_id: str,
+    current_user = Depends(get_current_active_user)
+):
+    """Regenerate a specific content asset."""
+    prisma = Prisma()
+    await prisma.connect()
+
+    try:
+        # Get the content asset
+        asset = await prisma.contentasset.find_unique(
+            where={"id": asset_id},
+            include={
+                "job": {
+                    "include": {
+                        "videoSource": {
+                            "include": {
+                                "workspace": True
+                            }
+                        },
+                        "transcript": True
+                    }
+                }
+            }
+        )
+
+        if not asset or not asset.job:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Content asset not found"
+            )
+
+        # Verify ownership
+        if asset.job.videoSource.workspace.ownerId != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied"
+            )
+
+        # Get transcript and video title
+        transcript_data = asset.job.transcript
+        if not transcript_data:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No transcript available for regeneration"
+            )
+
+        # Parse transcript
+        import json
+        transcript_obj = json.loads(transcript_data.fullTranscript) if isinstance(transcript_data.fullTranscript, str) else transcript_data.fullTranscript
+        transcript_text = transcript_obj.get("text", "")
+        video_title = asset.job.videoSource.title or "Video"
+
+        # Regenerate content based on type
+        processor = VideoProcessor()
+        gemini = processor.gemini
+
+        print(f"🔄 Regenerating {asset.type} content for asset {asset_id}")
+
+        if asset.type == "BLOG_POST":
+            result = await gemini.generate_blog_post(transcript_text, video_title)
+        elif asset.type == "TWITTER_THREAD":
+            result = await gemini.generate_twitter_thread(transcript_text, video_title)
+        elif asset.type == "LINKEDIN_POST":
+            result = await gemini.generate_linkedin_post(transcript_text, video_title)
+        elif asset.type == "TIKTOK":
+            result = await gemini.generate_tiktok(transcript_text, video_title)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Unsupported content type: {asset.type}"
+            )
+
+        # Update the content asset with new content
+        updated_asset = await prisma.contentasset.update(
+            where={"id": asset_id},
+            data={"content": result.get("content", "")}
+        )
+
+        print(f"✅ Successfully regenerated {asset.type} content")
+
+        return APIResponse(
+            success=True,
+            message="Content regenerated successfully",
+            data={
+                "asset_id": updated_asset.id,
+                "type": updated_asset.type,
+                "content": updated_asset.content
+            }
+        )
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error regenerating content: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to regenerate content: {str(e)}"
+        )
+    finally:
+        await prisma.disconnect()
