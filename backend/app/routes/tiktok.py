@@ -4,6 +4,7 @@ from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import httpx
 import os
 import jwt
+import secrets
 from datetime import datetime
 from app.routes.progress import prisma_client
 
@@ -33,17 +34,19 @@ TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "http://localhost:3000/ti
 
 
 @router.get("/auth-url")
-async def get_tiktok_auth_url():
+async def get_tiktok_auth_url(code_verifier: str = None):
     """
     Get TikTok OAuth authorization URL with PKCE
     """
     import urllib.parse
     import hashlib
     import base64
-    import secrets
     
-    # Generate PKCE code_verifier and code_challenge
-    code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+    # Use provided code_verifier or generate new one
+    if not code_verifier:
+        code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+    
+    # Generate code_challenge from code_verifier
     code_challenge = base64.urlsafe_b64encode(
         hashlib.sha256(code_verifier.encode('utf-8')).digest()
     ).decode('utf-8').rstrip('=')

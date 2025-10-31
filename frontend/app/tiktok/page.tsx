@@ -84,19 +84,23 @@ export default function TikTokPage() {
       setConnecting(true);
       const apiUrl = 'https://api.vidova.me';
       
+      // Generate PKCE code_verifier on frontend
+      const codeVerifier = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+        .map(b => String.fromCharCode(b))
+        .join('');
+      const encodedVerifier = btoa(codeVerifier).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+      
+      // Store code_verifier in localStorage for callback
+      localStorage.setItem('tiktok_code_verifier', encodedVerifier);
+      
       // Get TikTok auth URL with code_verifier
-      const response = await fetch(`${apiUrl}/tiktok/auth-url`);
+      const response = await fetch(`${apiUrl}/tiktok/auth-url?code_verifier=${encodedVerifier}`);
       
       if (!response.ok) {
         throw new Error('Failed to get TikTok auth URL');
       }
 
       const data = await response.json();
-      
-      // Store code_verifier in localStorage for callback
-      if (data.codeVerifier) {
-        localStorage.setItem('tiktok_code_verifier', data.codeVerifier);
-      }
       
       // Redirect to TikTok OAuth
       window.location.href = data.authUrl;
