@@ -8,6 +8,10 @@ from fastapi.middleware.cors import CORSMiddleware
 # from temporalio.client import Client
 from prisma import Prisma
 import uvicorn
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 from app.routes.auth import router as auth_router
 from app.routes.workspaces import router as workspaces_router
