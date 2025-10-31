@@ -99,11 +99,14 @@ class VideoProcessor:
                     "BLOG_POST": "BLOG_POST",
                     "TWITTER_THREAD": "TWITTER_THREAD",
                     "LINKEDIN_POST": "LINKEDIN_POST",
-                    "TIKTOK": "TIKTOK",
-                    "INSTAGRAM": "TIKTOK"  # Map Instagram to TIKTOK
+                    "TIKTOK": "TIKTOK"
                 }
-                
+
                 for asset_type, content in generated_content.items():
+                    # Skip Instagram to avoid duplicate with TikTok
+                    if asset_type == "INSTAGRAM":
+                        continue
+
                     mapped_type = type_mapping.get(asset_type, "BLOG_POST")
                     await prisma.contentasset.create(
                         data={
