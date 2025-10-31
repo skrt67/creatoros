@@ -46,7 +46,7 @@ INSTRUCTIONS FINALES:
     def __init__(self, api_key: Optional[str] = None):
         """Initialize Gemini service with improved configuration."""
         self.api_key = api_key or os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_GEMINI_API_KEY")
-        
+
         if not self.api_key:
             logger.warning("No Gemini API key found. Content generation will be limited.")
             self.model = None
@@ -64,6 +64,18 @@ INSTRUCTIONS FINALES:
                 generation_config=generation_config
             )
             logger.info("Gemini service initialized with improved prompts")
+
+    def _get_varied_generation_config(self):
+        """Get a varied generation config for better diversity in regenerations."""
+        import random
+        # Vary temperature between 0.85 and 1.0 for more diversity
+        temp = random.uniform(0.85, 1.0)
+        return {
+            "temperature": temp,
+            "top_p": random.uniform(0.9, 0.98),
+            "top_k": random.randint(35, 45),
+            "max_output_tokens": 8192,
+        }
     
     async def generate_blog_post(self, transcript: str, video_title: str) -> Dict[str, Any]:
         """
@@ -73,6 +85,13 @@ INSTRUCTIONS FINALES:
         if not self.model:
             return self._generate_demo_content("blog_post", transcript, video_title)
         
+        import random
+        import datetime
+
+        # Add variation instruction to avoid repetition
+        variation_seed = random.randint(1000, 9999)
+        timestamp = datetime.datetime.now().strftime("%H:%M:%S")
+
         prompt = f"""{self.SYSTEM_CONTEXT}
 
 CONTEXTE :
@@ -82,6 +101,13 @@ Tu dois transformer cette transcription vidéo en un article de blog exceptionne
 - Est structuré de manière logique et fluide
 - Sonne naturel et humain, pas généré par IA
 - Est optimisé SEO sans paraître forcé
+
+IMPORTANT POUR LA DIVERSITÉ: Cette génération porte le code #{variation_seed}-{timestamp}.
+Si tu régénères ce contenu, tu DOIS utiliser:
+- Un angle différent (statistique, storytelling, question, fait surprenant)
+- Un style légèrement différent
+- Des exemples variés
+- Une structure alternative (commence par le pourquoi, le comment, ou le quoi)
 
 TITRE DE LA VIDÉO : {video_title}
 
@@ -132,9 +158,16 @@ Ne parle PAS à l'utilisateur.
 GÉNÈRE DIRECTEMENT LE TITRE, puis l'article, sans préambule."""
 
         try:
-            response = self.model.generate_content(prompt)
+            # Create a new model instance with varied config for this generation
+            varied_config = self._get_varied_generation_config()
+            varied_model = genai.GenerativeModel(
+                'gemini-2.0-flash',
+                generation_config=varied_config
+            )
+
+            response = varied_model.generate_content(prompt)
             content = response.text
-            
+
             return {
                 "type": "blog_post",
                 "content": content,
