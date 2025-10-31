@@ -28,7 +28,24 @@ router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 
 TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "awczkmz8uuquhy73")
 TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "5IONt6wOrUIIaPluZ7zNjx8uZglw1XC2")
-TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "https://creatoros-henna.vercel.app/api/tiktok/callback")
+TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "https://vidova.me/tiktok/callback")
+
+
+@router.get("/auth-url")
+async def get_tiktok_auth_url():
+    """
+    Get TikTok OAuth authorization URL
+    """
+    # TikTok OAuth authorization URL with required scopes
+    auth_url = (
+        f"https://www.tiktok.com/v2/auth/authorize/"
+        f"?client_key={TIKTOK_CLIENT_KEY}"
+        f"&scope=user.info.basic,video.list"
+        f"&response_type=code"
+        f"&redirect_uri={TIKTOK_REDIRECT_URI}"
+        f"&state=random_state_string"
+    )
+    return {"authUrl": auth_url}
 
 
 @router.post("/callback")

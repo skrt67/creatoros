@@ -9,7 +9,7 @@ import {
   Twitter,
   Settings,
   LogOut,
-  TrendingUp
+  Music
 } from 'lucide-react';
 import Cookies from 'js-cookie';
 
@@ -41,10 +41,10 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       active: pathname === '/dashboard/videos'
     },
     {
-      name: 'TikTok Stats',
-      icon: TrendingUp,
-      path: '/dashboard/tiktok',
-      active: pathname === '/dashboard/tiktok',
+      name: 'TikTok',
+      icon: Music,
+      path: '/tiktok',
+      active: pathname === '/tiktok' || pathname.startsWith('/tiktok/'),
       highlight: true
     },
     {
