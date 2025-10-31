@@ -110,6 +110,25 @@ export default function TikTokDebugPage() {
               </div>
             </div>
 
+            {/* Mode Info */}
+            <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mt-8 mb-8">
+              <h2 className="text-lg font-medium text-purple-900 mb-4">🔄 Modes de Sandbox</h2>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-white p-4 rounded border border-purple-200">
+                  <p className="text-sm font-medium text-gray-900 mb-2">🧪 Mode Sandbox (Test)</p>
+                  <p className="text-xs text-gray-600 mb-2">Redirect URI :</p>
+                  <code className="text-xs bg-gray-100 p-2 rounded block break-all">http://localhost:3000/tiktok/callback</code>
+                </div>
+                
+                <div className="bg-white p-4 rounded border border-purple-200">
+                  <p className="text-sm font-medium text-gray-900 mb-2">🚀 Mode Production</p>
+                  <p className="text-xs text-gray-600 mb-2">Redirect URI :</p>
+                  <code className="text-xs bg-gray-100 p-2 rounded block break-all">https://vidova.me/tiktok/callback</code>
+                </div>
+              </div>
+            </div>
+
             {/* Checklist */}
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mt-8">
               <h2 className="text-lg font-medium text-yellow-900 mb-4">⚠️ Vérifications à faire</h2>
@@ -120,7 +139,10 @@ export default function TikTokDebugPage() {
                   <div>
                     <p className="text-sm font-medium text-gray-900">Redirect URI dans TikTok Developer Portal</p>
                     <p className="text-xs text-gray-600 mt-1">
-                      Doit être exactement : <code className="bg-white px-2 py-1 rounded">https://vidova.me/tiktok/callback</code>
+                      Pour Sandbox : <code className="bg-white px-2 py-1 rounded">http://localhost:3000/tiktok/callback</code>
+                    </p>
+                    <p className="text-xs text-gray-600 mt-1">
+                      Pour Production : <code className="bg-white px-2 py-1 rounded">https://vidova.me/tiktok/callback</code>
                     </p>
                   </div>
                 </li>
