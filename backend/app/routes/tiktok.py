@@ -36,15 +36,24 @@ async def get_tiktok_auth_url():
     """
     Get TikTok OAuth authorization URL
     """
-    # TikTok OAuth authorization URL with required scopes
-    auth_url = (
-        f"https://www.tiktok.com/v2/auth/authorize/"
-        f"?client_key={TIKTOK_CLIENT_KEY}"
-        f"&scope=user.info.basic,video.list"
-        f"&response_type=code"
-        f"&redirect_uri={TIKTOK_REDIRECT_URI}"
-        f"&state=random_state_string"
-    )
+    import urllib.parse
+    
+    # TikTok OAuth authorization URL with correct format
+    # Using the correct endpoint and parameters for TikTok Business API
+    params = {
+        "client_key": TIKTOK_CLIENT_KEY,
+        "scope": "user.info.basic,video.list",
+        "response_type": "code",
+        "redirect_uri": TIKTOK_REDIRECT_URI,
+        "state": "random_state_string"
+    }
+    
+    auth_url = f"https://www.tiktok.com/v2/auth/authorize/?{urllib.parse.urlencode(params)}"
+    
+    print(f"🔗 TikTok Auth URL: {auth_url}")
+    print(f"📱 Client Key: {TIKTOK_CLIENT_KEY}")
+    print(f"🔄 Redirect URI: {TIKTOK_REDIRECT_URI}")
+    
     return {"authUrl": auth_url}
 
 
