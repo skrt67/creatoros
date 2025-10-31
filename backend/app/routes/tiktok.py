@@ -26,8 +26,8 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 
 router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 
-TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "awczkmz8uuquhy73")
-TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "5IONt6wOrUIIaPluZ7zNjx8uZglw1XC2")
+TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "sbawjlojdif6x8rxin")
+TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "mHFuDEhsdVsmB6Wqz8viULlBvvrtGchO")
 TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "https://vidova.me/tiktok/callback")
 
 
