@@ -88,9 +88,10 @@ export default function DashboardPage() {
 
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
+          console.log('Dashboard stats received:', statsData);
           setDashboardStats(statsData);
         } else {
-          console.warn('Failed to fetch dashboard stats, using defaults');
+          console.warn('Failed to fetch dashboard stats:', statsResponse.status, await statsResponse.text());
         }
 
       } catch (err: any) {
@@ -122,13 +123,17 @@ export default function DashboardPage() {
       const token = Cookies.get('access_token');
 
       if (token) {
+        console.log('Refreshing dashboard stats after video submission...');
         const statsResponse = await fetch(`${apiUrl}/tiktok/dashboard-stats`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (statsResponse.ok) {
           const statsData = await statsResponse.json();
+          console.log('Updated dashboard stats:', statsData);
           setDashboardStats(statsData);
+        } else {
+          console.warn('Failed to refresh dashboard stats:', statsResponse.status, await statsResponse.text());
         }
       }
     } catch (err) {
