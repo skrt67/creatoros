@@ -107,7 +107,8 @@ async def tiktok_callback(data: dict):
                 token_data_payload["code_verifier"] = code_verifier
             
             token_response = await client.post(
-                "https://open.tiktokapis.com/v1/oauth/token/",
+                "https://open.tiktokapis.com/v2/oauth/token/",
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
                 data=token_data_payload,
             )
 
