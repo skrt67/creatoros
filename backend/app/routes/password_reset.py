@@ -6,17 +6,9 @@ from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from prisma import Prisma
-
-try:
-    import resend
-except ImportError:
-    resend = None
+from ..email import send_password_reset_email
 
 router = APIRouter(tags=["password"])
-
-# Initialize Resend
-resend_api_key = os.getenv("RESEND_API_KEY")
-resend_client = resend if resend_api_key else None
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -33,54 +25,38 @@ async def forgot_password(request: ForgotPasswordRequest):
     """Send password reset email."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
         # Find user
         user = await prisma.user.find_unique(where={"email": request.email})
-        
+
         if not user:
             # Don't reveal if email exists (security best practice)
             return {
                 "success": True,
                 "message": "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé"
             }
-        
+
         # Generate reset token
         reset_token = secrets.token_urlsafe(32)
         reset_token_expires = datetime.utcnow() + timedelta(hours=1)
-        
-        # Store reset token (you'd need to add this to your schema)
+
+        # TODO: Store reset token in database with expiry
         # For now, we'll just send the email
-        
-        # Send email with Resend
-        if resend_client and resend_api_key:
-            try:
-                resend.api_key = resend_api_key
-                resend.Emails.send(
-                    {
-                        "from": "onboarding@resend.dev",  # Use Resend's test domain
-                        "to": request.email,
-                        "subject": "Réinitialiser votre mot de passe Vidova",
-                        "html": f"""
-                        <h1>Réinitialiser votre mot de passe</h1>
-                        <p>Cliquez sur le lien ci-dessous pour réinitialiser votre mot de passe:</p>
-                        <a href="https://creatoros.vercel.app/reset-password?token={reset_token}">
-                            Réinitialiser mon mot de passe
-                        </a>
-                        <p>Ce lien expire dans 1 heure.</p>
-                        <p>Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
-                        """
-                    }
-                )
-                print(f"✅ Password reset email sent to {request.email}")
-            except Exception as e:
-                print(f"❌ Error sending email: {e}")
-        
+
+        # Send email using the email service
+        try:
+            send_password_reset_email(request.email, reset_token)
+            print(f"✅ Password reset email sent to {request.email}")
+        except Exception as e:
+            print(f"❌ Error sending email: {e}")
+            # Still return success to not reveal if email exists
+
         return {
             "success": True,
             "message": "Si un compte existe avec cet email, un lien de réinitialisation a été envoyé"
         }
-    
+
     finally:
         await prisma.disconnect()
 
