@@ -2,8 +2,8 @@
 'use client';
 
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { forwardRef, useRef, useMemo, useLayoutEffect } from 'react';
-import { Color } from 'three';
+import { forwardRef, useRef, useMemo, useLayoutEffect, useEffect, useState } from 'react';
+import type { Color as ColorType } from 'three';
 
 const hexToNormalizedRGB = (hex: string) => {
   hex = hex.replace('#', '');
@@ -110,18 +110,35 @@ interface SilkProps {
 
 const Silk = ({ speed = 5, scale = 1, color = '#7B7481', noiseIntensity = 1.5, rotation = 0 }: SilkProps) => {
   const meshRef = useRef();
+  const [mounted, setMounted] = useState(false);
+  const [Color, setColor] = useState<any>(null);
+
+  useEffect(() => {
+    // Only import Three.js Color on client side
+    import('three').then((THREE) => {
+      setColor(() => THREE.Color);
+      setMounted(true);
+    });
+  }, []);
 
   const uniforms = useMemo(
-    () => ({
-      uSpeed: { value: speed },
-      uScale: { value: scale },
-      uNoiseIntensity: { value: noiseIntensity },
-      uColor: { value: new Color(...hexToNormalizedRGB(color)) },
-      uRotation: { value: rotation },
-      uTime: { value: 0 }
-    }),
-    [speed, scale, noiseIntensity, color, rotation]
+    () => {
+      if (!Color) return null;
+      return {
+        uSpeed: { value: speed },
+        uScale: { value: scale },
+        uNoiseIntensity: { value: noiseIntensity },
+        uColor: { value: new Color(...hexToNormalizedRGB(color)) },
+        uRotation: { value: rotation },
+        uTime: { value: 0 }
+      };
+    },
+    [speed, scale, noiseIntensity, color, rotation, Color]
   );
+
+  if (!mounted || !uniforms) {
+    return null;
+  }
 
   return (
     <Canvas dpr={[1, 2]} frameloop="always" style={{ position: 'absolute', inset: 0 }}>
