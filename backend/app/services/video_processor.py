@@ -222,30 +222,23 @@ class VideoProcessor:
             # Full text with paragraph breaks
             full_text = "\n\n".join([seg["text"] for seg in segments])
             
-            # Get video title using YouTube Data API v3 (reliable, not blocked)
+            # Get video title using yt-dlp (more reliable than API)
             video_title = f"YouTube Video {video_id}"  # Fallback
             try:
-                import requests
-                api_key = os.getenv('YOUTUBE_API_KEY')
-                if api_key:
-                    response = requests.get(
-                        f'https://www.googleapis.com/youtube/v3/videos',
-                        params={
-                            'part': 'snippet',
-                            'id': video_id,
-                            'key': api_key
-                        },
-                        timeout=5
-                    )
-                    if response.status_code == 200:
-                        data = response.json()
-                        if data.get('items'):
-                            video_title = data['items'][0]['snippet']['title']
-                            print(f"📺 Video title: {video_title}")
-                    else:
-                        print(f"⚠️ YouTube API error: {response.status_code}")
+                proxy_url = self.get_random_proxy()
+                title_cmd = [
+                    'yt-dlp',
+                    '--get-title',
+                    '--proxy', proxy_url,
+                    '--no-warnings',
+                    f'https://www.youtube.com/watch?v={video_id}'
+                ]
+                title_result = subprocess.run(title_cmd, capture_output=True, text=True, timeout=10)
+                if title_result.returncode == 0 and title_result.stdout.strip():
+                    video_title = title_result.stdout.strip()
+                    print(f"📺 Video title: {video_title}")
                 else:
-                    print("⚠️ No YouTube API key configured, using fallback title")
+                    print(f"⚠️ Could not fetch title with yt-dlp, using fallback")
             except Exception as e:
                 print(f"⚠️ Could not fetch video title: {str(e)[:50]}")
             
