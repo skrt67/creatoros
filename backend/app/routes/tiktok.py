@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
-from fastapi.security import HTTPBearer
-from fastapi.security.http import HTTPAuthorizationCredentials
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import httpx
 import os
 import jwt
@@ -158,12 +157,55 @@ async def get_tiktok_stats(current_user: dict = Depends(get_current_user)):
 
 
 @router.get("/dashboard-stats")
-async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
+async def get_dashboard_stats(credentials: HTTPAuthorizationCredentials = Depends(HTTPBearer(auto_error=False))):
     """
     Get general dashboard stats for current user
     """
     try:
-        user_id = current_user["id"]
+        # Try to get current user, but don't fail if token is invalid
+        if not credentials:
+            print("No credentials provided for dashboard stats")
+            return {
+                "videosProcessed": 0,
+                "videosInProgress": 0,
+                "contentGenerated": 0,
+            }
+
+        try:
+            # Decode token manually to avoid raising exception
+            from jose import jwt
+            SECRET_KEY = "your-secret-key-change-in-production"  # Same as in auth.py
+            payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=["HS256"])
+            email = payload.get("sub")
+
+            if not email:
+                print("Invalid token payload for dashboard stats")
+                return {
+                    "videosProcessed": 0,
+                    "videosInProgress": 0,
+                    "contentGenerated": 0,
+                }
+
+            # Get user by email
+            user = await prisma_client.user.find_unique(where={"email": email})
+            if not user:
+                print(f"User not found for email: {email}")
+                return {
+                    "videosProcessed": 0,
+                    "videosInProgress": 0,
+                    "contentGenerated": 0,
+                }
+
+            user_id = user.id
+
+        except Exception as token_error:
+            print(f"Token validation failed for dashboard stats: {token_error}")
+            return {
+                "videosProcessed": 0,
+                "videosInProgress": 0,
+                "contentGenerated": 0,
+            }
+
         print(f"Getting dashboard stats for user: {user_id}")
 
         # Get video sources count (processed videos)
@@ -200,7 +242,7 @@ async def get_dashboard_stats(current_user: dict = Depends(get_current_user)):
         return result
 
     except Exception as e:
-        print(f"Error in dashboard stats: {str(e)}")
+        print(f"Unexpected error in dashboard stats: {str(e)}")
         import traceback
         traceback.print_exc()
         # Return zeros instead of error for better UX
