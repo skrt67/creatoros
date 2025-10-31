@@ -72,6 +72,10 @@ async def tiktok_callback(
 
         # Exchange code for access token
         async with httpx.AsyncClient() as client:
+            print(f"🔄 Exchanging TikTok code for access token...")
+            print(f"📱 Client Key: {TIKTOK_CLIENT_KEY}")
+            print(f"🔗 Redirect URI: {TIKTOK_REDIRECT_URI}")
+            
             token_response = await client.post(
                 "https://open.tiktokapis.com/v1/oauth/token/",
                 data={
@@ -83,12 +87,19 @@ async def tiktok_callback(
                 },
             )
 
+            print(f"📊 Token Response Status: {token_response.status_code}")
+            print(f"📋 Token Response: {token_response.text[:500]}")
+
             if token_response.status_code != 200:
-                raise HTTPException(status_code=400, detail="Failed to exchange code for token")
+                error_detail = token_response.json() if token_response.headers.get('content-type') == 'application/json' else token_response.text
+                print(f"❌ Token exchange failed: {error_detail}")
+                raise HTTPException(status_code=400, detail=f"Failed to exchange code for token: {error_detail}")
 
             token_data = token_response.json()
             access_token = token_data.get("access_token")
             refresh_token = token_data.get("refresh_token")
+            
+            print(f"✅ Access Token obtained: {access_token[:20]}...")
 
             if not access_token:
                 raise HTTPException(status_code=400, detail="No access token in response")
