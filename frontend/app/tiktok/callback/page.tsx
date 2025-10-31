@@ -44,7 +44,10 @@ export default function TikTokCallbackPage() {
         return;
       }
 
-      // Send code to backend
+      // Get code_verifier from localStorage
+      const codeVerifier = localStorage.getItem('tiktok_code_verifier');
+      
+      // Send code and code_verifier to backend
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
       const response = await fetch(`${apiUrl}/tiktok/callback`, {
         method: 'POST',
@@ -52,8 +55,14 @@ export default function TikTokCallbackPage() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ 
+          code,
+          code_verifier: codeVerifier 
+        })
       });
+      
+      // Clean up code_verifier from localStorage
+      localStorage.removeItem('tiktok_code_verifier');
 
       if (!response.ok) {
         const errorData = await response.json();

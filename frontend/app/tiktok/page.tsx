@@ -84,7 +84,7 @@ export default function TikTokPage() {
       setConnecting(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
       
-      // Get TikTok auth URL
+      // Get TikTok auth URL with code_verifier
       const response = await fetch(`${apiUrl}/tiktok/auth-url`);
       
       if (!response.ok) {
@@ -92,6 +92,11 @@ export default function TikTokPage() {
       }
 
       const data = await response.json();
+      
+      // Store code_verifier in localStorage for callback
+      if (data.codeVerifier) {
+        localStorage.setItem('tiktok_code_verifier', data.codeVerifier);
+      }
       
       // Redirect to TikTok OAuth
       window.location.href = data.authUrl;

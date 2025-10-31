@@ -29,24 +29,34 @@ router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "sbawjlojdif6x8rxin")
 TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "mHFuDEhsdVsmB6Wqz8viULlBvvrtGchO")
 # For Sandbox: use localhost, for Production: use vidova.me
-TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "http://localhost:3000/tiktok/callback")
+TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "https://vidova.me/tiktok/callback")
 
 
 @router.get("/auth-url")
 async def get_tiktok_auth_url():
     """
-    Get TikTok OAuth authorization URL
+    Get TikTok OAuth authorization URL with PKCE
     """
     import urllib.parse
+    import hashlib
+    import base64
+    import secrets
     
-    # TikTok OAuth authorization URL with correct format
-    # Using the correct endpoint and parameters for TikTok Business API
+    # Generate PKCE code_verifier and code_challenge
+    code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+    code_challenge = base64.urlsafe_b64encode(
+        hashlib.sha256(code_verifier.encode('utf-8')).digest()
+    ).decode('utf-8').rstrip('=')
+    
+    # TikTok OAuth authorization URL with PKCE
     params = {
         "client_key": TIKTOK_CLIENT_KEY,
         "scope": "user.info.basic,video.list",
         "response_type": "code",
         "redirect_uri": TIKTOK_REDIRECT_URI,
-        "state": "random_state_string"
+        "state": "random_state_string",
+        "code_challenge": code_challenge,
+        "code_challenge_method": "S256"
     }
     
     auth_url = f"https://www.tiktok.com/v2/auth/authorize/?{urllib.parse.urlencode(params)}"
@@ -54,8 +64,12 @@ async def get_tiktok_auth_url():
     print(f"🔗 TikTok Auth URL: {auth_url}")
     print(f"📱 Client Key: {TIKTOK_CLIENT_KEY}")
     print(f"🔄 Redirect URI: {TIKTOK_REDIRECT_URI}")
+    print(f"🔐 Code Challenge: {code_challenge[:20]}...")
     
-    return {"authUrl": auth_url}
+    return {
+        "authUrl": auth_url,
+        "codeVerifier": code_verifier  # Frontend will need this for the callback
+    }
 
 
 @router.post("/callback")
@@ -68,6 +82,8 @@ async def tiktok_callback(
     """
     try:
         code = data.get("code")
+        code_verifier = data.get("code_verifier")
+        
         if not code:
             raise HTTPException(status_code=400, detail="No authorization code provided")
 
@@ -76,16 +92,23 @@ async def tiktok_callback(
             print(f"🔄 Exchanging TikTok code for access token...")
             print(f"📱 Client Key: {TIKTOK_CLIENT_KEY}")
             print(f"🔗 Redirect URI: {TIKTOK_REDIRECT_URI}")
+            print(f"🔐 Code Verifier: {code_verifier[:20] if code_verifier else 'None'}...")
+            
+            token_data_payload = {
+                "client_key": TIKTOK_CLIENT_KEY,
+                "client_secret": TIKTOK_CLIENT_SECRET,
+                "code": code,
+                "grant_type": "authorization_code",
+                "redirect_uri": TIKTOK_REDIRECT_URI,
+            }
+            
+            # Add code_verifier if provided (PKCE flow)
+            if code_verifier:
+                token_data_payload["code_verifier"] = code_verifier
             
             token_response = await client.post(
                 "https://open.tiktokapis.com/v1/oauth/token/",
-                data={
-                    "client_key": TIKTOK_CLIENT_KEY,
-                    "client_secret": TIKTOK_CLIENT_SECRET,
-                    "code": code,
-                    "grant_type": "authorization_code",
-                    "redirect_uri": TIKTOK_REDIRECT_URI,
-                },
+                data=token_data_payload,
             )
 
             print(f"📊 Token Response Status: {token_response.status_code}")

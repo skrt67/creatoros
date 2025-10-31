@@ -25,6 +25,12 @@ export default function TikTokDebugPage() {
 
       const data = await response.json();
       setAuthUrl(data.authUrl);
+      
+      // Store code_verifier for later use
+      if (data.codeVerifier) {
+        (window as any).tiktokCodeVerifier = data.codeVerifier;
+      }
+      
       setLoading(false);
     } catch (err: any) {
       console.error('Error fetching auth URL:', err);
@@ -64,7 +70,13 @@ export default function TikTokDebugPage() {
               </div>
 
               <button
-                onClick={() => window.open(authUrl, '_blank')}
+                onClick={() => {
+                  // Store code_verifier in localStorage before redirecting
+                  if ((window as any).tiktokCodeVerifier) {
+                    localStorage.setItem('tiktok_code_verifier', (window as any).tiktokCodeVerifier);
+                  }
+                  window.open(authUrl, '_blank');
+                }}
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
               >
                 🔗 Ouvrir l'URL OAuth
