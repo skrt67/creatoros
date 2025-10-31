@@ -11,8 +11,7 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  FileText,
-  TrendingUp
+  FileText
 } from 'lucide-react';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
 import { VideoList } from '@/components/dashboard/VideoList';
@@ -241,39 +240,45 @@ export default function DashboardPage() {
           </button>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Enhanced */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+          <div className="bg-gradient-to-br from-green-50 to-white rounded-2xl border border-green-200/60 p-8 hover:shadow-lg transition-all">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-green-50 border border-green-200 rounded-xl flex items-center justify-center">
-                <CheckCircle2 className="h-6 w-6 text-green-600" strokeWidth={1.5} />
+              <div className="w-14 h-14 bg-green-100 border-2 border-green-300 rounded-xl flex items-center justify-center">
+                <CheckCircle2 className="h-7 w-7 text-green-600" strokeWidth={1.5} />
               </div>
-              <TrendingUp className="h-5 w-5 text-green-600" strokeWidth={1.5} />
             </div>
-            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.videosProcessed}</h3>
-            <p className="text-sm text-gray-600 font-light">Vidéos traitées</p>
+            <h3 className="text-5xl font-light text-gray-900 mb-2 tracking-tight">{dashboardStats.videosProcessed}</h3>
+            <p className="text-sm text-gray-600 font-medium">Vidéos traitées</p>
+            <div className="mt-4 pt-4 border-t border-green-200/40">
+              <p className="text-xs text-green-600 font-light">+{dashboardStats.videosProcessed} ce mois</p>
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+          <div className="bg-gradient-to-br from-blue-50 to-white rounded-2xl border border-blue-200/60 p-8 hover:shadow-lg transition-all">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-blue-50 border border-blue-200 rounded-xl flex items-center justify-center">
-                <Clock className="h-6 w-6 text-blue-600" strokeWidth={1.5} />
+              <div className="w-14 h-14 bg-blue-100 border-2 border-blue-300 rounded-xl flex items-center justify-center">
+                <Clock className="h-7 w-7 text-blue-600" strokeWidth={1.5} />
               </div>
-              <TrendingUp className="h-5 w-5 text-blue-600" strokeWidth={1.5} />
             </div>
-            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.videosInProgress}</h3>
-            <p className="text-sm text-gray-600 font-light">En cours</p>
+            <h3 className="text-5xl font-light text-gray-900 mb-2 tracking-tight">{dashboardStats.videosInProgress}</h3>
+            <p className="text-sm text-gray-600 font-medium">En traitement</p>
+            <div className="mt-4 pt-4 border-t border-blue-200/40">
+              <p className="text-xs text-blue-600 font-light">Analyse en cours</p>
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200/60 p-8 hover:shadow-sm transition-shadow">
+          <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl border border-purple-200/60 p-8 hover:shadow-lg transition-all">
             <div className="flex items-center justify-between mb-6">
-              <div className="w-12 h-12 bg-purple-50 border border-purple-200 rounded-xl flex items-center justify-center">
-                <FileText className="h-6 w-6 text-purple-600" strokeWidth={1.5} />
+              <div className="w-14 h-14 bg-purple-100 border-2 border-purple-300 rounded-xl flex items-center justify-center">
+                <FileText className="h-7 w-7 text-purple-600" strokeWidth={1.5} />
               </div>
-              <TrendingUp className="h-5 w-5 text-purple-600" strokeWidth={1.5} />
             </div>
-            <h3 className="text-4xl font-light text-gray-900 mb-2">{dashboardStats.contentGenerated}</h3>
-            <p className="text-sm text-gray-600 font-light">Contenu généré</p>
+            <h3 className="text-5xl font-light text-gray-900 mb-2 tracking-tight">{dashboardStats.contentGenerated}</h3>
+            <p className="text-sm text-gray-600 font-medium">Contenus créés</p>
+            <div className="mt-4 pt-4 border-t border-purple-200/40">
+              <p className="text-xs text-purple-600 font-light">Prêts à publier</p>
+            </div>
           </div>
         </div>
 
