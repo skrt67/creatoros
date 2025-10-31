@@ -1,5 +1,6 @@
 """Dashboard statistics routes."""
 
+import os
 from fastapi import APIRouter, Request
 
 from app.routes.progress import prisma_client
@@ -28,7 +29,7 @@ async def get_dashboard_stats(request: Request):
         try:
             # Decode token manually
             from jose import jwt
-            SECRET_KEY = "your-secret-key-change-in-production"  # Same as in auth.py
+            SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
             payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             print(f"🔑 Token decoded successfully, payload: {payload}")
             email = payload.get("sub")

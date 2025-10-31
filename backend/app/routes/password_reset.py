@@ -7,8 +7,12 @@ from fastapi import APIRouter, HTTPException, status
 from pydantic import BaseModel, EmailStr
 from prisma import Prisma
 from ..email import send_password_reset_email
+from ..auth import get_password_hash
 
 router = APIRouter(tags=["password"])
+
+# In-memory store for reset tokens (in production, use Redis or database)
+reset_tokens = {}
 
 
 class ForgotPasswordRequest(BaseModel):
@@ -41,13 +45,16 @@ async def forgot_password(request: ForgotPasswordRequest):
         reset_token = secrets.token_urlsafe(32)
         reset_token_expires = datetime.utcnow() + timedelta(hours=1)
 
-        # TODO: Store reset token in database with expiry
-        # For now, we'll just send the email
+        # Store reset token with expiry and email
+        reset_tokens[reset_token] = {
+            "email": request.email,
+            "expires": reset_token_expires
+        }
 
         # Send email using the email service
         try:
             send_password_reset_email(request.email, reset_token)
-            print(f"✅ Password reset email sent to {request.email}")
+            print(f"✅ Password reset email sent to {request.email}, token stored")
         except Exception as e:
             print(f"❌ Error sending email: {e}")
             # Still return success to not reveal if email exists
@@ -66,27 +73,58 @@ async def reset_password(request: ResetPasswordRequest):
     """Reset password with token."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
-        # For now, just accept any token (in production, validate against stored tokens)
-        # This is a simplified version
-        
+        # Validate password length
         if len(request.new_password) < 8:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Le mot de passe doit contenir au moins 8 caractères"
             )
-        
-        # In production, you would:
-        # 1. Validate the token against stored tokens
-        # 2. Check if token is expired
-        # 3. Get user from token
-        # 4. Update password
-        
+
+        # Check if token exists
+        if request.token not in reset_tokens:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Token invalide ou expiré"
+            )
+
+        token_data = reset_tokens[request.token]
+
+        # Check if token is expired
+        if datetime.utcnow() > token_data["expires"]:
+            del reset_tokens[request.token]
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Token expiré"
+            )
+
+        # Get user by email
+        user = await prisma.user.find_unique(where={"email": token_data["email"]})
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Utilisateur non trouvé"
+            )
+
+        # Hash new password
+        hashed_password = get_password_hash(request.new_password)
+
+        # Update user password
+        await prisma.user.update(
+            where={"id": user.id},
+            data={"hashedPassword": hashed_password}
+        )
+
+        # Delete used token
+        del reset_tokens[request.token]
+
+        print(f"✅ Password reset successfully for {token_data['email']}")
+
         return {
             "success": True,
             "message": "Mot de passe réinitialisé avec succès"
         }
-    
+
     finally:
         await prisma.disconnect()
