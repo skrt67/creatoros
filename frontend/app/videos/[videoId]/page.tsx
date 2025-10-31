@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Play, Clock, CheckCircle, AlertCircle, FileText, Copy, ExternalLink, Video } from 'lucide-react';
+import { ArrowLeft, Play, Clock, CheckCircle, AlertCircle, FileText, Copy, ExternalLink, Video, RefreshCw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface VideoDetails {
@@ -42,6 +42,7 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
   const [contentAssets, setContentAssets] = useState<ContentAsset[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'transcript' | 'content'>('transcript');
+  const [regeneratingAssetId, setRegeneratingAssetId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -104,6 +105,43 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const regenerateContent = async (assetId: string) => {
+    try {
+      setRegeneratingAssetId(assetId);
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+      const token = Cookies.get('access_token');
+
+      const response = await fetch(`${apiUrl}/content/${assetId}/regenerate`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        // Update the specific asset in the contentAssets array
+        setContentAssets(prev =>
+          prev.map(asset =>
+            asset.id === assetId
+              ? { ...asset, content: result.data.content }
+              : asset
+          )
+        );
+        toast.success('Contenu régénéré avec succès !');
+      } else {
+        const error = await response.json();
+        toast.error(error.detail || 'Erreur lors de la régénération');
+      }
+    } catch (error) {
+      console.error('Regeneration error:', error);
+      toast.error('Erreur lors de la régénération');
+    } finally {
+      setRegeneratingAssetId(null);
+    }
   };
 
   const getStatusConfig = (status: string) => {
@@ -346,13 +384,23 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
                                 {new Date(asset.createdAt).toLocaleDateString('fr-FR')}
                               </p>
                             </div>
-                            <button
-                              onClick={() => copyToClipboard(asset.content)}
-                              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
-                            >
-                              <Copy className="h-4 w-4" strokeWidth={1.5} />
-                              <span>Copier</span>
-                            </button>
+                            <div className="flex items-center gap-3">
+                              <button
+                                onClick={() => regenerateContent(asset.id)}
+                                disabled={regeneratingAssetId === asset.id}
+                                className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
+                                <RefreshCw className={`h-4 w-4 ${regeneratingAssetId === asset.id ? 'animate-spin' : ''}`} strokeWidth={1.5} />
+                                <span>{regeneratingAssetId === asset.id ? 'Régénération...' : 'Régénérer'}</span>
+                              </button>
+                              <button
+                                onClick={() => copyToClipboard(asset.content)}
+                                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
+                              >
+                                <Copy className="h-4 w-4" strokeWidth={1.5} />
+                                <span>Copier</span>
+                              </button>
+                            </div>
                           </div>
                           <div className="p-6">
                             <div className="prose max-w-none">
