@@ -29,7 +29,7 @@ router = APIRouter(prefix="/tiktok", tags=["tiktok"])
 TIKTOK_CLIENT_KEY = os.getenv("TIKTOK_CLIENT_KEY", "sbawjlojdif6x8rxin")
 TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "mHFuDEhsdVsmB6Wqz8viULlBvvrtGchO")
 # For Sandbox: use localhost, for Production: use vidova.me
-TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "https://vidova.me/tiktok/callback")
+TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "http://localhost:3000/tiktok/callback")
 
 
 @router.get("/auth-url")
