@@ -2,8 +2,7 @@
 
 import os
 from fastapi import APIRouter, Request
-
-from app.routes.progress import prisma_client
+from prisma import Prisma
 
 router = APIRouter(prefix="/stats", tags=["stats"])
 
@@ -13,6 +12,9 @@ async def get_dashboard_stats(request: Request):
     """
     Get general dashboard stats for current user
     """
+    prisma = Prisma()
+    await prisma.connect()
+
     try:
         # Get token from Authorization header
         auth_header = request.headers.get("authorization", "")
@@ -44,7 +46,7 @@ async def get_dashboard_stats(request: Request):
                 }
 
             # Get user by email
-            user = await prisma_client.user.find_unique(where={"email": email})
+            user = await prisma.user.find_unique(where={"email": email})
             print(f"👤 User found: {user.id if user else 'None'}")
             if not user:
                 print(f"❌ User not found for email: {email}")
@@ -68,13 +70,13 @@ async def get_dashboard_stats(request: Request):
         print(f"Getting dashboard stats for user: {user_id}")
 
         # Get video sources count (processed videos)
-        video_sources_count = await prisma_client.videosource.count(
+        video_sources_count = await prisma.videosource.count(
             where={"workspace": {"ownerId": user_id}}
         )
         print(f"Video sources count: {video_sources_count}")
 
         # Get processing jobs count (videos in progress)
-        in_progress_count = await prisma_client.processingjob.count(
+        in_progress_count = await prisma.processingjob.count(
             where={
                 "videoSource": {"workspace": {"ownerId": user_id}},
                 "status": {"not": "COMPLETED"}
@@ -83,7 +85,7 @@ async def get_dashboard_stats(request: Request):
         print(f"Videos in progress count: {in_progress_count}")
 
         # Get content assets count (generated content)
-        content_count = await prisma_client.contentasset.count(
+        content_count = await prisma.contentasset.count(
             where={
                 "job": {
                     "videoSource": {"workspace": {"ownerId": user_id}}
@@ -110,3 +112,5 @@ async def get_dashboard_stats(request: Request):
             "videosInProgress": 0,
             "contentGenerated": 0,
         }
+    finally:
+        await prisma.disconnect()
