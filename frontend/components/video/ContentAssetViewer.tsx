@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Download, Edit3, Eye, FileText, Twitter, Linkedin, Mail, Video, Scissors } from 'lucide-react';
+import { Copy, Download, Edit3, Eye, FileText, Twitter, Linkedin, Mail, Video, Scissors, RefreshCw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Button, Card, CardHeader, CardTitle, CardContent, StatusBadge } from '@/components/ui';
 import { copyToClipboard, formatDate } from '@/lib/utils';
@@ -9,6 +9,7 @@ import { ASSET_TYPE_NAMES } from '@/types';
 interface ContentAssetViewerProps {
   assets: ContentAsset[];
   className?: string;
+  onRegenerate?: (assetId: string, assetType: AssetType) => void;
 }
 
 const ASSET_ICONS: Record<AssetType, React.ReactNode> = {
@@ -24,6 +25,7 @@ const ASSET_ICONS: Record<AssetType, React.ReactNode> = {
 export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
   assets,
   className = '',
+  onRegenerate,
 }) => {
   const [activeTab, setActiveTab] = useState<AssetType | null>(
     assets.length > 0 ? assets[0].type : null
@@ -138,6 +140,17 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
 
               {/* Actions */}
               <div className="flex items-center space-x-2">
+                {onRegenerate && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => onRegenerate(activeAsset.id, activeAsset.type)}
+                  >
+                    <RefreshCw className="h-4 w-4" />
+                    <span className="ml-2">Regenerate</span>
+                  </Button>
+                )}
+
                 <Button
                   variant="ghost"
                   size="sm"
@@ -146,7 +159,7 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
                   <Copy className="h-4 w-4" />
                   <span className="ml-2">Copy</span>
                 </Button>
-                
+
                 <Button
                   variant="ghost"
                   size="sm"
@@ -155,7 +168,7 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
                   <Download className="h-4 w-4" />
                   <span className="ml-2">Download</span>
                 </Button>
-                
+
                 {editingAsset !== activeAsset.id ? (
                   <Button
                     variant="ghost"
