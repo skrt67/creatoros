@@ -83,16 +83,25 @@ export default function TikTokPage() {
     try {
       setConnecting(true);
       const apiUrl = 'https://api.vidova.me';
-      
-      // Get TikTok auth URL (backend generates code_verifier)
-      const response = await fetch(`${apiUrl}/tiktok/auth-url`);
-      
+      const token = Cookies.get('access_token');
+
+      if (!token) {
+        throw new Error('Vous devez être connecté pour lier votre compte TikTok');
+      }
+
+      // Get TikTok auth URL (backend generates code_verifier and stores user_id)
+      const response = await fetch(`${apiUrl}/tiktok/auth-url`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
       if (!response.ok) {
         throw new Error('Failed to get TikTok auth URL');
       }
 
       const data = await response.json();
-      
+
       // Redirect to TikTok OAuth
       window.location.href = data.authUrl;
     } catch (err: any) {
