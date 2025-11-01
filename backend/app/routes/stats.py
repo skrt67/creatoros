@@ -34,29 +34,31 @@ async def get_dashboard_stats(request: Request):
             SECRET_KEY = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
             payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             print(f"🔑 Token decoded successfully, payload: {payload}")
-            email = payload.get("sub")
-            print(f"📧 Email from token: {email}")
 
-            if not email:
-                print("❌ Invalid token payload for dashboard stats - no email")
+            # Try to get user_id from 'sub' field first (it contains user ID)
+            user_id = payload.get("sub")
+            email = payload.get("email")
+            print(f"📧 Email from token: {email}, User ID: {user_id}")
+
+            if not user_id:
+                print("❌ Invalid token payload for dashboard stats - no user_id")
                 return {
                     "videosProcessed": 0,
                     "videosInProgress": 0,
                     "contentGenerated": 0,
                 }
 
-            # Get user by email
-            user = await prisma.user.find_unique(where={"email": email})
+            # Verify user exists
+            user = await prisma.user.find_unique(where={"id": user_id})
             print(f"👤 User found: {user.id if user else 'None'}")
             if not user:
-                print(f"❌ User not found for email: {email}")
+                print(f"❌ User not found for id: {user_id}")
                 return {
                     "videosProcessed": 0,
                     "videosInProgress": 0,
                     "contentGenerated": 0,
                 }
 
-            user_id = user.id
             print(f"✅ User ID for stats: {user_id}")
 
         except Exception as token_error:
