@@ -134,33 +134,44 @@ async def create_portal_session(
     finally:
         await prisma.disconnect()
 
-@router.get("/subscription", response_model=SubscriptionResponse)
+@router.get("/subscription")
 async def get_user_subscription(current_user = Depends(get_current_active_user)):
     """Get current user's subscription details."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
         subscription = await prisma.subscription.find_unique(
             where={"userId": current_user.id}
         )
-        
+
         if not subscription:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="No subscription found"
-            )
-        
-        return SubscriptionResponse(
-            id=subscription.id,
-            user_id=subscription.userId,
-            stripe_customer_id=subscription.stripeCustomerId,
-            stripe_subscription_id=subscription.stripeSubscriptionId,
-            stripe_price_id=subscription.stripePriceId,
-            stripe_current_period_end=subscription.stripeCurrentPeriodEnd,
-            status=subscription.status
-        )
-        
+            # Return FREE plan status if no subscription found
+            return {
+                "id": None,
+                "user_id": current_user.id,
+                "plan": "FREE",
+                "status": "active",
+                "stripe_customer_id": None,
+                "stripe_subscription_id": None,
+                "stripe_price_id": None,
+                "stripe_current_period_end": None
+            }
+
+        # Check if subscription is active
+        is_active = subscription.status in ["active", "trialing"]
+
+        return {
+            "id": subscription.id,
+            "user_id": subscription.userId,
+            "plan": "PRO" if is_active else "FREE",
+            "status": subscription.status,
+            "stripe_customer_id": subscription.stripeCustomerId,
+            "stripe_subscription_id": subscription.stripeSubscriptionId,
+            "stripe_price_id": subscription.stripePriceId,
+            "stripe_current_period_end": subscription.stripeCurrentPeriodEnd
+        }
+
     finally:
         await prisma.disconnect()
 
