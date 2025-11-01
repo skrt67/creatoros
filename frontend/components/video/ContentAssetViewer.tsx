@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Download, Edit3, Eye, FileText, Twitter, Linkedin, Mail, Video } from 'lucide-react';
+import { Copy, Download, Edit3, Eye, FileText, Twitter, Linkedin, Mail, Video, Scissors } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { Button, Card, CardHeader, CardTitle, CardContent, StatusBadge } from '@/components/ui';
 import { copyToClipboard, formatDate } from '@/lib/utils';
@@ -17,6 +17,7 @@ const ASSET_ICONS: Record<AssetType, React.ReactNode> = {
   LINKEDIN_POST: <Linkedin className="h-4 w-4" />,
   NEWSLETTER: <Mail className="h-4 w-4" />,
   VIDEO_HIGHLIGHTS: <Video className="h-4 w-4" />,
+  CLIPS: <Scissors className="h-4 w-4" />,
 };
 
 export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
@@ -220,6 +221,103 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
                 </div>
               </div>
             )}
+
+            {/* Clips Preview */}
+            {activeAsset.type === 'CLIPS' && !editingAsset && (() => {
+              try {
+                const clipsData = JSON.parse(activeAsset.content);
+                return (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-gray-900">Viral Clips Suggestions</h4>
+                      <span className="text-sm text-gray-500">
+                        {clipsData.clips?.length || 0} clips generated
+                      </span>
+                    </div>
+
+                    <div className="grid gap-4 md:grid-cols-2">
+                      {clipsData.clips?.map((clip: any, index: number) => (
+                        <div
+                          key={index}
+                          className={`border-2 rounded-lg p-4 ${
+                            index === clipsData.best_clip_index
+                              ? 'border-yellow-400 bg-yellow-50'
+                              : 'border-gray-200 bg-white'
+                          }`}
+                        >
+                          {index === clipsData.best_clip_index && (
+                            <div className="flex items-center space-x-1 mb-2">
+                              <span className="text-xs font-semibold text-yellow-700 bg-yellow-200 px-2 py-1 rounded">
+                                ⭐ BEST CLIP
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="space-y-2">
+                            <div className="flex items-start justify-between">
+                              <h5 className="font-semibold text-gray-900 text-sm line-clamp-2">
+                                {clip.title}
+                              </h5>
+                              <span className={`ml-2 px-2 py-0.5 rounded text-xs font-medium ${
+                                clip.viral_score >= 9 ? 'bg-green-100 text-green-800' :
+                                clip.viral_score >= 7 ? 'bg-blue-100 text-blue-800' :
+                                'bg-gray-100 text-gray-800'
+                              }`}>
+                                {clip.viral_score}/10
+                              </span>
+                            </div>
+
+                            <div className="flex items-center space-x-4 text-xs text-gray-600">
+                              <span className="flex items-center space-x-1">
+                                <Video className="h-3 w-3" />
+                                <span>{clip.timestamp_start} - {clip.timestamp_end}</span>
+                              </span>
+                              <span>({clip.duration_seconds}s)</span>
+                            </div>
+
+                            <p className="text-sm text-gray-700 italic">
+                              "{clip.hook}"
+                            </p>
+
+                            <p className="text-xs text-gray-600">
+                              {clip.reason}
+                            </p>
+
+                            <div className="flex flex-wrap gap-1 mt-2">
+                              {clip.platform_optimized?.map((platform: string) => (
+                                <span
+                                  key={platform}
+                                  className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded"
+                                >
+                                  {platform}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {clipsData.recommendations && (
+                      <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h5 className="font-medium text-blue-900 text-sm mb-2">
+                          Recommendations
+                        </h5>
+                        <p className="text-sm text-blue-800">
+                          {clipsData.recommendations}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                );
+              } catch (e) {
+                return (
+                  <div className="text-sm text-red-600">
+                    Error parsing clips data. Please check the JSON format.
+                  </div>
+                );
+              }
+            })()}
           </div>
         )}
       </CardContent>

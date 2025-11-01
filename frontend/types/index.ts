@@ -47,7 +47,7 @@ export interface WorkspaceWithVideos extends Workspace {
 // Video Types
 export type VideoStatus = 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 export type JobStatus = 'STARTED' | 'COMPLETED' | 'FAILED';
-export type AssetType = 'BLOG_POST' | 'TWITTER_THREAD' | 'LINKEDIN_POST' | 'NEWSLETTER' | 'VIDEO_HIGHLIGHTS';
+export type AssetType = 'BLOG_POST' | 'TWITTER_THREAD' | 'LINKEDIN_POST' | 'NEWSLETTER' | 'VIDEO_HIGHLIGHTS' | 'CLIPS';
 export type AssetStatus = 'GENERATED' | 'PUBLISHED' | 'ARCHIVED';
 
 export interface VideoSource {
@@ -187,7 +187,8 @@ export const ASSET_TYPE_NAMES: Record<AssetType, string> = {
   TWITTER_THREAD: 'Twitter Thread',
   LINKEDIN_POST: 'LinkedIn Post',
   NEWSLETTER: 'Newsletter',
-  VIDEO_HIGHLIGHTS: 'Video Highlights'
+  VIDEO_HIGHLIGHTS: 'Video Highlights',
+  CLIPS: 'Viral Clips'
 };
 
 // Status Display Names
