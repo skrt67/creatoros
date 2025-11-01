@@ -70,6 +70,7 @@ export default function DashboardPage() {
 
         if (userResponse.ok) {
           const userData = await userResponse.json();
+          console.log('👤 User data received:', userData);
           setUser(userData);
         } else {
           throw new Error('Failed to fetch user info');
@@ -171,10 +172,14 @@ export default function DashboardPage() {
         <div className="px-8 py-4 flex justify-end items-center">
           {user && (
             <div className="flex items-center gap-3">
-              {user.plan === 'PRO' && (
+              {user.plan === 'PRO' ? (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-gray-900 text-gray-900 rounded-full text-xs font-medium">
                   <Crown className="h-3 w-3" />
                   Pro
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-full text-xs font-medium">
+                  Free
                 </div>
               )}
               <div className="text-right">
