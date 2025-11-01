@@ -9,12 +9,11 @@ import {
   ArrowRight,
   CheckCircle2,
   Clock,
-  FileText
+  FileText,
+  User,
+  Settings,
+  LogOut
 } from 'lucide-react';
-import { Sidebar } from '@/components/dashboard/Sidebar';
-import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
-import { VideoList } from '@/components/dashboard/VideoList';
-import { UsageCounter } from '@/components/dashboard/UsageCounter';
 
 interface User {
   id: string;
@@ -161,8 +160,27 @@ export default function DashboardPage() {
       {/* Sidebar */}
       <Sidebar />
 
+      {/* Top Header with User Profile */}
+      <div className="fixed top-0 right-0 left-64 bg-white border-b border-gray-200/60 z-40">
+        <div className="px-8 py-4 flex justify-end items-center">
+          {user && (
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-sm font-medium text-gray-900">
+                  {user.name || user.email.split('@')[0]}
+                </p>
+                <p className="text-xs text-gray-500 font-light">{user.email}</p>
+              </div>
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <User className="h-5 w-5 text-gray-600" strokeWidth={1.5} />
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Main Content */}
-      <main className="flex-1 ml-64 p-8">
+      <main className="flex-1 ml-64 p-8 pt-20">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-light text-gray-900 mb-2 tracking-tight">
