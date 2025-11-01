@@ -29,6 +29,12 @@ interface ScheduledPost {
   videoTitle?: string;
 }
 
+interface User {
+  id: string;
+  email: string;
+  name?: string;
+}
+
 export default function CalendarPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<'month' | 'week'>('month');
@@ -36,10 +42,30 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
+    fetchUser();
     fetchScheduledPosts();
   }, []);
+
+  const fetchUser = async () => {
+    try {
+      const token = Cookies.get('access_token');
+      const response = await fetch('https://api.vidova.me/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData);
+      }
+    } catch (error) {
+      console.error('Error fetching user:', error);
+    }
+  };
 
   const fetchScheduledPosts = async () => {
     try {
@@ -158,7 +184,7 @@ export default function CalendarPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar />
+      <Sidebar userName={user?.name} userEmail={user?.email} />
 
       <main className="ml-64 p-8">
         {/* Header */}
