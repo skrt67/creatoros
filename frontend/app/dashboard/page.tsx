@@ -4,18 +4,12 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import {
-  Eye,
-  Users,
-  Layers,
-  DollarSign,
-  Youtube,
   Music,
   Plus,
   ArrowRight,
   CheckCircle2,
   Clock,
-  FileText,
-  BarChart3
+  FileText
 } from 'lucide-react';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
@@ -36,9 +30,6 @@ interface DashboardStats {
   videosProcessed: number;
   videosInProgress: number;
   contentGenerated: number;
-  totalReach?: number;
-  totalFollowers?: number;
-  totalRevenue?: number;
 }
 
 export default function DashboardPage() {
@@ -51,10 +42,7 @@ export default function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats>({
     videosProcessed: 0,
     videosInProgress: 0,
-    contentGenerated: 0,
-    totalReach: 0,
-    totalFollowers: 0,
-    totalRevenue: 0
+    contentGenerated: 0
   });
   const router = useRouter();
 
@@ -206,100 +194,8 @@ export default function DashboardPage() {
           </div>
         )}
 
-        {/* Top Stats Grid */}
-        <div className="grid grid-cols-4 gap-6 mb-8">
-          {/* Reach Card */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                <Eye className="h-6 w-6 text-gray-900" strokeWidth={1.5} />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Reach</span>
-            </div>
-            <div className="text-3xl font-light text-gray-900 mb-2">
-              {stats.totalReach?.toLocaleString() || '0'}
-            </div>
-            <div className="text-sm text-green-600">+10%</div>
-          </div>
-
-          {/* Followers Card */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                <Users className="h-6 w-6 text-gray-900" strokeWidth={1.5} />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Followers</span>
-            </div>
-            <div className="text-3xl font-light text-gray-900 mb-2">
-              {stats.totalFollowers?.toLocaleString() || '0'}
-            </div>
-            <div className="text-sm text-green-600">+4%</div>
-          </div>
-
-          {/* Content Card */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                <Layers className="h-6 w-6 text-gray-900" strokeWidth={1.5} />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Content</span>
-            </div>
-            <div className="text-3xl font-light text-gray-900 mb-2">
-              {stats.contentGenerated} Uploads
-            </div>
-            <div className="text-sm text-green-600">+2%</div>
-          </div>
-
-          {/* Revenue Card */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:shadow-lg transition-all">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                <DollarSign className="h-6 w-6 text-gray-900" strokeWidth={1.5} />
-              </div>
-              <span className="text-sm font-medium text-gray-600">Revenue</span>
-            </div>
-            <div className="text-3xl font-light text-gray-900 mb-2">
-              ${stats.totalRevenue?.toLocaleString() || '0'}
-            </div>
-            <div className="text-sm text-green-600">+5%</div>
-          </div>
-        </div>
-
-        {/* Bottom Section - 3 Columns */}
-        <div className="grid grid-cols-3 gap-6 mb-8">
-          {/* Reach Overview */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6">
-            <div className="flex items-center justify-between mb-6">
-              <h3 className="text-lg font-medium text-gray-900">Reach</h3>
-              <div className="flex gap-2">
-                <button className="px-3 py-1 bg-gray-900 text-white text-xs rounded-md font-medium">Monthly</button>
-                <button className="px-3 py-1 text-gray-600 text-xs hover:text-gray-900 font-medium">Weekly</button>
-                <button className="px-3 py-1 text-gray-600 text-xs hover:text-gray-900 font-medium">Today</button>
-              </div>
-            </div>
-            <p className="text-xs text-gray-500 mb-4 font-light">Overview</p>
-
-            {/* Chart Visualization */}
-            <div className="h-48 flex items-end gap-2 mb-4">
-              {[20, 40, 35, 60, 45, 80, 70, 50, 65, 75, 60, 85].map((height, i) => (
-                <div key={i} className="flex-1 flex flex-col justify-end">
-                  <div
-                    className="bg-gradient-to-t from-gray-300 to-gray-200 rounded-t hover:from-gray-400 hover:to-gray-300 transition-colors"
-                    style={{ height: `${height}%` }}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Platform Icons */}
-            <div className="flex items-center justify-around pt-4 border-t border-gray-200/60">
-              <Music className="h-5 w-5 text-gray-400" />
-              <Youtube className="h-5 w-5 text-gray-900" />
-              <Music className="h-5 w-5 text-gray-400" />
-              <Music className="h-5 w-5 text-gray-900" />
-            </div>
-          </div>
-
+        {/* Bottom Section - 2 Columns */}
+        <div className="grid grid-cols-2 gap-6 mb-8">
           {/* Processing Stats */}
           <div className="bg-white border border-gray-200/60 rounded-2xl p-6">
             <h3 className="text-lg font-medium text-gray-900 mb-2">Statut</h3>
@@ -341,43 +237,17 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Performance */}
+          {/* Recent Videos */}
           <div className="bg-white border border-gray-200/60 rounded-2xl p-6">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Performance</h3>
-            <p className="text-xs text-gray-500 mb-6 font-light">Plateformes</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Vidéos récentes</h3>
+            <p className="text-xs text-gray-500 mb-6 font-light">Dernières vidéos traitées</p>
 
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Youtube className="h-5 w-5 text-gray-900" />
-                  <span className="text-sm text-gray-700 font-medium">YouTube</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900">60%</span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full w-[60%] bg-gradient-to-r from-gray-800 to-gray-900"></div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <Music className="h-5 w-5 text-gray-900" />
-                  <span className="text-sm text-gray-700 font-medium">TikTok</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900">25%</span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full w-[25%] bg-gradient-to-r from-gray-600 to-gray-700"></div>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <BarChart3 className="h-5 w-5 text-gray-900" />
-                  <span className="text-sm text-gray-700 font-medium">Autres</span>
-                </div>
-                <span className="text-sm font-semibold text-gray-900">15%</span>
-              </div>
-              <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                <div className="h-full w-[15%] bg-gradient-to-r from-gray-400 to-gray-500"></div>
+              {/* Placeholder for recent videos */}
+              <div className="text-center py-8">
+                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-3" />
+                <p className="text-sm text-gray-500 font-light">Aucune vidéo récente</p>
+                <p className="text-xs text-gray-400 mt-1">Vos vidéos traitées apparaîtront ici</p>
               </div>
             </div>
           </div>
