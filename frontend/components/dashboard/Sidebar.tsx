@@ -1,12 +1,14 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Video,
   Calendar,
   Settings,
-  LogOut
+  LogOut,
+  Crown
 } from 'lucide-react';
 import Cookies from 'js-cookie';
 
@@ -18,6 +20,31 @@ interface SidebarProps {
 export function Sidebar({ userName, userEmail }: SidebarProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const [subscriptionPlan, setSubscriptionPlan] = useState<'FREE' | 'PRO'>('FREE');
+
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, []);
+
+  const fetchSubscriptionStatus = async () => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
+      const token = Cookies.get('access_token');
+
+      if (!token) return;
+
+      const response = await fetch(`${apiUrl}/billing/subscription`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSubscriptionPlan(data.plan || 'FREE');
+      }
+    } catch (error) {
+      console.error('Error fetching subscription:', error);
+    }
+  };
 
   const handleLogout = () => {
     Cookies.remove('access_token');
@@ -60,9 +87,17 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">
-              {userName || 'User'}
-            </p>
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-medium text-gray-900 truncate">
+                {userName || 'User'}
+              </p>
+              {subscriptionPlan === 'PRO' && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold rounded-full">
+                  <Crown className="h-3 w-3" />
+                  PRO
+                </span>
+              )}
+            </div>
             <p className="text-xs text-gray-500 truncate">{userEmail}</p>
           </div>
         </div>
@@ -96,11 +131,11 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       {/* Bottom Actions */}
       <div className="p-3 border-t border-gray-200/60 space-y-1">
         <button
-          onClick={() => router.push('/settings')}
+          onClick={() => router.push('/settings/subscription')}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all"
         >
           <Settings className="h-5 w-5" strokeWidth={1.5} />
-          <span className="text-sm font-medium">Paramètres</span>
+          <span className="text-sm font-medium">Abonnement</span>
         </button>
         <button
           onClick={handleLogout}
