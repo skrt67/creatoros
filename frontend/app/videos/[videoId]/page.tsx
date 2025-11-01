@@ -378,7 +378,7 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
 
                           toast.loading(`Régénération de ${assetType} en cours...`, { id: assetId });
 
-                          const response = await fetch(`${apiUrl}/videos/content/${assetId}/regenerate`, {
+                          const response = await fetch(`${apiUrl}/content/${assetId}/regenerate`, {
                             method: 'POST',
                             headers: {
                               'Authorization': `Bearer ${token}`
