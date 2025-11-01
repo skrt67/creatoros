@@ -91,10 +91,13 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
 
         if (response.ok) {
           const result = await response.json();
-          setSuccess(`Vidéo soumise avec succès !`);
+          setSuccess(`✅ Vidéo soumise avec succès ! Le traitement démarre dans quelques secondes...`);
           setVideoUrl('');
           setPreview(null);
-          onVideoSubmitted();
+          // Attendre 2 secondes pour que l'utilisateur voit le message, puis refresh
+          setTimeout(() => {
+            onVideoSubmitted();
+          }, 2000);
         } else {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Échec de la soumission');
