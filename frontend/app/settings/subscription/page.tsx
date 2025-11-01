@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';
-import { ArrowLeft, Crown, Check, ExternalLink, CreditCard, Calendar, Video } from 'lucide-react';
+import { ArrowLeft, Crown, CreditCard, Calendar, Video, AlertCircle, ExternalLink } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
 interface SubscriptionData {
@@ -21,7 +21,7 @@ interface SubscriptionData {
 export default function SubscriptionPage() {
   const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [managingSubscription, setManagingSubscription] = useState(false);
+  const [cancellingSubscription, setCancellingSubscription] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -44,6 +44,7 @@ export default function SubscriptionPage() {
 
       if (response.ok) {
         const data = await response.json();
+        console.log('Subscription data:', data);
         setSubscription(data);
       }
     } catch (error) {
@@ -54,16 +55,15 @@ export default function SubscriptionPage() {
     }
   };
 
-  const handleManageSubscription = async () => {
+  const handleCancelSubscription = async () => {
+    if (!confirm('Êtes-vous sûr de vouloir annuler votre abonnement ? Vous conserverez l\'accès Pro jusqu\'à la fin de votre période de facturation.')) {
+      return;
+    }
+
     try {
-      setManagingSubscription(true);
+      setCancellingSubscription(true);
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
       const token = Cookies.get('access_token');
-
-      if (!token) {
-        toast.error('Vous devez être connecté');
-        return;
-      }
 
       const response = await fetch(`${apiUrl}/billing/create-portal-session`, {
         method: 'POST',
@@ -77,7 +77,8 @@ export default function SubscriptionPage() {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la création de la session');
+        const error = await response.json();
+        throw new Error(error.detail || 'Erreur lors de l\'annulation');
       }
 
       const data = await response.json();
@@ -85,9 +86,9 @@ export default function SubscriptionPage() {
 
     } catch (error: any) {
       console.error('Error:', error);
-      toast.error(error.message || 'Erreur lors de l\'accès au portail');
+      toast.error(error.message || 'Erreur lors de l\'accès au portail de gestion');
     } finally {
-      setManagingSubscription(false);
+      setCancellingSubscription(false);
     }
   };
 
@@ -104,7 +105,11 @@ export default function SubscriptionPage() {
 
   const isPro = subscription?.plan === 'PRO';
   const renewalDate = subscription?.stripe_current_period_end
-    ? new Date(subscription.stripe_current_period_end * 1000).toLocaleDateString('fr-FR')
+    ? new Date(subscription.stripe_current_period_end).toLocaleDateString('fr-FR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      })
     : null;
 
   return (
@@ -121,11 +126,11 @@ export default function SubscriptionPage() {
             </Link>
 
             <Link
-              href="/dashboard"
+              href="/settings"
               className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
-              <span className="font-light">Retour</span>
+              <span className="font-light">Retour aux paramètres</span>
             </Link>
           </div>
         </div>
@@ -145,11 +150,7 @@ export default function SubscriptionPage() {
           </div>
 
           {/* Current Plan Card */}
-          <div className={`rounded-2xl border-2 p-8 mb-8 ${
-            isPro
-              ? 'border-yellow-400 bg-gradient-to-br from-yellow-50 to-white'
-              : 'border-gray-200 bg-white'
-          }`}>
+          <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8">
             <div className="flex items-start justify-between mb-6">
               <div>
                 <div className="flex items-center gap-3 mb-2">
@@ -157,7 +158,7 @@ export default function SubscriptionPage() {
                     {isPro ? 'Plan Pro' : 'Plan Gratuit'}
                   </h2>
                   {isPro && (
-                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-yellow-400 to-yellow-600 text-white text-xs font-bold rounded-full">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-white border-2 border-gray-900 text-gray-900 text-xs font-medium rounded-full">
                       <Crown className="h-3 w-3" />
                       PRO
                     </span>
@@ -177,82 +178,73 @@ export default function SubscriptionPage() {
               </div>
             </div>
 
-            {/* Features */}
-            <div className="space-y-3 mb-6">
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-gray-900" strokeWidth={2} />
-                <span className="text-gray-700 font-light">
-                  {isPro ? 'Vidéos illimitées' : '3 vidéos par mois'}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-gray-900" strokeWidth={2} />
-                <span className="text-gray-700 font-light">
-                  Transcription IA {isPro ? 'avancée' : 'basique'}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <Check className="h-5 w-5 text-gray-900" strokeWidth={2} />
-                <span className="text-gray-700 font-light">
-                  Génération de contenu {isPro ? 'complète' : 'standard'}
-                </span>
-              </div>
-              {isPro && (
-                <>
-                  <div className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-gray-900" strokeWidth={2} />
-                    <span className="text-gray-700 font-light">
-                      Traitement prioritaire
-                    </span>
+            {/* Status & Renewal */}
+            {isPro && (
+              <>
+                <div className="flex items-center gap-2 text-sm mb-6 pb-6 border-b border-gray-200">
+                  <div className="flex items-center gap-2 text-green-600">
+                    <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                    <span className="font-medium">Abonnement actif</span>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <Check className="h-5 w-5 text-gray-900" strokeWidth={2} />
-                    <span className="text-gray-700 font-light">
-                      Support prioritaire
-                    </span>
-                  </div>
-                </>
-              )}
-            </div>
-
-            {/* Status & Actions */}
-            {isPro && renewalDate && (
-              <div className="flex items-center gap-2 text-sm text-gray-600 font-light mb-6 pt-6 border-t border-gray-200">
-                <Calendar className="h-4 w-4" />
-                <span>Renouvellement le {renewalDate}</span>
-              </div>
-            )}
-
-            <div className="flex gap-3">
-              {isPro ? (
-                <button
-                  onClick={handleManageSubscription}
-                  disabled={managingSubscription}
-                  className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
-                >
-                  {managingSubscription ? (
+                  {renewalDate && (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Chargement...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="h-4 w-4" />
-                      Gérer mon abonnement
+                      <span className="text-gray-400">•</span>
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <Calendar className="h-4 w-4" />
+                        <span>Renouvellement le {renewalDate}</span>
+                      </div>
                     </>
                   )}
-                </button>
-              ) : (
-                <Link
-                  href="/billing"
-                  className="flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+                </div>
+
+                {/* Cancel Button */}
+                <button
+                  onClick={handleCancelSubscription}
+                  disabled={cancellingSubscription}
+                  className="w-full px-4 py-3 bg-white border border-red-200 text-red-600 rounded-lg hover:bg-red-50 hover:border-red-300 transition-colors font-medium disabled:opacity-50"
                 >
+                  {cancellingSubscription ? 'Chargement...' : 'Annuler mon abonnement'}
+                </button>
+              </>
+            )}
+
+            {/* Upgrade for Free users */}
+            {!isPro && (
+              <Link
+                href="/billing"
+                className="block w-full px-4 py-3 bg-gray-900 text-white text-center rounded-lg hover:bg-gray-800 transition-colors font-medium"
+              >
+                <div className="flex items-center justify-center gap-2">
                   <Crown className="h-4 w-4" />
-                  Passer à Pro
-                </Link>
-              )}
-            </div>
+                  Passer à Pro - 14,99€/mois
+                </div>
+              </Link>
+            )}
           </div>
+
+          {/* Payment Method */}
+          {isPro && subscription?.stripe_customer_id && !subscription.stripe_customer_id.startsWith('cus_test_') && (
+            <div className="bg-white border border-gray-200 rounded-2xl p-8 mb-8">
+              <h3 className="text-xl font-medium text-gray-900 mb-6">Moyen de paiement</h3>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
+                    <CreditCard className="h-4 w-4 text-white" strokeWidth={1.5} />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">Carte bancaire</p>
+                    <p className="text-sm text-gray-600 font-light">Géré par Stripe</p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleCancelSubscription}
+                  className="px-4 py-2 border border-gray-300 rounded-lg text-gray-900 hover:border-gray-400 transition-colors font-medium text-sm"
+                >
+                  Modifier
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Info Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -268,15 +260,16 @@ export default function SubscriptionPage() {
             </div>
 
             <div className="bg-white border border-gray-200/60 rounded-xl p-6">
-              <h3 className="font-medium text-gray-900 mb-3">Annulation facile</h3>
+              <h3 className="font-medium text-gray-900 mb-3">Support</h3>
               <p className="text-sm text-gray-600 font-light mb-4">
-                Vous pouvez annuler votre abonnement à tout moment. L'accès Pro reste actif jusqu'à la fin de votre période de facturation.
+                Une question sur votre abonnement ? Notre équipe est là pour vous aider.
               </p>
               <a
                 href="mailto:support@vidova.me"
-                className="text-xs text-gray-900 hover:underline font-medium"
+                className="text-sm text-gray-900 hover:underline font-medium inline-flex items-center gap-1"
               >
                 Contacter le support
+                <ExternalLink className="h-3 w-3" />
               </a>
             </div>
           </div>
