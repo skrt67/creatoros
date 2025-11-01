@@ -186,23 +186,25 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
               </div>
             </div>
 
-            {/* Content Display/Editor */}
-            <div className="border border-gray-200 rounded-lg">
-              {editingAsset === activeAsset.id ? (
-                <textarea
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                  className="w-full h-96 p-4 border-0 resize-none focus:ring-0 focus:outline-none font-mono text-sm"
-                  placeholder="Edit your content..."
-                />
-              ) : (
-                <div className="p-4 max-h-96 overflow-y-auto">
-                  <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900 leading-relaxed">
-                    {activeAsset.content}
-                  </pre>
-                </div>
-              )}
-            </div>
+            {/* Content Display/Editor - Hidden for CLIPS as they have a custom preview below */}
+            {activeAsset.type !== 'CLIPS' && (
+              <div className="border border-gray-200 rounded-lg">
+                {editingAsset === activeAsset.id ? (
+                  <textarea
+                    value={editedContent}
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    className="w-full h-96 p-4 border-0 resize-none focus:ring-0 focus:outline-none font-mono text-sm"
+                    placeholder="Edit your content..."
+                  />
+                ) : (
+                  <div className="p-4 max-h-96 overflow-y-auto">
+                    <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900 leading-relaxed">
+                      {activeAsset.content}
+                    </pre>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Content Preview for specific types */}
             {activeAsset.type === 'TWITTER_THREAD' && !editingAsset && (

@@ -36,8 +36,11 @@ async def get_user_usage(user_id: str, prisma: Prisma) -> Dict:
         }
     )
 
-    # Get user plan
-    user = await prisma.user.find_unique(where={"id": user_id})
+    # Get user plan and subscription status
+    user = await prisma.user.find_unique(
+        where={"id": user_id},
+        include={"subscription": True}
+    )
 
     if not user:
         return {
@@ -45,11 +48,15 @@ async def get_user_usage(user_id: str, prisma: Prisma) -> Dict:
             "canProcess": False
         }
 
-    # Determine limit based on plan
+    # Determine limit based on plan AND active subscription
     plan = user.plan or "FREE"
-    if plan == "FREE":
-        limit = UsageLimits.FREE
-    elif plan in ["PRO", "ENTERPRISE"]:
+    has_active_subscription = (
+        user.subscription is not None and
+        user.subscription.status == "active"
+    )
+
+    # User must have both PRO/ENTERPRISE plan AND active subscription for unlimited access
+    if plan in ["PRO", "ENTERPRISE"] and has_active_subscription:
         limit = UsageLimits.PRO  # Unlimited
     else:
         limit = UsageLimits.FREE

@@ -127,9 +127,9 @@ export default function SettingsPage() {
                       <p className="text-sm text-gray-300">Prochaine facturation</p>
                       <p className="font-medium">15 décembre 2024</p>
                     </div>
-                    <button className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors font-medium">
+                    <Link href="/settings/subscription" className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors font-medium">
                       Gérer l'abonnement
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </div>

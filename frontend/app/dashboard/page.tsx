@@ -12,7 +12,8 @@ import {
   FileText,
   User,
   Settings,
-  LogOut
+  LogOut,
+  Crown
 } from 'lucide-react';
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
@@ -23,6 +24,7 @@ interface User {
   id: string;
   email: string;
   name?: string;
+  plan?: string;
 }
 
 interface Workspace {
@@ -169,6 +171,12 @@ export default function DashboardPage() {
         <div className="px-8 py-4 flex justify-end items-center">
           {user && (
             <div className="flex items-center gap-3">
+              {user.plan === 'PRO' && (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-gray-900 text-gray-900 rounded-full text-xs font-medium">
+                  <Crown className="h-3 w-3" />
+                  Pro
+                </div>
+              )}
               <div className="text-right">
                 <p className="text-sm font-medium text-gray-900">
                   {user.name || user.email.split('@')[0]}

@@ -53,6 +53,8 @@ class UserBase(BaseModel):
 
 class UserResponse(UserBase):
     id: str
+    name: Optional[str] = None
+    plan: str = "FREE"
     created_at: datetime
     updated_at: datetime
 

@@ -106,6 +106,8 @@ async def get_current_user_info(current_user = Depends(get_current_active_user))
     return UserResponse(
         id=current_user.id,
         email=current_user.email,
+        name=current_user.name,
+        plan=current_user.plan or "FREE",
         created_at=current_user.createdAt,
         updated_at=current_user.updatedAt
     )
