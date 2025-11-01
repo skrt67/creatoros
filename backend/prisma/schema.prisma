@@ -29,13 +29,13 @@ model User {
 
 model UsageTracking {
   id              String   @id @default(cuid())
-  userId          String
+  userId          String   @map("user_id")
   user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   month           String   // Format: YYYY-MM
-  videosProcessed Int      @default(0)
-  limit           Int      @default(3) // 3 for FREE, -1 for unlimited
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  videosProcessed Int      @default(0) @map("videos_processed")
+  limit           Int      @default(3)
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
   @@unique([userId, month])
   @@map("usage_tracking")
