@@ -4,6 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Video,
+  Calendar,
   Settings,
   LogOut
 } from 'lucide-react';
@@ -35,6 +36,12 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       icon: Video,
       path: '/dashboard/videos',
       active: pathname === '/dashboard/videos'
+    },
+    {
+      name: 'Calendrier',
+      icon: Calendar,
+      path: '/dashboard/calendar',
+      active: pathname === '/dashboard/calendar'
     }
   ];
 

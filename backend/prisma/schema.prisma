@@ -20,6 +20,7 @@ model User {
   workspaces    Workspace[]
   subscription  Subscription?
   tiktokAccount TikTokAccount?
+  scheduledPosts ScheduledPost[]
 
   @@map("users")
 }
@@ -103,8 +104,28 @@ model ContentAsset {
   updatedAt DateTime   @updatedAt
   jobId     String
   job       ProcessingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  scheduledPosts ScheduledPost[]
 
   @@map("content_assets")
+}
+
+model ScheduledPost {
+  id              String       @id @default(cuid())
+  contentAssetId  String
+  contentAsset    ContentAsset @relation(fields: [contentAssetId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  platform        String       // TWITTER, LINKEDIN, INSTAGRAM, TIKTOK, YOUTUBE
+  scheduledDate   DateTime
+  status          String       @default("SCHEDULED") // SCHEDULED, PUBLISHED, FAILED, CANCELLED
+  publishedAt     DateTime?
+  errorMessage    String?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@map("scheduled_posts")
+  @@index([userId, scheduledDate])
+  @@index([status, scheduledDate])
 }
 
 model Subscription {
