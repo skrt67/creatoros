@@ -28,28 +28,35 @@ async def create_checkout_session(
 ):
     """Create a Stripe checkout session for subscription."""
     try:
+        print(f"🔵 Creating checkout session for user: {current_user.id}, email: {current_user.email}")
+        print(f"🔵 Price ID: {checkout_data.price_id}")
+
         # Create or get Stripe customer
         prisma = Prisma()
         await prisma.connect()
-        
+
         try:
             subscription = await prisma.subscription.find_unique(
                 where={"userId": current_user.id}
             )
-            
+
             if subscription:
                 customer_id = subscription.stripeCustomerId
+                print(f"🔵 Found existing customer: {customer_id}")
             else:
                 # Create new Stripe customer
+                print(f"🔵 Creating new Stripe customer for {current_user.email}")
                 customer = stripe.Customer.create(
                     email=current_user.email,
                     metadata={"user_id": current_user.id}
                 )
                 customer_id = customer.id
+                print(f"🔵 Created customer: {customer_id}")
         finally:
             await prisma.disconnect()
-        
+
         # Create checkout session
+        print(f"🔵 Creating Stripe checkout session...")
         session = stripe.checkout.Session.create(
             customer=customer_id,
             payment_method_types=["card"],
@@ -64,18 +71,23 @@ async def create_checkout_session(
                 "user_id": current_user.id
             }
         )
-        
+
+        print(f"✅ Checkout session created: {session.id}")
         return CheckoutResponse(
             session_url=session.url,
             session_id=session.id
         )
-        
+
     except stripe.error.StripeError as e:
+        print(f"❌ Stripe error: {str(e)}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Stripe error: {str(e)}"
         )
     except Exception as e:
+        print(f"❌ Exception creating checkout session: {str(e)}")
+        import traceback
+        traceback.print_exc()
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to create checkout session: {str(e)}"
