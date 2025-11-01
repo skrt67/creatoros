@@ -11,6 +11,7 @@ from typing import Dict, Any, Optional
 import assemblyai as aai
 from prisma import Prisma
 from .gemini_service import GeminiService
+from . import clip_suggestions
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api._errors import TranscriptsDisabled, NoTranscriptFound, VideoUnavailable
 from youtube_transcript_api.proxies import GenericProxyConfig
@@ -82,7 +83,21 @@ class VideoProcessor:
             # Generate content using Gemini
             print("🤖 Generating content with Gemini...")
             generated_content = await self.gemini.generate_content(transcript_text)
-            
+
+            # Generate clip suggestions
+            print("✂️ Generating viral clip suggestions...")
+            try:
+                clips_result = await clip_suggestions.suggest_viral_clips(
+                    self.gemini.model,
+                    transcript_text,
+                    video_title,
+                    duration_seconds=60
+                )
+                print(f"✅ Generated {len(clips_result.get('data', {}).get('clips', []))} clip suggestions")
+            except Exception as e:
+                print(f"⚠️ Clip suggestions failed: {e}")
+                clips_result = None
+
             # Create transcript record
             import json
             await prisma.transcript.create(
@@ -116,7 +131,19 @@ class VideoProcessor:
                             "jobId": job_id
                         }
                     )
-            
+
+            # Save clip suggestions as content asset
+            if clips_result and clips_result.get('status') == 'generated':
+                await prisma.contentasset.create(
+                    data={
+                        "type": "CLIPS",
+                        "content": json.dumps(clips_result.get('data', {})),
+                        "status": "GENERATED",
+                        "jobId": job_id
+                    }
+                )
+                print(f"💾 Saved {len(clips_result.get('data', {}).get('clips', []))} clip suggestions to database")
+
             # Update job status
             await prisma.processingjob.update(
                 where={"id": job_id},
