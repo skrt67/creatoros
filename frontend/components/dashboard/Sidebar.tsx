@@ -32,12 +32,6 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       active: pathname === '/dashboard'
     },
     {
-      name: 'Vidéos',
-      icon: Video,
-      path: '/dashboard/videos',
-      active: pathname === '/dashboard/videos'
-    },
-    {
       name: 'Calendrier',
       icon: Calendar,
       path: '/dashboard/calendar',
