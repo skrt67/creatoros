@@ -369,7 +369,13 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
                   )
                 ) : (
                   contentAssets.length > 0 ? (
-                    <ContentAssetViewer assets={contentAssets} />
+                    <ContentAssetViewer
+                      assets={contentAssets}
+                      onRegenerate={(assetId, assetType) => {
+                        toast.success(`Régénération de ${assetType} en cours...`);
+                        // TODO: Implement regeneration API call
+                      }}
+                    />
                   ) : (
                     <div className="text-center py-16">
                       <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" strokeWidth={1.5} />

@@ -1,12 +1,20 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
-import { ArrowLeft, User, Bell, Shield, Video, LogOut, CreditCard, Crown } from 'lucide-react';
+import { ArrowLeft, User, Bell, Shield, Video, LogOut, Crown } from 'lucide-react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
+  const router = useRouter();
+
+  useEffect(() => {
+    if (activeTab === 'subscription') {
+      router.push('/settings/subscription');
+    }
+  }, [activeTab, router]);
 
   const handleLogout = () => {
     Cookies.remove('access_token');
@@ -87,116 +95,10 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Subscription Tab */}
+          {/* Subscription Tab - Redirect to dedicated page */}
           {activeTab === 'subscription' && (
-            <div className="space-y-12">
-              <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">Plan actuel</h3>
-                <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl border border-gray-700 p-8 text-white">
-                  <div className="flex items-start justify-between mb-6">
-                    <div>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Crown className="h-5 w-5 text-yellow-400" strokeWidth={1.5} />
-                        <span className="text-lg font-bold">Plan Pro</span>
-                      </div>
-                      <p className="text-gray-300 font-light">Accès complet à toutes les fonctionnalités</p>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-2xl font-bold">14,99€</div>
-                      <div className="text-sm text-gray-300">par mois</div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="text-2xl font-bold">∞</div>
-                      <div className="text-sm text-gray-300">Vidéos</div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="text-2xl font-bold">∞</div>
-                      <div className="text-sm text-gray-300">Contenu généré</div>
-                    </div>
-                    <div className="bg-white/10 rounded-lg p-4">
-                      <div className="text-2xl font-bold">24/7</div>
-                      <div className="text-sm text-gray-300">Support</div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm text-gray-300">Prochaine facturation</p>
-                      <p className="font-medium">15 décembre 2024</p>
-                    </div>
-                    <Link href="/settings/subscription" className="px-6 py-2 bg-white text-gray-900 rounded-lg hover:bg-gray-100 transition-colors font-medium">
-                      Gérer l'abonnement
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">Historique de facturation</h3>
-                <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between py-3 border-b border-gray-200">
-                      <div>
-                        <p className="font-medium text-gray-900">Plan Pro - Décembre 2024</p>
-                        <p className="text-sm text-gray-600 font-light">Facturé le 15 novembre 2024</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-gray-900">14,99€</p>
-                        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                          Télécharger
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between py-3 border-b border-gray-200">
-                      <div>
-                        <p className="font-medium text-gray-900">Plan Pro - Novembre 2024</p>
-                        <p className="text-sm text-gray-600 font-light">Facturé le 15 octobre 2024</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-gray-900">14,99€</p>
-                        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                          Télécharger
-                        </button>
-                      </div>
-                    </div>
-                    <div className="flex items-center justify-between py-3">
-                      <div>
-                        <p className="font-medium text-gray-900">Plan Pro - Octobre 2024</p>
-                        <p className="text-sm text-gray-600 font-light">Facturé le 15 septembre 2024</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium text-gray-900">14,99€</p>
-                        <button className="text-sm text-blue-600 hover:text-blue-700 font-medium">
-                          Télécharger
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div>
-                <h3 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">Méthode de paiement</h3>
-                <div className="bg-gray-50 rounded-2xl border border-gray-200 p-8">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-8 bg-blue-600 rounded flex items-center justify-center">
-                        <CreditCard className="h-4 w-4 text-white" strokeWidth={1.5} />
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">•••• •••• •••• 4242</p>
-                        <p className="text-sm text-gray-600 font-light">Expire le 12/26</p>
-                      </div>
-                    </div>
-                    <button className="px-4 py-2 border border-gray-300 rounded-lg text-gray-900 hover:border-gray-400 transition-colors font-medium">
-                      Modifier
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div className="text-center py-12">
+              <p className="text-gray-600 mb-4">Redirection vers la page d'abonnement...</p>
             </div>
           )}
 

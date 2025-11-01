@@ -210,17 +210,26 @@ async def handle_stripe_webhook(request: Request):
 
 async def handle_checkout_completed(session):
     """Handle successful checkout completion."""
+    from datetime import datetime
+
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
         user_id = session["metadata"]["user_id"]
         customer_id = session["customer"]
         subscription_id = session["subscription"]
-        
+
+        print(f"🔔 Processing checkout completion for user {user_id}")
+
         # Get subscription details from Stripe
         subscription = stripe.Subscription.retrieve(subscription_id)
-        
+
+        print(f"📦 Subscription retrieved: {subscription.id}, status: {subscription.status}")
+
+        # Convert Unix timestamp to datetime
+        period_end = datetime.fromtimestamp(subscription.current_period_end)
+
         # Create or update subscription record
         await prisma.subscription.upsert(
             where={"userId": user_id},
@@ -229,20 +238,35 @@ async def handle_checkout_completed(session):
                     "userId": user_id,
                     "stripeCustomerId": customer_id,
                     "stripeSubscriptionId": subscription_id,
-                    "stripePriceId": subscription["items"]["data"][0]["price"]["id"],
-                    "stripeCurrentPeriodEnd": subscription["current_period_end"],
-                    "status": subscription["status"]
+                    "stripePriceId": subscription.items.data[0].price.id,
+                    "stripeCurrentPeriodEnd": period_end,
+                    "status": subscription.status
                 },
                 "update": {
                     "stripeCustomerId": customer_id,
                     "stripeSubscriptionId": subscription_id,
-                    "stripePriceId": subscription["items"]["data"][0]["price"]["id"],
-                    "stripeCurrentPeriodEnd": subscription["current_period_end"],
-                    "status": subscription["status"]
+                    "stripePriceId": subscription.items.data[0].price.id,
+                    "stripeCurrentPeriodEnd": period_end,
+                    "status": subscription.status
                 }
             }
         )
-        
+
+        # Update user plan to PRO if subscription is active
+        if subscription.status in ["active", "trialing"]:
+            await prisma.user.update(
+                where={"id": user_id},
+                data={"plan": "PRO"}
+            )
+            print(f"✅ User {user_id} upgraded to PRO")
+
+        print(f"✅ Subscription record created/updated for user {user_id}")
+
+    except Exception as e:
+        print(f"❌ Error in handle_checkout_completed: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise
     finally:
         await prisma.disconnect()
 
@@ -253,18 +277,37 @@ async def handle_payment_succeeded(invoice):
 
 async def handle_subscription_updated(subscription):
     """Handle subscription updates."""
+    from datetime import datetime
+
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
-        await prisma.subscription.update(
+        # Convert Unix timestamp to datetime
+        period_end = datetime.fromtimestamp(subscription["current_period_end"])
+
+        # Update subscription
+        updated_sub = await prisma.subscription.update(
             where={"stripeSubscriptionId": subscription["id"]},
             data={
                 "stripePriceId": subscription["items"]["data"][0]["price"]["id"],
-                "stripeCurrentPeriodEnd": subscription["current_period_end"],
+                "stripeCurrentPeriodEnd": period_end,
                 "status": subscription["status"]
             }
         )
+
+        # Update user plan based on subscription status
+        if subscription["status"] in ["active", "trialing"]:
+            await prisma.user.update(
+                where={"id": updated_sub.userId},
+                data={"plan": "PRO"}
+            )
+        else:
+            await prisma.user.update(
+                where={"id": updated_sub.userId},
+                data={"plan": "FREE"}
+            )
+
     finally:
         await prisma.disconnect()
 
@@ -272,11 +315,19 @@ async def handle_subscription_deleted(subscription):
     """Handle subscription cancellation."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
-        await prisma.subscription.update(
+        # Update subscription status
+        updated_sub = await prisma.subscription.update(
             where={"stripeSubscriptionId": subscription["id"]},
             data={"status": "canceled"}
         )
+
+        # Downgrade user to FREE plan
+        await prisma.user.update(
+            where={"id": updated_sub.userId},
+            data={"plan": "FREE"}
+        )
+
     finally:
         await prisma.disconnect()
