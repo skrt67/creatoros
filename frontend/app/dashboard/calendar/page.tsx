@@ -184,7 +184,7 @@ export default function CalendarPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Sidebar userName={user?.name} userEmail={user?.email} />
+      <Sidebar />
 
       <main className="ml-64 p-8">
         {/* Header */}

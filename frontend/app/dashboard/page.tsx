@@ -159,7 +159,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-white flex">
       {/* Sidebar */}
-      <Sidebar userName={user?.name} userEmail={user?.email} />
+      <Sidebar />
 
       {/* Main Content */}
       <main className="flex-1 ml-64 p-8">

@@ -160,7 +160,7 @@ export default function TikTokPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-white flex">
-        <Sidebar userName={user?.name} userEmail={user?.email} />
+        <Sidebar />
         <main className="flex-1 ml-64 p-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center">
@@ -176,7 +176,7 @@ export default function TikTokPage() {
   if (error) {
     return (
       <div className="min-h-screen bg-white flex">
-        <Sidebar userName={user?.name} userEmail={user?.email} />
+        <Sidebar />
         <main className="flex-1 ml-64 p-8">
           <div className="flex items-center justify-center h-96">
             <div className="text-center max-w-md">
@@ -197,7 +197,7 @@ export default function TikTokPage() {
 
   return (
     <div className="min-h-screen bg-white flex">
-      <Sidebar userName={user?.name} userEmail={user?.email} />
+      <Sidebar />
 
       <main className="flex-1 ml-64 p-8">
         {/* Header */}
