@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ArrowLeft, Zap, Check, Sparkles, Crown, Star } from 'lucide-react';
+import { ArrowLeft, Check, Crown, Video } from 'lucide-react';
 import Cookies from 'js-cookie';
 import { toast } from 'react-hot-toast';
 
@@ -13,7 +13,7 @@ export default function BillingPage() {
   const handleUpgradeToPro = async () => {
     try {
       setIsLoading(true);
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8003';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
       const token = Cookies.get('access_token');
 
       if (!token) {
@@ -28,24 +28,23 @@ export default function BillingPage() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          price_id: 'price_1SOfVwGUC8VxEGVNjalEbEiN', // Pro plan Price ID
+          price_id: 'price_1SOfVwGUC8VxEGVNjalEbEiN',
           success_url: `${window.location.origin}/dashboard?upgrade=success`,
           cancel_url: `${window.location.origin}/billing?upgrade=cancelled`
         })
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la création de la session de paiement');
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Erreur lors de la création de la session de paiement');
       }
 
       const data = await response.json();
-
-      // Redirect to Stripe Checkout
       window.location.href = data.session_url;
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error:', error);
-      toast.error('Erreur lors du paiement. Veuillez réessayer.');
+      toast.error(error.message || 'Erreur lors du paiement. Veuillez réessayer.');
     } finally {
       setIsLoading(false);
     }
@@ -84,130 +83,102 @@ export default function BillingPage() {
       cta: 'Passer à Pro',
       current: false,
       popular: true
-    },
-    {
-      id: 'enterprise',
-      name: 'Enterprise',
-      price: billingCycle === 'monthly' ? 99 : 990,
-      description: 'Pour les équipes et agences',
-      features: [
-        'Tout du plan Pro',
-        'Collaboration en équipe',
-        'Accès API',
-        'Intégrations personnalisées',
-        'Support dédié',
-        'SLA garanti',
-        'Branding personnalisé'
-      ],
-      cta: 'Contacter les ventes',
-      current: false,
-      popular: false
     }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/20">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="sticky top-0 z-50 backdrop-blur-xl bg-white/80 border-b border-gray-200/60 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/dashboard" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-500 to-purple-500 rounded-xl blur-md opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary-600 to-purple-600">
-                  <Zap className="h-5 w-5 text-white" />
-                </div>
+      <header className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm border-b border-gray-200/60 z-50">
+        <div className="max-w-7xl mx-auto px-6 lg:px-12">
+          <div className="flex items-center justify-between h-20">
+            <Link href="/dashboard" className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-gray-900 rounded-lg flex items-center justify-center">
+                <Video className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xl font-black bg-gradient-to-r from-gray-900 via-primary-600 to-purple-600 bg-clip-text text-transparent">
-                Vidova
-              </span>
+              <span className="text-xl font-medium tracking-tight text-gray-900">Vidova</span>
             </Link>
 
             <Link
               href="/dashboard"
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-all"
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
             >
-              <ArrowLeft className="h-4 w-4" />
-              <span>Retour au dashboard</span>
+              <ArrowLeft className="h-4 w-4" strokeWidth={1.5} />
+              <span className="font-light">Retour</span>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="px-4 py-16 lg:py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-100 to-purple-100 border border-primary-200 rounded-full text-primary-700 text-sm font-semibold mb-6">
-            <Crown className="h-4 w-4" />
-            <span>Plans & Tarification</span>
+      {/* Main Content */}
+      <main className="pt-32 pb-20 px-6 lg:px-12">
+        <div className="max-w-6xl mx-auto">
+          {/* Page Title */}
+          <div className="text-center mb-16">
+            <h1 className="text-4xl lg:text-5xl font-light text-gray-900 mb-4 tracking-tight">
+              Tarifs
+            </h1>
+            <p className="text-lg text-gray-600 font-light max-w-2xl mx-auto">
+              Commencez gratuitement, évoluez quand vous êtes prêt
+            </p>
           </div>
-          <h1 className="text-4xl lg:text-5xl font-black text-gray-900 mb-6">
-            Choisissez le plan parfait<br />pour votre création
-          </h1>
-          <p className="text-xl text-gray-600 mb-8">
-            Commencez gratuitement, évoluez quand vous êtes prêt
-          </p>
 
           {/* Billing Toggle */}
-          <div className="inline-flex items-center gap-4 p-2 bg-white rounded-xl border border-gray-200 shadow-sm">
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Mensuel
-            </button>
-            <button
-              onClick={() => setBillingCycle('yearly')}
-              className={`px-6 py-2 rounded-lg font-semibold transition-all ${
-                billingCycle === 'yearly'
-                  ? 'bg-gradient-to-r from-primary-600 to-purple-600 text-white shadow-md'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Annuel
-              <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full font-bold">
-                -17%
-              </span>
-            </button>
+          <div className="flex justify-center mb-12">
+            <div className="inline-flex items-center gap-3 p-1.5 bg-gray-100 rounded-lg">
+              <button
+                onClick={() => setBillingCycle('monthly')}
+                className={`px-6 py-2.5 rounded-md font-medium transition-all text-sm ${
+                  billingCycle === 'monthly'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Mensuel
+              </button>
+              <button
+                onClick={() => setBillingCycle('yearly')}
+                className={`px-6 py-2.5 rounded-md font-medium transition-all text-sm ${
+                  billingCycle === 'yearly'
+                    ? 'bg-white text-gray-900 shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Annuel
+                <span className="ml-2 text-xs text-green-600 font-semibold">Économisez 17%</span>
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* Pricing Cards */}
-      <section className="px-4 pb-24">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {plans.map((plan, index) => (
+          {/* Pricing Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {plans.map((plan) => (
               <div
                 key={plan.id}
-                className={`relative bg-white rounded-2xl shadow-sm border-2 transition-all hover:shadow-xl ${
+                className={`relative bg-white rounded-2xl border-2 transition-all ${
                   plan.popular
-                    ? 'border-primary-500 scale-105'
+                    ? 'border-gray-900 shadow-lg'
                     : 'border-gray-200'
                 }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                    <div className="inline-flex items-center gap-1 px-4 py-1.5 bg-gradient-to-r from-primary-600 to-purple-600 text-white text-sm font-bold rounded-full shadow-lg">
-                      <Star className="h-3 w-3" />
-                      <span>Plus populaire</span>
+                    <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-full">
+                      <Crown className="h-3 w-3" />
+                      <span>Recommandé</span>
                     </div>
                   </div>
                 )}
 
                 <div className="p-8">
                   {/* Header */}
-                  <div className="text-center mb-6">
-                    <h3 className="text-2xl font-black text-gray-900 mb-2">{plan.name}</h3>
-                    <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
-                    <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-5xl font-black text-gray-900">{plan.price}€</span>
+                  <div className="mb-8">
+                    <h3 className="text-2xl font-medium text-gray-900 mb-2">{plan.name}</h3>
+                    <p className="text-gray-600 text-sm font-light mb-6">{plan.description}</p>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-5xl font-light text-gray-900">{plan.price}€</span>
                       {plan.price > 0 && (
-                        <span className="text-gray-500">/{billingCycle === 'monthly' ? 'mois' : 'an'}</span>
+                        <span className="text-gray-500 font-light">/{billingCycle === 'monthly' ? 'mois' : 'an'}</span>
                       )}
                     </div>
                   </div>
@@ -216,8 +187,10 @@ export default function BillingPage() {
                   <ul className="space-y-3 mb-8">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <Check className="h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" />
-                        <span className="text-gray-700">{feature}</span>
+                        <div className="mt-0.5">
+                          <Check className="h-4 w-4 text-gray-900" strokeWidth={2} />
+                        </div>
+                        <span className="text-gray-700 font-light text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -226,106 +199,90 @@ export default function BillingPage() {
                   <button
                     onClick={() => plan.id === 'pro' && handleUpgradeToPro()}
                     disabled={plan.current || isLoading}
-                    className={`w-full px-6 py-3 rounded-xl font-bold transition-all ${
-                      plan.current || isLoading
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    className={`w-full px-6 py-3 rounded-lg font-medium transition-all text-sm ${
+                      plan.current
+                        ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                         : plan.popular
-                        ? 'bg-gradient-to-r from-primary-600 to-purple-600 hover:from-primary-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl hover:scale-105'
-                        : 'bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-300 hover:border-primary-500'
-                    }`}
+                        ? 'bg-gray-900 hover:bg-gray-800 text-white'
+                        : 'bg-gray-900 hover:bg-gray-800 text-white'
+                    } ${isLoading ? 'opacity-50 cursor-wait' : ''}`}
                   >
                     {plan.current ? (
                       <span className="flex items-center justify-center gap-2">
-                        <Check className="h-5 w-5" />
+                        <Check className="h-4 w-4" />
                         {plan.cta}
                       </span>
                     ) : isLoading && plan.id === 'pro' ? (
                       <span className="flex items-center justify-center gap-2">
-                        <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
+                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                         Chargement...
                       </span>
                     ) : (
-                      <span className="flex items-center justify-center gap-2">
-                        <Sparkles className="h-5 w-5" />
-                        {plan.cta}
-                      </span>
+                      plan.cta
                     )}
                   </button>
                 </div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* FAQ */}
-      <section className="px-4 py-16 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-black text-gray-900 mb-4">
+          {/* FAQ */}
+          <div className="mt-24 max-w-3xl mx-auto">
+            <h2 className="text-3xl font-light text-gray-900 mb-8 text-center tracking-tight">
               Questions fréquentes
             </h2>
-          </div>
 
-          <div className="space-y-4">
-            {[
-              {
-                q: 'Puis-je changer de plan à tout moment ?',
-                a: 'Oui, vous pouvez upgrader ou downgrader votre plan à tout moment. Les changements sont proratisés.'
-              },
-              {
-                q: "Que se passe-t-il si j'annule ?",
-                a: "Vous conserverez l'accès aux fonctionnalités payantes jusqu'à la fin de votre période de facturation, puis vous serez automatiquement basculé sur le plan gratuit."
-              },
-              {
-                q: 'Proposez-vous des remboursements ?',
-                a: 'Nous offrons une garantie satisfait ou remboursé de 30 jours pour tous les plans payants. Contactez le support pour toute demande.'
-              },
-              {
-                q: 'Comment sont gérés les paiements ?',
-                a: 'Tous les paiements sont traités de manière sécurisée via Stripe. Nous ne stockons jamais vos informations de carte bancaire.'
-              }
-            ].map((faq, index) => (
-              <details key={index} className="group bg-gray-50 rounded-xl border border-gray-200 overflow-hidden">
-                <summary className="flex items-center justify-between p-6 cursor-pointer hover:bg-gray-100 transition-colors">
-                  <span className="font-bold text-gray-900">{faq.q}</span>
-                  <span className="text-primary-600 group-open:rotate-180 transition-transform">▼</span>
-                </summary>
-                <div className="px-6 pb-6 text-gray-600">
-                  {faq.a}
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="px-4 py-16">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-gradient-to-br from-primary-600 via-purple-600 to-pink-600 rounded-3xl p-12 text-center text-white relative overflow-hidden">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
-              <div className="absolute bottom-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+            <div className="space-y-4">
+              {[
+                {
+                  q: 'Puis-je changer de plan à tout moment ?',
+                  a: 'Oui, vous pouvez upgrader ou downgrader votre plan à tout moment. Les changements sont proratisés.'
+                },
+                {
+                  q: "Que se passe-t-il si j'annule ?",
+                  a: "Vous conserverez l'accès aux fonctionnalités payantes jusqu'à la fin de votre période de facturation, puis vous serez automatiquement basculé sur le plan gratuit."
+                },
+                {
+                  q: 'Proposez-vous des remboursements ?',
+                  a: 'Nous offrons une garantie satisfait ou remboursé de 30 jours pour tous les plans payants.'
+                },
+                {
+                  q: 'Comment sont gérés les paiements ?',
+                  a: 'Tous les paiements sont traités de manière sécurisée via Stripe. Nous ne stockons jamais vos informations de carte bancaire.'
+                }
+              ].map((faq, index) => (
+                <details key={index} className="group bg-white border border-gray-200/60 rounded-xl overflow-hidden">
+                  <summary className="flex items-center justify-between p-5 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <span className="font-medium text-gray-900">{faq.q}</span>
+                    <span className="text-gray-400 group-open:rotate-180 transition-transform text-sm">▼</span>
+                  </summary>
+                  <div className="px-5 pb-5 text-gray-600 font-light text-sm border-t border-gray-100 pt-4">
+                    {faq.a}
+                  </div>
+                </details>
+              ))}
             </div>
-            <div className="relative z-10">
-              <h2 className="text-3xl font-black mb-4">Une question sur les plans ?</h2>
-              <p className="text-white/90 text-lg mb-8">
-                Notre équipe est là pour vous aider à choisir le meilleur plan
+          </div>
+
+          {/* CTA */}
+          <div className="mt-20 text-center">
+            <div className="inline-flex flex-col items-center gap-4 p-12 bg-gray-50 border border-gray-200/60 rounded-2xl">
+              <h3 className="text-2xl font-light text-gray-900">
+                Une question sur les plans ?
+              </h3>
+              <p className="text-gray-600 font-light">
+                Notre équipe est là pour vous aider
               </p>
               <Link
-                href="/help"
-                className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-gray-50 text-primary-600 font-bold rounded-xl shadow-lg transition-all hover:scale-105"
+                href="mailto:support@vidova.me"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors text-sm"
               >
                 Contacter le support
               </Link>
             </div>
           </div>
         </div>
-      </section>
+      </main>
     </div>
   );
 }
