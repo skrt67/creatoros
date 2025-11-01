@@ -18,6 +18,7 @@ const ASSET_ICONS: Record<AssetType, React.ReactNode> = {
   NEWSLETTER: <Mail className="h-4 w-4" />,
   VIDEO_HIGHLIGHTS: <Video className="h-4 w-4" />,
   CLIPS: <Scissors className="h-4 w-4" />,
+  TIKTOK: <Video className="h-4 w-4" />,
 };
 
 export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
