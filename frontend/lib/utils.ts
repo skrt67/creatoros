@@ -5,24 +5,50 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string | Date): string {
-  const d = new Date(date);
-  return d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
+export function formatDate(date: string | Date | null | undefined): string {
+  if (!date) return 'Unknown date';
+
+  try {
+    const d = new Date(date);
+
+    // Check if the date is valid
+    if (isNaN(d.getTime())) {
+      return 'Invalid date';
+    }
+
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  } catch (error) {
+    console.warn('Error formatting date:', date, error);
+    return 'Invalid date';
+  }
 }
 
-export function formatDateTime(date: string | Date): string {
-  const d = new Date(date);
-  return d.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+export function formatDateTime(date: string | Date | null | undefined): string {
+  if (!date) return 'Unknown date';
+
+  try {
+    const d = new Date(date);
+
+    // Check if the date is valid
+    if (isNaN(d.getTime())) {
+      return 'Invalid date';
+    }
+
+    return d.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  } catch (error) {
+    console.warn('Error formatting date:', date, error);
+    return 'Invalid date';
+  }
 }
 
 export function formatDuration(seconds: number): string {
