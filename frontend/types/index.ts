@@ -134,8 +134,8 @@ export interface ContentAsset {
   type: AssetType;
   content: string;
   status: AssetStatus;
-  created_at: string;
-  updated_at: string;
+  created_at?: string;
+  updated_at?: string;
   job_id: string;
 }
 

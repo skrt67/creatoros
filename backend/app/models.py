@@ -114,8 +114,8 @@ class ContentAssetResponse(BaseModel):
     type: AssetType
     content: str
     status: AssetStatus
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
     job_id: str
 
 # Billing Models
