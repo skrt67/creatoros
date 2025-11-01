@@ -32,24 +32,33 @@ TIKTOK_CLIENT_SECRET = os.getenv("TIKTOK_CLIENT_SECRET", "mHFuDEhsdVsmB6Wqz8viUL
 # For local: use localhost:3000, for production: use vidova.me
 TIKTOK_REDIRECT_URI = os.getenv("TIKTOK_REDIRECT_URI", "http://localhost:3000/tiktok/callback")
 
+# Temporary storage for code_verifiers (in production use Redis)
+code_verifiers = {}
+
 
 @router.get("/auth-url")
-async def get_tiktok_auth_url(code_verifier: str = None):
+async def get_tiktok_auth_url():
     """
     Get TikTok OAuth authorization URL with PKCE
     """
     import urllib.parse
     import hashlib
     import base64
+    import uuid
     
-    # Use provided code_verifier or generate new one
-    if not code_verifier:
-        code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
+    # Always generate new code_verifier
+    code_verifier = base64.urlsafe_b64encode(secrets.token_bytes(32)).decode('utf-8').rstrip('=')
     
     # Generate code_challenge from code_verifier
     code_challenge = base64.urlsafe_b64encode(
         hashlib.sha256(code_verifier.encode('utf-8')).digest()
     ).decode('utf-8').rstrip('=')
+    
+    # Generate unique state
+    state = str(uuid.uuid4())
+    
+    # Store code_verifier with state
+    code_verifiers[state] = code_verifier
     
     # TikTok OAuth authorization URL with PKCE
     params = {
@@ -57,7 +66,7 @@ async def get_tiktok_auth_url(code_verifier: str = None):
         "scope": "user.info.basic,video.list",
         "response_type": "code",
         "redirect_uri": TIKTOK_REDIRECT_URI,
-        "state": "random_state_string",
+        "state": state,
         "code_challenge": code_challenge,
         "code_challenge_method": "S256"
     }
@@ -82,10 +91,15 @@ async def tiktok_callback(data: dict):
     """
     try:
         code = data.get("code")
-        code_verifier = data.get("code_verifier")
+        state = data.get("state")
         
         if not code:
             raise HTTPException(status_code=400, detail="No authorization code provided")
+        
+        # Get code_verifier from storage using state
+        code_verifier = code_verifiers.get(state)
+        if not code_verifier:
+            raise HTTPException(status_code=400, detail="Invalid state or code_verifier not found")
 
         # Exchange code for access token
         async with httpx.AsyncClient() as client:

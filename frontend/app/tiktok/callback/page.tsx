@@ -17,8 +17,9 @@ export default function TikTokCallbackPage() {
 
   const handleCallback = async () => {
     try {
-      // Get authorization code from URL
+      // Get authorization code and state from URL
       const code = searchParams.get('code');
+      const state = searchParams.get('state');
       const error = searchParams.get('error');
 
       if (error) {
@@ -28,17 +29,14 @@ export default function TikTokCallbackPage() {
         return;
       }
 
-      if (!code) {
+      if (!code || !state) {
         setStatus('error');
-        setMessage('Code d\'autorisation manquant');
+        setMessage('Code d\'autorisation ou state manquant');
         setTimeout(() => router.push('/tiktok'), 3000);
         return;
       }
-
-      // Get code_verifier from localStorage
-      const codeVerifier = localStorage.getItem('tiktok_code_verifier');
       
-      // Send code and code_verifier to backend
+      // Send code and state to backend
       const apiUrl = 'https://api.vidova.me';
       const response = await fetch(`${apiUrl}/tiktok/callback`, {
         method: 'POST',
@@ -47,12 +45,9 @@ export default function TikTokCallbackPage() {
         },
         body: JSON.stringify({ 
           code,
-          code_verifier: codeVerifier 
+          state 
         })
       });
-      
-      // Clean up code_verifier from localStorage
-      localStorage.removeItem('tiktok_code_verifier');
 
       if (!response.ok) {
         const errorData = await response.json();
