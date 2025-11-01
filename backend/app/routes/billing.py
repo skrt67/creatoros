@@ -106,26 +106,35 @@ async def create_portal_session(
         subscription = await prisma.subscription.find_unique(
             where={"userId": current_user.id}
         )
-        
+
         if not subscription:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="No subscription found"
             )
-        
+
+        # Check if this is a test subscription (manual)
+        if subscription.stripeCustomerId.startswith("cus_test_"):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Cannot manage test subscriptions. Please subscribe via Stripe to manage your subscription."
+            )
+
         # Create portal session
         session = stripe.billing_portal.Session.create(
             customer=subscription.stripeCustomerId,
             return_url=portal_data.return_url,
         )
-        
+
         return PortalResponse(portal_url=session.url)
-        
+
     except stripe.error.StripeError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Stripe error: {str(e)}"
         )
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

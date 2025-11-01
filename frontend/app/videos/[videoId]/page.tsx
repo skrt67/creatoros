@@ -371,9 +371,33 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
                   contentAssets.length > 0 ? (
                     <ContentAssetViewer
                       assets={contentAssets}
-                      onRegenerate={(assetId, assetType) => {
-                        toast.success(`Régénération de ${assetType} en cours...`);
-                        // TODO: Implement regeneration API call
+                      onRegenerate={async (assetId, assetType) => {
+                        try {
+                          const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
+                          const token = Cookies.get('access_token');
+
+                          toast.loading(`Régénération de ${assetType} en cours...`, { id: assetId });
+
+                          const response = await fetch(`${apiUrl}/videos/content/${assetId}/regenerate`, {
+                            method: 'POST',
+                            headers: {
+                              'Authorization': `Bearer ${token}`
+                            }
+                          });
+
+                          if (!response.ok) {
+                            throw new Error('Erreur lors de la régénération');
+                          }
+
+                          toast.success('Contenu régénéré avec succès !', { id: assetId });
+
+                          // Refresh the page data
+                          await fetchVideoDetails();
+
+                        } catch (error: any) {
+                          console.error('Regeneration error:', error);
+                          toast.error(error.message || 'Erreur lors de la régénération', { id: assetId });
+                        }
                       }}
                     />
                   ) : (
