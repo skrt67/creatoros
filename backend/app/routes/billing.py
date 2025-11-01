@@ -237,7 +237,9 @@ async def handle_checkout_completed(session):
         print(f"📦 Subscription retrieved: {subscription.id}, status: {subscription.status}")
 
         # Convert Unix timestamp to datetime
-        period_end = datetime.fromtimestamp(subscription.current_period_end)
+        # Handle both dict and object notation
+        period_end_timestamp = getattr(subscription, 'current_period_end', None) or subscription.get('current_period_end')
+        period_end = datetime.fromtimestamp(period_end_timestamp)
 
         # Create or update subscription record
         await prisma.subscription.upsert(

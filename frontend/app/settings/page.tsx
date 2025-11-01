@@ -1,20 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import Cookies from 'js-cookie';
 import { ArrowLeft, User, Bell, Shield, Video, LogOut, Crown } from 'lucide-react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
-  const router = useRouter();
-
-  useEffect(() => {
-    if (activeTab === 'subscription') {
-      router.push('/settings/subscription');
-    }
-  }, [activeTab, router]);
 
   const handleLogout = () => {
     Cookies.remove('access_token');
@@ -95,10 +87,21 @@ export default function SettingsPage() {
             </div>
           )}
 
-          {/* Subscription Tab - Redirect to dedicated page */}
+          {/* Subscription Tab */}
           {activeTab === 'subscription' && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 mb-4">Redirection vers la page d'abonnement...</p>
+            <div className="text-center py-16">
+              <Crown className="h-16 w-16 text-gray-400 mx-auto mb-6" strokeWidth={1.5} />
+              <h3 className="text-2xl font-light text-gray-900 mb-3">Gérer votre abonnement</h3>
+              <p className="text-gray-600 mb-8 font-light max-w-md mx-auto">
+                Consultez et gérez votre plan, votre facturation et vos options d'abonnement.
+              </p>
+              <Link
+                href="/settings/subscription"
+                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 hover:bg-gray-800 text-white font-medium rounded-lg transition-colors"
+              >
+                <Crown className="h-4 w-4" />
+                Voir mes abonnements
+              </Link>
             </div>
           )}
 
