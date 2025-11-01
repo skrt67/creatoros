@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowLeft, Play, Clock, CheckCircle, AlertCircle, FileText, Copy, ExternalLink, Video, RefreshCw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ContentAssetViewer } from '@/components/video/ContentAssetViewer';
+import type { ContentAsset } from '@/types';
 
 interface VideoDetails {
   id: string;
@@ -27,16 +28,6 @@ interface Transcript {
   id: string;
   content: string;
   segments: TranscriptSegment[];
-}
-
-interface ContentAsset {
-  id: string;
-  type: string;
-  content: string;
-  status: string;
-  created_at: string;
-  updated_at: string;
-  job_id: string;
 }
 
 export default function VideoDetailPage({ params }: { params: { videoId: string } }) {
@@ -85,7 +76,8 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
             });
             if (assetsResponse.ok) {
               const assetsData = await assetsResponse.json();
-              setContentAssets(assetsData);
+              // Cast to ContentAsset type
+              setContentAssets(assetsData as ContentAsset[]);
             }
           } catch (err) {
             console.log('Content assets not available');
