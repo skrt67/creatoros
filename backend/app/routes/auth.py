@@ -91,7 +91,7 @@ async def login_user(user_credentials: UserLogin):
     
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=access_token_expires
+        data={"sub": user.id, "email": user.email}, expires_delta=access_token_expires
     )
     
     return Token(
@@ -192,7 +192,7 @@ async def google_auth(
         # Generate JWT token
         access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = create_access_token(
-            data={"sub": user.email},
+            data={"sub": user.id, "email": user.email},
             expires_delta=access_token_expires
         )
         

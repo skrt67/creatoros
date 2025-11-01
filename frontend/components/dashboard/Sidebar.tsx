@@ -4,12 +4,8 @@ import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Video,
-  Youtube,
-  Instagram,
-  Twitter,
   Settings,
-  LogOut,
-  Music
+  LogOut
 } from 'lucide-react';
 import Cookies from 'js-cookie';
 
@@ -39,31 +35,6 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
       icon: Video,
       path: '/dashboard/videos',
       active: pathname === '/dashboard/videos'
-    },
-    {
-      name: 'TikTok',
-      icon: Music,
-      path: '/tiktok',
-      active: pathname === '/tiktok' || pathname.startsWith('/tiktok/'),
-      highlight: true
-    },
-    {
-      name: 'YouTube',
-      icon: Youtube,
-      path: '/dashboard/youtube',
-      active: pathname === '/dashboard/youtube'
-    },
-    {
-      name: 'Instagram',
-      icon: Instagram,
-      path: '/dashboard/instagram',
-      active: pathname === '/dashboard/instagram'
-    },
-    {
-      name: 'Twitter',
-      icon: Twitter,
-      path: '/dashboard/twitter',
-      active: pathname === '/dashboard/twitter'
     }
   ];
 
@@ -111,7 +82,6 @@ export function Sidebar({ userName, userEmail }: SidebarProps) {
                     ? 'bg-gray-100 text-gray-900'
                     : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                   }
-                  ${item.highlight && item.active ? 'bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-200' : ''}
                 `}
               >
                 <Icon className="h-5 w-5" strokeWidth={1.5} />

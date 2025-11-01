@@ -46,10 +46,24 @@ async def get_user_by_email(email: str):
     """Get user by email address."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
         user = await prisma.user.find_unique(
             where={"email": email},
+            include={"workspaces": True}
+        )
+        return user
+    finally:
+        await prisma.disconnect()
+
+async def get_user_by_id(user_id: str):
+    """Get user by user ID."""
+    prisma = Prisma()
+    await prisma.connect()
+
+    try:
+        user = await prisma.user.find_unique(
+            where={"id": user_id},
             include={"workspaces": True}
         )
         return user
@@ -72,17 +86,19 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    
+
     try:
         payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        user_id: str = payload.get("sub")
+        if user_id is None:
             raise credentials_exception
-        token_data = TokenData(email=email)
+        # Keep email for backwards compatibility
+        email: str = payload.get("email")
+        token_data = TokenData(email=email or user_id)
     except JWTError:
         raise credentials_exception
-    
-    user = await get_user_by_email(email=token_data.email)
+
+    user = await get_user_by_id(user_id=user_id)
     if user is None:
         raise credentials_exception
     return user
