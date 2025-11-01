@@ -15,14 +15,31 @@ model User {
   email         String        @unique
   hashedPassword String
   name          String?
+  plan          String        @default("FREE") // FREE, PRO, ENTERPRISE
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
   workspaces    Workspace[]
   subscription  Subscription?
   tiktokAccount TikTokAccount?
   scheduledPosts ScheduledPost[]
+  usageTracking UsageTracking[]
 
   @@map("users")
+}
+
+model UsageTracking {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month           String   // Format: YYYY-MM
+  videosProcessed Int      @default(0)
+  limit           Int      @default(3) // 3 for FREE, -1 for unlimited
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([userId, month])
+  @@map("usage_tracking")
+  @@index([userId, month])
 }
 
 model TikTokAccount {

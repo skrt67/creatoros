@@ -14,6 +14,7 @@ import {
 import { Sidebar } from '@/components/dashboard/Sidebar';
 import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
 import { VideoList } from '@/components/dashboard/VideoList';
+import { UsageCounter } from '@/components/dashboard/UsageCounter';
 
 interface User {
   id: string;
@@ -170,6 +171,11 @@ export default function DashboardPage() {
           <p className="text-gray-600 text-sm font-light">
             Transformez vos vidéos en contenu viral pour toutes vos plateformes
           </p>
+        </div>
+
+        {/* Usage Counter */}
+        <div className="mb-8">
+          <UsageCounter />
         </div>
 
         {/* Add Video Button */}

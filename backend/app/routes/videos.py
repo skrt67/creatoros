@@ -16,6 +16,7 @@ from ..models import (
 )
 from ..auth import get_current_active_user
 from ..services.video_processor import VideoProcessor
+from ..services import usage_service
 
 router = APIRouter(tags=["videos"])
 
@@ -28,19 +29,31 @@ async def submit_video_for_processing(
     """Submit a YouTube video for processing."""
     prisma = Prisma()
     await prisma.connect()
-    
+
     try:
+        # Check usage limits FIRST
+        can_process, error_message = await usage_service.check_can_process_video(
+            current_user.id,
+            prisma
+        )
+
+        if not can_process:
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail=error_message
+            )
+
         # Verify workspace ownership
         workspace = await prisma.workspace.find_unique(
             where={"id": workspace_id}
         )
-        
+
         if not workspace:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Workspace not found"
             )
-        
+
         if workspace.ownerId != current_user.id:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
@@ -69,6 +82,10 @@ async def submit_video_for_processing(
             }
         )
         
+        # Increment usage counter
+        usage_result = await usage_service.increment_usage(current_user.id, prisma)
+        print(f"✅ Usage incremented: {usage_result['usage']}")
+
         # Process video asynchronously (without Temporal)
         asyncio.create_task(process_video_async(
             video_source.id,
@@ -76,14 +93,15 @@ async def submit_video_for_processing(
             job_id,
             workspace_id
         ))
-        
+
         return APIResponse(
             success=True,
             message="Video submitted for processing",
             data={
                 "video_id": video_source.id,
                 "job_id": job_id,
-                "workflow_id": workflow_id
+                "workflow_id": workflow_id,
+                "usage": usage_result['usage']
             }
         )
     except HTTPException:
