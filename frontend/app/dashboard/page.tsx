@@ -14,6 +14,10 @@ import {
   Settings,
   LogOut
 } from 'lucide-react';
+import { Sidebar } from '@/components/dashboard/Sidebar';
+import { VideoSubmission } from '@/components/dashboard/VideoSubmission';
+import { VideoList } from '@/components/dashboard/VideoList';
+import { UsageCounter } from '@/components/dashboard/UsageCounter';
 
 interface User {
   id: string;
