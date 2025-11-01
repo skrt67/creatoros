@@ -21,7 +21,7 @@ export default function HomePage() {
               <Link href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
                 Fonctionnalités
               </Link>
-              <Link href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
+              <Link href="/billing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
                 Tarifs
               </Link>
             </nav>
@@ -204,7 +204,7 @@ export default function HomePage() {
               <div className="text-xs text-white/80 font-medium mb-4 uppercase tracking-wider">Populaire</div>
               <h3 className="text-2xl font-medium text-white mb-2">Pro</h3>
               <div className="mb-6">
-                <span className="text-4xl font-light text-white">29€</span>
+                <span className="text-4xl font-light text-white">14,99€</span>
                 <span className="text-white/80 font-light">/mois</span>
               </div>
               <ul className="space-y-4 mb-8">
@@ -299,7 +299,7 @@ export default function HomePage() {
               <h3 className="text-sm font-medium text-gray-900 mb-4">Produit</h3>
               <ul className="space-y-3">
                 <li><Link href="#features" className="text-sm text-gray-600 hover:text-gray-900 font-light">Fonctionnalités</Link></li>
-                <li><Link href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 font-light">Tarifs</Link></li>
+                <li><Link href="/billing" className="text-sm text-gray-600 hover:text-gray-900 font-light">Tarifs</Link></li>
               </ul>
             </div>
 

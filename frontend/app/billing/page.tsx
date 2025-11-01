@@ -70,7 +70,7 @@ export default function BillingPage() {
     {
       id: 'pro',
       name: 'Pro',
-      price: billingCycle === 'monthly' ? 29 : 290,
+      price: billingCycle === 'monthly' ? 14.99 : 149.99,
       description: 'Pour les créateurs sérieux',
       features: [
         'Vidéos illimitées',

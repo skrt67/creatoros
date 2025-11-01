@@ -228,10 +228,21 @@ export const ContentAssetViewer: React.FC<ContentAssetViewerProps> = ({
                 const clipsData = JSON.parse(activeAsset.content);
                 return (
                   <div className="space-y-4">
+                    {/* Explanation Banner */}
+                    <div className="bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-purple-900 mb-2 flex items-center gap-2">
+                        <Scissors className="h-5 w-5" />
+                        Suggestions de Clips Viraux
+                      </h4>
+                      <p className="text-sm text-purple-700 leading-relaxed">
+                        Notre IA a analysé votre vidéo et identifié les moments les plus percutants pour créer des clips courts optimisés pour TikTok, YouTube Shorts et Instagram Reels. Chaque clip est sélectionné pour son potentiel viral avec un score de viralité, des timestamps précis et un hook accrocheur.
+                      </p>
+                    </div>
+
                     <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-gray-900">Viral Clips Suggestions</h4>
+                      <h4 className="font-medium text-gray-900">Clips Générés</h4>
                       <span className="text-sm text-gray-500">
-                        {clipsData.clips?.length || 0} clips generated
+                        {clipsData.clips?.length || 0} clips identifiés
                       </span>
                     </div>
 

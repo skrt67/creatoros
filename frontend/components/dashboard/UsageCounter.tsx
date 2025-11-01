@@ -175,11 +175,11 @@ export function UsageCounter() {
       {usage.plan === 'FREE' && (
         <div className="mt-4 pt-4 border-t border-gray-200">
           <button
-            onClick={() => window.location.href = '/pricing'}
+            onClick={() => window.location.href = '/billing'}
             className="w-full px-4 py-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all flex items-center justify-center gap-2"
           >
             <Crown className="h-4 w-4" />
-            Passer à Pro - Illimité
+            Passer à Pro - 14,99€/mois
           </button>
         </div>
       )}
