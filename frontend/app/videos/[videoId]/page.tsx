@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, Play, Clock, CheckCircle, AlertCircle, FileText, Copy, ExternalLink, Video, RefreshCw } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { ContentAssetViewer } from '@/components/video/ContentAssetViewer';
 
 interface VideoDetails {
   id: string;
@@ -33,7 +34,9 @@ interface ContentAsset {
   type: string;
   content: string;
   status: string;
-  createdAt: string;
+  created_at: string;
+  updated_at: string;
+  job_id: string;
 }
 
 export default function VideoDetailPage({ params }: { params: { videoId: string } }) {
@@ -374,42 +377,7 @@ export default function VideoDetailPage({ params }: { params: { videoId: string 
                   )
                 ) : (
                   contentAssets.length > 0 ? (
-                    <div className="space-y-6">
-                      {contentAssets.map((asset) => (
-                        <div key={asset.id} className="border border-gray-200 rounded-2xl overflow-hidden">
-                          <div className="bg-gray-50 px-6 py-4 flex items-center justify-between border-b border-gray-200">
-                            <div>
-                              <h4 className="font-medium text-gray-900">{asset.type}</h4>
-                              <p className="text-xs text-gray-600 font-light mt-1">
-                                {new Date(asset.createdAt).toLocaleDateString('fr-FR')}
-                              </p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                              <button
-                                onClick={() => regenerateContent(asset.id)}
-                                disabled={regeneratingAssetId === asset.id}
-                                className="inline-flex items-center gap-2 px-4 py-2 border border-gray-300 hover:bg-gray-100 text-gray-700 rounded-lg transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                              >
-                                <RefreshCw className={`h-4 w-4 ${regeneratingAssetId === asset.id ? 'animate-spin' : ''}`} strokeWidth={1.5} />
-                                <span>{regeneratingAssetId === asset.id ? 'Régénération...' : 'Régénérer'}</span>
-                              </button>
-                              <button
-                                onClick={() => copyToClipboard(asset.content)}
-                                className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 hover:bg-gray-800 text-white rounded-lg transition-colors font-medium"
-                              >
-                                <Copy className="h-4 w-4" strokeWidth={1.5} />
-                                <span>Copier</span>
-                              </button>
-                            </div>
-                          </div>
-                          <div className="p-6">
-                            <div className="prose max-w-none">
-                              <div className="text-gray-600 font-light leading-relaxed whitespace-pre-wrap">{asset.content}</div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <ContentAssetViewer assets={contentAssets} />
                   ) : (
                     <div className="text-center py-16">
                       <FileText className="h-12 w-12 text-gray-300 mx-auto mb-4" strokeWidth={1.5} />
