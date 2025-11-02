@@ -349,7 +349,9 @@ async def get_video_content(
                 "type": asset.type,
                 "content": asset.content,
                 "status": asset.status,
-                "createdAt": asset.createdAt.isoformat()
+                "created_at": asset.createdAt.isoformat() if asset.createdAt else None,
+                "updated_at": asset.updatedAt.isoformat() if asset.updatedAt else None,
+                "job_id": asset.jobId
             })
         
         return content_assets

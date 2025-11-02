@@ -26,6 +26,7 @@ from app.routes.tiktok import router as tiktok_router
 from app.routes.stats import router as stats_router
 from app.routes.calendar import router as calendar_router
 from app.routes.usage import router as usage_router
+from app.routes.preferences import router as preferences_router
 
 # Global variables
 prisma_client: Prisma = None
@@ -172,6 +173,7 @@ app.include_router(tiktok_router)
 app.include_router(stats_router)
 app.include_router(calendar_router)
 app.include_router(usage_router)
+app.include_router(preferences_router)
 
 # Root endpoint
 @app.get("/")

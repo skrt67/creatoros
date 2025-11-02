@@ -23,6 +23,7 @@ model User {
   tiktokAccount TikTokAccount?
   scheduledPosts ScheduledPost[]
   usageTracking UsageTracking[]
+  contentPreferences ContentPreferences?
 
   @@map("users")
 }
@@ -156,6 +157,26 @@ model Subscription {
   status             String
 
   @@map("subscriptions")
+}
+
+model ContentPreferences {
+  id            String   @id @default(cuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Style d'écriture
+  writingStyle  String   @default("BALANCED") // FORMAL, CASUAL, BALANCED, PROFESSIONAL, CREATIVE
+
+  // Longueur du contenu
+  contentLength String   @default("MEDIUM") // SHORT, MEDIUM, LONG
+
+  // Ton
+  tone          String   @default("FRIENDLY") // FRIENDLY, PROFESSIONAL, INSPIRATIONAL, HUMOROUS, SERIOUS
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("content_preferences")
 }
 
 // Enums removed - using strings instead for compatibility with PostgreSQL types

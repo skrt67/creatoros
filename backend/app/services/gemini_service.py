@@ -80,11 +80,11 @@ INSTRUCTIONS FINALES:
     async def generate_blog_post(self, transcript: str, video_title: str) -> Dict[str, Any]:
         """
         Generate a professional, engaging blog post from video transcript.
-        Optimized for SEO, readability, and value delivery.
+        Uses intelligent video type detection and adaptive content generation.
         """
         if not self.model:
             return self._generate_demo_content("blog_post", transcript, video_title)
-        
+
         import random
         import datetime
 
@@ -92,70 +92,124 @@ INSTRUCTIONS FINALES:
         variation_seed = random.randint(1000, 9999)
         timestamp = datetime.datetime.now().strftime("%H:%M:%S")
 
-        prompt = f"""{self.SYSTEM_CONTEXT}
+        prompt = f"""SYSTÈME : Tu es un expert en création de contenu viral adaptatif. Tu analyses et génères du contenu selon le type et le ton de la vidéo source.
 
-CONTEXTE :
-Tu dois transformer cette transcription vidéo en un article de blog exceptionnel qui :
-- Capte l'attention dès la première ligne
-- Apporte une réelle valeur au lecteur
-- Est structuré de manière logique et fluide
-- Sonne naturel et humain, pas généré par IA
-- Est optimisé SEO sans paraître forcé
+═══════════════════════════════════════════════════════════════════
+ÉTAPE 1 — DÉTECTION AUTOMATIQUE DU TYPE DE VIDÉO
+═══════════════════════════════════════════════════════════════════
 
-IMPORTANT POUR LA DIVERSITÉ: Cette génération porte le code #{variation_seed}-{timestamp}.
-Si tu régénères ce contenu, tu DOIS utiliser:
-- Un angle différent (statistique, storytelling, question, fait surprenant)
-- Un style légèrement différent
-- Des exemples variés
-- Une structure alternative (commence par le pourquoi, le comment, ou le quoi)
+Analyse la transcription et identifie le type dominant :
 
-TITRE DE LA VIDÉO : {video_title}
+🎓 PÉDAGOGIQUE / TUTO / FORMATION
+   → Ton : Instructif, clair, structuré
+   → Public : Personnes cherchant à apprendre une compétence
+   → Style article : Guide pratique, étapes claires, exemples concrets
+
+🎬 STORYTELLING / DIVERTISSEMENT
+   → Ton : Narratif, émotionnel, captivant
+   → Public : Grand public, fans, communauté
+   → Style article : Récit engageant, descriptions vivantes, arc narratif
+
+🎤 INTERVIEW / PODCAST
+   → Ton : Conversationnel, insights, citations clés
+   → Public : Professionnels, curieux du sujet
+   → Style article : Points de vue d'expert, citations fortes, analyse
+
+💼 BUSINESS / PITCH / CONFÉRENCE
+   → Ton : Professionnel, persuasif, axé résultats
+   → Public : Entrepreneurs, décideurs, investisseurs
+   → Style article : Arguments structurés, données, ROI
+
+🎥 VLOG / CRÉATEUR / LIFESTYLE
+   → Ton : Personnel, authentique, proche
+   → Public : Communauté fidèle, aspirants créateurs
+   → Style article : Expérience personnelle, conseils pratiques, behind-the-scenes
+
+═══════════════════════════════════════════════════════════════════
+ÉTAPE 2 — ANALYSE DU CONTEXTE
+═══════════════════════════════════════════════════════════════════
+
+TITRE VIDÉO : {video_title}
+CODE GÉNÉRATION : #{variation_seed}-{timestamp}
 
 TRANSCRIPTION :
 {transcript[:4500]}
 
-INSTRUCTIONS SPÉCIFIQUES :
+Analyse maintenant :
+✓ Thèmes majeurs abordés
+✓ Intention principale (informer / vendre / inspirer / divertir / instruire)
+✓ Ton émotionnel (sérieux / léger / motivant / informatif / humoristique)
+✓ Public cible détecté
 
-1. TITRE (max 60 caractères)
-   - Accrocheur et précis
-   - Contient le mot-clé principal
-   - Promet une valeur claire
-   - Exemple : "3 erreurs qui sabotent votre productivité (et comment les éviter)"
+═══════════════════════════════════════════════════════════════════
+ÉTAPE 3 — GÉNÉRATION ADAPTATIVE DE L'ARTICLE
+═══════════════════════════════════════════════════════════════════
 
-2. INTRODUCTION (100-150 mots)
-   - Commence par un fait surprenant, une question provocante ou une anecdote personnelle
-   - Présente le problème ou l'opportunité
-   - Annonce la solution sans tout révéler
-   - Crée l'envie de lire la suite
+Crée un article de blog en ADAPTANT ton style au type détecté :
 
-3. CORPS DE L'ARTICLE (700-1000 mots)
-   - 3 à 5 sections avec sous-titres H2 descriptifs
-   - Chaque section apporte un insight concret
-   - Utilise des exemples réels, des chiffres, des études
-   - Alterne entre explication et storytelling
-   - Ajoute des listes à puces pour la lisibilité
-   - Inclut des transitions fluides entre sections
+📝 STRUCTURE GÉNÉRALE :
 
-4. POINTS CLÉS À RETENIR (3-5 bullets)
-   - Synthétise les enseignements principaux
-   - Format actionnable
+1. TITRE MAGNÉTIQUE (50-60 caractères)
+   → Adapte selon le type :
+   • Tuto : "Comment [résultat] en [X] étapes (sans [objection])"
+   • Story : "[Nombre] leçons que j'ai apprises en [situation]"
+   • Interview : "Ce que [expert] m'a appris sur [sujet]"
+   • Business : "[Résultat chiffré] : La méthode [nom/concept]"
+   • Vlog : "Pourquoi [action personnelle] a changé [aspect de vie]"
 
-5. CONCLUSION (100-150 mots)
-   - Résume la transformation possible
-   - Appel à l'action clair et motivant
-   - Termine sur une note inspirante ou une question qui fait réfléchir
+2. HOOK D'OUVERTURE (2-3 phrases percutantes)
+   → Ne copie JAMAIS la transcription mot pour mot
+   → Reformule avec un angle original
+   → Commence par : question provocante / fait surprenant / mini-histoire / statistique choc
 
-STYLE :
-- Tutoyez le lecteur pour créer proximité
-- Phrases de longueur variable (mix court/moyen pour rythme)
-- Vocabulaire riche mais accessible
-- Exemples concrets et relatable
-- Zéro jargon inutile
+3. CORPS PRINCIPAL (700-1000 mots)
+   → Adapte la structure au type détecté :
+   • Tuto : Étapes numérotées claires avec sous-actions
+   • Story : Chronologie narrative avec moments clés
+   • Interview : Citations + analyse + contexte
+   • Business : Problème → Solution → Résultats → Application
+   • Vlog : Expérience perso → Leçons → Conseils pratiques
 
-IMPORTANT : GÉNÈRE UNIQUEMENT LE CONTENU FINAL.
-Ne dis PAS "Voici l'article" ou "Absolument, voici..."
-Ne parle PAS à l'utilisateur.
-GÉNÈRE DIRECTEMENT LE TITRE, puis l'article, sans préambule."""
+   → Utilise systématiquement :
+   • Sous-titres H2 descriptifs et engageants
+   • Listes à puces pour la clarté
+   • Exemples concrets et relatable
+   • Transitions fluides entre sections
+   • Mix de phrases courtes (impact) et longues (explication)
+
+4. POINTS CLÉS (3-5 bullets)
+   → Synthèse actionnable des insights principaux
+   → Format : "Action concrète" ou "Leçon apprise"
+
+5. CONCLUSION PUISSANTE (100-150 mots)
+   → Adapte selon le type :
+   • Tuto : Récap rapide + encouragement à passer à l'action
+   • Story : Réflexion finale + question qui fait réfléchir
+   • Interview : Synthèse insights + invitation à approfondir
+   • Business : ROI potentiel + CTA clair
+   • Vlog : Message perso + connexion avec la communauté
+
+═══════════════════════════════════════════════════════════════════
+RÈGLES ABSOLUES
+═══════════════════════════════════════════════════════════════════
+
+❌ NE JAMAIS :
+• Copier-coller la transcription
+• Utiliser des tournures génériques ("Dans cet article", "Comme nous l'avons vu")
+• Commencer par "Voici", "Absolument", "Bien sûr"
+• Parler à l'utilisateur ou expliquer ce que tu fais
+
+✅ TOUJOURS :
+• Reformuler naturellement avec ta propre voix
+• Conserver le ton émotionnel de la vidéo
+• Adapter le vocabulaire au public cible détecté
+• Terminer avec une phrase qui pousse à l'interaction
+• Sonner humain, pas robotique
+
+═══════════════════════════════════════════════════════════════════
+
+GÉNÈRE MAINTENANT L'ARTICLE COMPLET.
+Commence DIRECTEMENT par le titre, sans préambule."""
 
         try:
             # Create a new model instance with varied config for this generation

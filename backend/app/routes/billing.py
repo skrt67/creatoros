@@ -236,9 +236,12 @@ async def handle_checkout_completed(session):
 
         print(f"📦 Subscription retrieved: {subscription.id}, status: {subscription.status}")
 
-        # Convert Unix timestamp to datetime
-        # Use bracket notation for Stripe objects
-        period_end = datetime.fromtimestamp(subscription['current_period_end'])
+        # Get current_period_end from subscription items (not at root level!)
+        # In Stripe's new API, current_period_end is in items.data[0], not at subscription root
+        period_end_timestamp = subscription['items']['data'][0]['current_period_end']
+        period_end = datetime.fromtimestamp(period_end_timestamp)
+
+        print(f"✅ Got period_end from items: {period_end}")
 
         # Create or update subscription record
         await prisma.subscription.upsert(
