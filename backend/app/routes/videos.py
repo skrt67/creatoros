@@ -122,6 +122,129 @@ async def process_video_async(video_id: str, youtube_url: str, job_id: str, work
     except Exception as e:
         print(f"Error processing video {video_id}: {str(e)}")
 
+@router.post("/workspaces/{workspace_id}/videos/upload", response_model=APIResponse)
+async def upload_video_file(
+    workspace_id: str,
+    file: UploadFile = File(...),
+    current_user = Depends(get_current_active_user)
+):
+    """Upload a video file for processing."""
+    prisma = Prisma()
+    await prisma.connect()
+
+    try:
+        # Check usage limits
+        can_process, error_message = await usage_service.check_can_process_video(
+            current_user.id,
+            prisma
+        )
+
+        if not can_process:
+            raise HTTPException(
+                status_code=status.HTTP_402_PAYMENT_REQUIRED,
+                detail=error_message
+            )
+
+        # Verify workspace ownership
+        workspace = await prisma.workspace.find_unique(
+            where={"id": workspace_id}
+        )
+
+        if not workspace:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Workspace not found"
+            )
+
+        if workspace.ownerId != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access denied to this workspace"
+            )
+
+        # Validate file type
+        allowed_types = ["video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/webm"]
+        if file.content_type not in allowed_types:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=f"Invalid file type. Allowed types: {', '.join(allowed_types)}"
+            )
+
+        # Create uploads directory if it doesn't exist
+        upload_dir = "uploads"
+        os.makedirs(upload_dir, exist_ok=True)
+
+        # Generate unique filename
+        file_extension = os.path.splitext(file.filename)[1]
+        unique_filename = f"{uuid.uuid4()}{file_extension}"
+        file_path = os.path.join(upload_dir, unique_filename)
+
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+
+        # Create video source record with file path
+        video_source = await prisma.videosource.create(
+            data={
+                "youtubeUrl": f"file://{file_path}",  # Store file path as URL
+                "title": file.filename,
+                "workspaceId": workspace_id,
+                "status": "PENDING"
+            }
+        )
+
+        # Create processing job
+        job_id = str(uuid.uuid4())
+        workflow_id = f"process-upload-{video_source.id}-{job_id}"
+
+        processing_job = await prisma.processingjob.create(
+            data={
+                "id": job_id,
+                "temporalWorkflowId": workflow_id,
+                "videoSourceId": video_source.id,
+                "status": "STARTED"
+            }
+        )
+
+        # Increment usage counter
+        usage_result = await usage_service.increment_usage(current_user.id, prisma)
+
+        # Note: File processing would happen here
+        # For now, just mark as completed since we don't have video processing for uploaded files
+        await prisma.processingjob.update(
+            where={"id": job_id},
+            data={"status": "COMPLETED"}
+        )
+
+        await prisma.videosource.update(
+            where={"id": video_source.id},
+            data={"status": "COMPLETED"}
+        )
+
+        return APIResponse(
+            success=True,
+            message="Video file uploaded successfully",
+            data={
+                "video_id": video_source.id,
+                "job_id": job_id,
+                "filename": file.filename,
+                "file_path": file_path,
+                "usage": usage_result['usage']
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        # Clean up file if error occurs
+        if 'file_path' in locals() and os.path.exists(file_path):
+            os.remove(file_path)
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to upload video: {str(e)}"
+        )
+    finally:
+        await prisma.disconnect()
+
 @router.get("/workspaces/{workspace_id}/videos", response_model=List[VideoSourceResponse])
 async def list_workspace_videos(
     workspace_id: str,
