@@ -237,7 +237,8 @@ async def handle_checkout_completed(session):
         print(f"📦 Subscription retrieved: {subscription.id}, status: {subscription.status}")
 
         # Convert Unix timestamp to datetime
-        period_end = datetime.fromtimestamp(subscription.current_period_end)
+        # Use bracket notation for Stripe objects
+        period_end = datetime.fromtimestamp(subscription['current_period_end'])
 
         # Create or update subscription record
         await prisma.subscription.upsert(
@@ -247,22 +248,22 @@ async def handle_checkout_completed(session):
                     "userId": user_id,
                     "stripeCustomerId": customer_id,
                     "stripeSubscriptionId": subscription_id,
-                    "stripePriceId": subscription.items.data[0].price.id,
+                    "stripePriceId": subscription['items']['data'][0]['price']['id'],
                     "stripeCurrentPeriodEnd": period_end,
-                    "status": subscription.status
+                    "status": subscription['status']
                 },
                 "update": {
                     "stripeCustomerId": customer_id,
                     "stripeSubscriptionId": subscription_id,
-                    "stripePriceId": subscription.items.data[0].price.id,
+                    "stripePriceId": subscription['items']['data'][0]['price']['id'],
                     "stripeCurrentPeriodEnd": period_end,
-                    "status": subscription.status
+                    "status": subscription['status']
                 }
             }
         )
 
         # Update user plan to PRO if subscription is active
-        if subscription.status in ["active", "trialing"]:
+        if subscription['status'] in ["active", "trialing"]:
             await prisma.user.update(
                 where={"id": user_id},
                 data={"plan": "PRO"}
