@@ -122,6 +122,167 @@ async def process_video_async(video_id: str, youtube_url: str, job_id: str, work
     except Exception as e:
         print(f"Error processing video {video_id}: {str(e)}")
 
+async def process_uploaded_video_async(video_id: str, file_path: str, job_id: str, filename: str):
+    """Process uploaded video file asynchronously."""
+    prisma = Prisma()
+    await prisma.connect()
+    
+    try:
+        print(f"🎬 Starting processing for uploaded video: {filename}")
+        
+        # Update status to PROCESSING
+        await prisma.videosource.update(
+            where={"id": video_id},
+            data={"status": "PROCESSING"}
+        )
+        
+        # Extract audio from video using ffmpeg
+        audio_path = file_path.replace(os.path.splitext(file_path)[1], '.mp3')
+        print(f"🎵 Extracting audio to: {audio_path}")
+        
+        try:
+            import subprocess
+            subprocess.run([
+                'ffmpeg', '-i', file_path,
+                '-vn',  # No video
+                '-acodec', 'libmp3lame',
+                '-q:a', '2',  # Good quality
+                audio_path
+            ], check=True, capture_output=True)
+            print(f"✅ Audio extracted successfully")
+        except subprocess.CalledProcessError as e:
+            print(f"⚠️ FFmpeg extraction failed: {e}")
+            # Fall back to using the video file directly if ffmpeg fails
+            audio_path = file_path
+        except FileNotFoundError:
+            print(f"⚠️ FFmpeg not found, using video file directly")
+            audio_path = file_path
+        
+        # Transcribe with AssemblyAI
+        print(f"📝 Transcribing audio with AssemblyAI...")
+        import assemblyai as aai
+        import os as os_module
+        
+        aai.settings.api_key = os_module.getenv("ASSEMBLYAI_API_KEY")
+        
+        if not aai.settings.api_key:
+            raise Exception("AssemblyAI API key not configured")
+        
+        transcriber = aai.Transcriber()
+        transcript_result = transcriber.transcribe(audio_path)
+        
+        if transcript_result.status == aai.TranscriptStatus.error:
+            raise Exception(f"Transcription failed: {transcript_result.error}")
+        
+        transcript_text = transcript_result.text
+        print(f"✅ Transcription completed: {len(transcript_text)} characters")
+        
+        # Save transcript to database
+        import json
+        await prisma.transcript.create(
+            data={
+                "fullTranscript": json.dumps({
+                    "text": transcript_text,
+                    "language": "en"
+                }),
+                "jobId": job_id
+            }
+        )
+        
+        # Generate content with Gemini
+        print(f"🤖 Generating content with Gemini...")
+        from ..services.gemini_service import GeminiService
+        from ..services import clip_suggestions
+        
+        gemini = GeminiService()
+        generated_content = await gemini.generate_content(transcript_text, filename)
+        
+        # Generate clip suggestions
+        print("✂️ Generating viral clip suggestions...")
+        try:
+            clips_result = await clip_suggestions.suggest_viral_clips(
+                gemini.model,
+                transcript_text,
+                filename,
+                duration_seconds=60
+            )
+            print(f"✅ Generated {len(clips_result.get('data', {}).get('clips', []))} clip suggestions")
+        except Exception as e:
+            print(f"⚠️ Clip suggestions failed: {e}")
+            clips_result = None
+        
+        # Save content assets
+        if generated_content:
+            type_mapping = {
+                "BLOG_POST": "BLOG_POST",
+                "TWITTER_THREAD": "TWITTER_THREAD",
+                "LINKEDIN_POST": "LINKEDIN_POST",
+                "TIKTOK": "TIKTOK"
+            }
+            
+            for asset_type, content in generated_content.items():
+                if asset_type == "INSTAGRAM":
+                    continue
+                
+                mapped_type = type_mapping.get(asset_type, "BLOG_POST")
+                await prisma.contentasset.create(
+                    data={
+                        "type": mapped_type,
+                        "content": content,
+                        "status": "GENERATED",
+                        "jobId": job_id
+                    }
+                )
+        
+        # Save clip suggestions
+        if clips_result and clips_result.get('status') == 'generated':
+            await prisma.contentasset.create(
+                data={
+                    "type": "CLIPS",
+                    "content": json.dumps(clips_result.get('data', {})),
+                    "status": "GENERATED",
+                    "jobId": job_id
+                }
+            )
+        
+        # Update job and video status to COMPLETED
+        await prisma.processingjob.update(
+            where={"id": job_id},
+            data={"status": "COMPLETED"}
+        )
+        
+        await prisma.videosource.update(
+            where={"id": video_id},
+            data={"status": "COMPLETED", "title": filename}
+        )
+        
+        print(f"✅ Uploaded video {filename} processed successfully")
+        
+        # Clean up audio file if it was extracted separately
+        if audio_path != file_path and os.path.exists(audio_path):
+            os.remove(audio_path)
+            print(f"🗑️ Cleaned up extracted audio file")
+        
+    except Exception as e:
+        print(f"❌ Error processing uploaded video {video_id}: {e}")
+        import traceback
+        traceback.print_exc()
+        
+        # Mark as FAILED
+        try:
+            await prisma.processingjob.update(
+                where={"id": job_id},
+                data={"status": "FAILED"}
+            )
+            await prisma.videosource.update(
+                where={"id": video_id},
+                data={"status": "FAILED"}
+            )
+        except Exception as update_error:
+            print(f"Failed to update error status: {update_error}")
+    finally:
+        await prisma.disconnect()
+
 @router.post("/workspaces/{workspace_id}/videos/upload", response_model=APIResponse)
 async def upload_video_file(
     workspace_id: str,
@@ -209,17 +370,13 @@ async def upload_video_file(
         # Increment usage counter
         usage_result = await usage_service.increment_usage(current_user.id, prisma)
 
-        # Note: File processing would happen here
-        # For now, just mark as completed since we don't have video processing for uploaded files
-        await prisma.processingjob.update(
-            where={"id": job_id},
-            data={"status": "COMPLETED"}
-        )
-
-        await prisma.videosource.update(
-            where={"id": video_source.id},
-            data={"status": "COMPLETED"}
-        )
+        # Process uploaded video asynchronously
+        asyncio.create_task(process_uploaded_video_async(
+            video_source.id,
+            file_path,
+            job_id,
+            file.filename
+        ))
 
         return APIResponse(
             success=True,
