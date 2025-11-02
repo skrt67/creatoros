@@ -88,19 +88,36 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     )
 
     try:
-        payload = jwt.decode(credentials.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        token = credentials.credentials
+        print(f"🔑 Validating token (first 20 chars): {token[:20]}...")
+        print(f"🔐 Using SECRET_KEY (first 10 chars): {SECRET_KEY[:10]}...")
+        
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         user_id: str = payload.get("sub")
+        
+        print(f"✅ Token decoded successfully. User ID: {user_id}")
+        
         if user_id is None:
+            print("❌ No user_id (sub) in token payload")
             raise credentials_exception
+            
         # Keep email for backwards compatibility
         email: str = payload.get("email")
         token_data = TokenData(email=email or user_id)
-    except JWTError:
+        
+    except JWTError as e:
+        print(f"❌ JWT Error: {str(e)}")
+        raise credentials_exception
+    except Exception as e:
+        print(f"❌ Unexpected error during token validation: {str(e)}")
         raise credentials_exception
 
     user = await get_user_by_id(user_id=user_id)
     if user is None:
+        print(f"❌ User not found with ID: {user_id}")
         raise credentials_exception
+        
+    print(f"✅ User authenticated: {user.email}")
     return user
 
 async def get_current_active_user(current_user = Depends(get_current_user)):

@@ -4,7 +4,7 @@ import jwt
 import os
 
 security = HTTPBearer()
-JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key")
+JWT_SECRET = os.getenv("JWT_SECRET_KEY", os.getenv("JWT_SECRET", "your-secret-key"))
 
 async def get_current_user(credentials: HTTPAuthCredentials = Depends(security)):
     """
