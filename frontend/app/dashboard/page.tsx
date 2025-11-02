@@ -284,48 +284,94 @@ export default function DashboardPage() {
             <p className="text-xs text-gray-500 mb-6 font-light">Votre progression créative</p>
 
             <div className="space-y-4">
-              {/* Quick stats and tips */}
-              <div className="text-center py-6">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Music className="h-8 w-8 text-white" />
+              {/* Simple Chart */}
+              <div className="flex items-center justify-center">
+                <div className="relative w-48 h-48">
+                  {/* Background circle */}
+                  <svg className="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+                    {/* Background circle */}
+                    <circle
+                      cx="60"
+                      cy="60"
+                      r="50"
+                      fill="none"
+                      stroke="#f3f4f6"
+                      strokeWidth="8"
+                    />
+
+                    {/* Videos processed arc */}
+                    {stats.videosProcessed > 0 && (
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke="#10b981"
+                        strokeWidth="8"
+                        strokeDasharray={`${(stats.videosProcessed / Math.max(stats.videosProcessed + stats.videosInProgress, 1)) * 314} 314`}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    )}
+
+                    {/* Videos in progress arc */}
+                    {stats.videosInProgress > 0 && (
+                      <circle
+                        cx="60"
+                        cy="60"
+                        r="50"
+                        fill="none"
+                        stroke="#3b82f6"
+                        strokeWidth="8"
+                        strokeDasharray={`${(stats.videosInProgress / Math.max(stats.videosProcessed + stats.videosInProgress, 1)) * 314} 314`}
+                        strokeDashoffset={`${-(stats.videosProcessed / Math.max(stats.videosProcessed + stats.videosInProgress, 1)) * 314}`}
+                        strokeLinecap="round"
+                        className="transition-all duration-1000 ease-out"
+                      />
+                    )}
+                  </svg>
+
+                  {/* Center content */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <div className="text-2xl font-bold text-gray-900">{stats.contentGenerated}</div>
+                    <div className="text-xs text-gray-500 font-light">Contenus</div>
+                    <div className="text-xs text-gray-500 font-light">générés</div>
+                  </div>
                 </div>
-
-                <h4 className="text-base font-medium text-gray-900 mb-2">
-                  {stats.videosProcessed === 0 ? "Prêt à créer ?" : "Continuez votre lancée !"}
-                </h4>
-
-                <p className="text-sm text-gray-600 mb-4 max-w-xs mx-auto font-light">
-                  {stats.videosProcessed === 0
-                    ? "Transformez vos vidéos YouTube en contenu viral pour toutes vos plateformes sociales."
-                    : `Vous avez déjà transformé ${stats.videosProcessed} vidéo${stats.videosProcessed > 1 ? 's' : ''} en contenu engageant !`
-                  }
-                </p>
-
-                {stats.videosProcessed === 0 && (
-                  <div className="space-y-2 text-xs text-gray-500">
-                    <p className="flex items-center justify-center gap-2">
-                      <span className="w-2 h-2 bg-green-400 rounded-full"></span>
-                      Articles de blog optimisés SEO
-                    </p>
-                    <p className="flex items-center justify-center gap-2">
-                      <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                      Threads Twitter viraux
-                    </p>
-                    <p className="flex items-center justify-center gap-2">
-                      <span className="w-2 h-2 bg-purple-400 rounded-full"></span>
-                      Posts LinkedIn professionnels
-                    </p>
-                  </div>
-                )}
-
-                {stats.videosProcessed > 0 && (
-                  <div className="mt-4 p-3 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border border-green-200">
-                    <p className="text-xs text-green-700 font-medium">
-                      🎉 {stats.contentGenerated} contenus générés automatiquement
-                    </p>
-                  </div>
-                )}
               </div>
+
+              {/* Legend */}
+              <div className="grid grid-cols-2 gap-4 text-xs">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <div>
+                    <div className="font-medium text-gray-900">{stats.videosProcessed}</div>
+                    <div className="text-gray-500">Traitée{stats.videosProcessed !== 1 ? 's' : ''}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                  <div>
+                    <div className="font-medium text-gray-900">{stats.videosInProgress}</div>
+                    <div className="text-gray-500">En cours</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Motivational message */}
+              {stats.videosProcessed === 0 ? (
+                <div className="text-center pt-2">
+                  <p className="text-sm text-gray-600 font-light">
+                    Commencez par ajouter votre première vidéo !
+                  </p>
+                </div>
+              ) : (
+                <div className="text-center pt-2">
+                  <p className="text-sm text-gray-600 font-light">
+                    🎉 {stats.videosProcessed} vidéo{stats.videosProcessed > 1 ? 's' : ''} transformée{stats.videosProcessed > 1 ? 's' : ''} !
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         </div>
