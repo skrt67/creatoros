@@ -18,24 +18,27 @@ export default function HomePage() {
             </Link>
 
             <nav className="hidden md:flex items-center gap-8">
-              <Link href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
-                Fonctionnalités
+              <Link href="#features" className="text-sm text-gray-600 hover:text-gray-900 transition-all duration-300 font-light relative group">
+                <span>Fonctionnalités</span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></span>
               </Link>
-              <Link href="/billing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-light">
-                Tarifs
+              <Link href="/billing" className="text-sm text-gray-600 hover:text-gray-900 transition-all duration-300 font-light relative group">
+                <span>Tarifs</span>
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gray-900 group-hover:w-full transition-all duration-300"></span>
               </Link>
             </nav>
 
             <div className="flex items-center gap-4">
               <Link
                 href="/login"
-                className="text-sm text-gray-600 hover:text-gray-900 transition-colors font-medium"
+                className="text-sm text-gray-600 hover:text-gray-900 transition-all duration-300 font-medium relative group px-4 py-2"
               >
-                Connexion
+                <span>Connexion</span>
+                <span className="absolute -bottom-0.5 left-4 right-4 h-0.5 bg-gray-900 scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></span>
               </Link>
               <Link
                 href="/register"
-                className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 hover:shadow-lg transition-all duration-300 hover:scale-105"
+                className="px-6 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 hover:shadow-lg transition-all duration-300 hover:scale-105 hover:-translate-y-0.5"
               >
                 Commencer
               </Link>
