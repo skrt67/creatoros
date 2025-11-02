@@ -4,7 +4,7 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
 from prisma import Prisma
 
-from ..models import UserCreate, UserLogin, Token, UserResponse, APIResponse
+from ..models import UserCreate, UserLogin, Token, UserResponse, APIResponse, GoogleAuthRequest
 from ..auth import (
     authenticate_user,
     create_access_token,
@@ -157,13 +157,13 @@ async def change_password(data: dict, current_user = Depends(get_current_active_
         await prisma.disconnect()
 
 @router.post("/google", response_model=APIResponse)
-async def google_auth(
-    email: str,
-    name: str,
-    image: str = None,
-    googleId: str = None
-):
+async def google_auth(request: GoogleAuthRequest):
     """Authenticate or register user with Google OAuth."""
+    email = request.email
+    name = request.name
+    image = request.image
+    google_id = request.google_id or request.googleId
+    
     prisma = Prisma()
     await prisma.connect()
     
@@ -178,7 +178,7 @@ async def google_auth(
             user = await prisma.user.create(
                 data={
                     "email": email,
-                    "hashedPassword": get_password_hash(googleId or "google_oauth"),
+                    "hashedPassword": get_password_hash(google_id or "google_oauth"),
                     "name": name
                 }
             )
