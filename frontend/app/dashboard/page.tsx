@@ -137,7 +137,7 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="text-center">
+        <div className="text-center animate-fade-in">
           <div className="w-12 h-12 border-2 border-gray-900 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
           <p className="text-base text-gray-600 font-light">Chargement...</p>
         </div>
@@ -171,14 +171,14 @@ export default function DashboardPage() {
       <div className="fixed top-0 right-0 left-64 bg-white border-b border-gray-200/60 z-40">
         <div className="px-8 py-4 flex justify-end items-center">
           {user && (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 animate-fade-in">
               {user.plan === 'PRO' ? (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-gray-900 text-gray-900 rounded-full text-xs font-medium">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-gray-900 text-gray-900 rounded-full text-xs font-medium hover:scale-105 transition-transform duration-300">
                   <Crown className="h-3 w-3" />
                   Pro
                 </div>
               ) : (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-full text-xs font-medium">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-white border border-gray-300 text-gray-600 rounded-full text-xs font-medium hover:scale-105 transition-transform duration-300">
                   Free
                 </div>
               )}
@@ -188,7 +188,7 @@ export default function DashboardPage() {
                 </p>
                 <p className="text-xs text-gray-500 font-light">{user.email}</p>
               </div>
-              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+              <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:scale-110 hover:bg-gray-200 transition-all duration-300 cursor-pointer">
                 <User className="h-5 w-5 text-gray-600" strokeWidth={1.5} />
               </div>
             </div>
@@ -199,7 +199,7 @@ export default function DashboardPage() {
       {/* Main Content */}
       <main className="flex-1 ml-64 p-8 pt-20">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in-up">
           <h1 className="text-4xl font-light text-gray-900 mb-2 tracking-tight">
             Bienvenue{user?.name ? `, ${user.name}` : ''}
           </h1>
@@ -209,19 +209,19 @@ export default function DashboardPage() {
         </div>
 
         {/* Usage Counter */}
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <UsageCounter />
         </div>
 
         {/* Add Video Button */}
-        <div className="mb-8">
+        <div className="mb-8 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <button
             onClick={() => setShowVideoSubmission(!showVideoSubmission)}
-            className="group inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-all"
+            className="group inline-flex items-center gap-3 px-8 py-4 bg-gray-900 text-white rounded-xl hover:bg-gray-800 hover:shadow-lg transition-all duration-300 hover:scale-105 hover:-translate-y-0.5"
           >
-            <Plus className="h-5 w-5" strokeWidth={2} />
+            <Plus className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" strokeWidth={2} />
             <span className="text-base font-medium">Ajouter une vidéo</span>
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" strokeWidth={2} />
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-2 transition-transform duration-300" strokeWidth={2} />
           </button>
         </div>
 
@@ -238,14 +238,14 @@ export default function DashboardPage() {
         {/* Bottom Section - 2 Columns */}
         <div className="grid grid-cols-2 gap-6 mb-8">
           {/* Processing Stats */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6">
+          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.3s' }}>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Statut</h3>
             <p className="text-xs text-gray-500 mb-6 font-light">Traitement vidéo</p>
 
             <div className="space-y-6">
-              <div>
+              <div className="group hover:scale-105 transition-transform duration-300 cursor-default">
                 <div className="flex items-center gap-3 mb-2">
-                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600 group-hover:scale-110 transition-transform duration-300" />
                   <div>
                     <span className="text-3xl font-light text-gray-900">{stats.videosProcessed}</span>
                     <span className="text-sm text-gray-600 ml-2">Vidéos</span>
@@ -254,9 +254,9 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 ml-8 font-light">Traitées avec succès</p>
               </div>
 
-              <div>
+              <div className="group hover:scale-105 transition-transform duration-300 cursor-default">
                 <div className="flex items-center gap-3 mb-2">
-                  <Clock className="h-5 w-5 text-blue-600" />
+                  <Clock className="h-5 w-5 text-blue-600 group-hover:scale-110 group-hover:rotate-12 transition-all duration-300" />
                   <div>
                     <span className="text-3xl font-light text-gray-900">{stats.videosInProgress}</span>
                     <span className="text-sm text-gray-600 ml-2">Vidéos</span>
@@ -265,9 +265,9 @@ export default function DashboardPage() {
                 <p className="text-xs text-gray-500 ml-8 font-light">En cours de traitement</p>
               </div>
 
-              <div>
+              <div className="group hover:scale-105 transition-transform duration-300 cursor-default">
                 <div className="flex items-center gap-3 mb-2">
-                  <FileText className="h-5 w-5 text-purple-600" />
+                  <FileText className="h-5 w-5 text-purple-600 group-hover:scale-110 transition-transform duration-300" />
                   <div>
                     <span className="text-3xl font-light text-gray-900">{stats.contentGenerated}</span>
                     <span className="text-sm text-gray-600 ml-2">Contenus</span>
@@ -279,7 +279,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Videos */}
-          <div className="bg-white border border-gray-200/60 rounded-2xl p-6">
+          <div className="bg-white border border-gray-200/60 rounded-2xl p-6 hover:border-gray-300 hover:shadow-lg transition-all duration-300 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
             <h3 className="text-lg font-medium text-gray-900 mb-2">Activités récentes</h3>
             <p className="text-xs text-gray-500 mb-6 font-light">Votre progression créative</p>
 
@@ -377,7 +377,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Video List Section */}
-        <div>
+        <div className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
           <h2 className="text-2xl font-light text-gray-900 mb-6 tracking-tight">
             Vos vidéos
           </h2>
