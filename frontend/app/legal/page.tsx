@@ -23,15 +23,6 @@ export default function LegalHub() {
       color: 'from-green-500 to-emerald-600',
       bgColor: 'from-green-50 to-emerald-50',
       borderColor: 'border-green-200'
-    },
-    {
-      title: 'Conditions Générales d\'Utilisation',
-      description: 'Règles d\'utilisation de la plateforme, droits et obligations',
-      icon: FileText,
-      href: '/legal/terms',
-      color: 'from-blue-500 to-indigo-600',
-      bgColor: 'from-blue-50 to-indigo-50',
-      borderColor: 'border-blue-200'
     }
   ];
 

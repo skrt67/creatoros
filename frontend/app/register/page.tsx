@@ -210,11 +210,7 @@ export default function RegisterPage() {
           </p>
 
           <p className="text-xs text-gray-500 mt-6 text-center font-light leading-relaxed">
-            En créant un compte, vous acceptez nos{' '}
-            <Link href="/terms" className="text-gray-900 hover:underline">
-              conditions d'utilisation
-            </Link>
-            {' '}et notre{' '}
+            En créant un compte, vous acceptez nos conditions d'utilisation et notre{' '}
             <Link href="/legal/privacy" className="text-gray-900 hover:underline">
               politique de confidentialité
             </Link>

@@ -19,7 +19,6 @@ export function Footer() {
     ],
     legal: [
       { name: 'Confidentialité', href: '/legal/privacy' },
-      { name: 'Conditions d\'utilisation', href: '/legal/terms' },
       { name: 'Mentions légales', href: '/legal/mentions' },
     ],
     social: [
