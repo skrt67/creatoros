@@ -19,7 +19,7 @@ from youtube_transcript_api.proxies import GenericProxyConfig
 # Initialize AssemblyAI
 aai.settings.api_key = os.getenv("ASSEMBLYAI_API_KEY")
 
-# Webshare RESIDENTIAL proxy list (rotating IPs)
+# Webshare RESIDENTIAL proxy list (rotating IPs) - Updated Dec 2025
 WEBSHARE_RESIDENTIAL_PROXIES = [
     {"username": "gopomuli-1", "password": "pa41o6pb250v"},
     {"username": "gopomuli-2", "password": "pa41o6pb250v"},
@@ -31,6 +31,14 @@ WEBSHARE_RESIDENTIAL_PROXIES = [
     {"username": "gopomuli-8", "password": "pa41o6pb250v"},
     {"username": "gopomuli-9", "password": "pa41o6pb250v"},
     {"username": "gopomuli-10", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-11", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-12", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-13", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-14", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-15", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-16", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-17", "password": "pa41o6pb250v"},
+    {"username": "gopomuli-18", "password": "pa41o6pb250v"},
 ]
 WEBSHARE_ENDPOINT = "p.webshare.io"
 WEBSHARE_PORT = "80"
