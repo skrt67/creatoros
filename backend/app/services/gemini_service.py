@@ -60,7 +60,7 @@ INSTRUCTIONS FINALES:
                 "max_output_tokens": 8192,
             }
             self.model = genai.GenerativeModel(
-                'gemini-2.0-flash',
+                'gemini-2.5-flash',
                 generation_config=generation_config
             )
             logger.info("Gemini service initialized with improved prompts")
@@ -215,7 +215,7 @@ Commence DIRECTEMENT par le titre, sans préambule."""
             # Create a new model instance with varied config for this generation
             varied_config = self._get_varied_generation_config()
             varied_model = genai.GenerativeModel(
-                'gemini-2.0-flash',
+                'gemini-2.5-flash',
                 generation_config=varied_config
             )
 
