@@ -20,6 +20,7 @@ from app.routes.jobs import router as jobs_router
 from app.routes.billing import router as billing_router
 from app.routes.processing import router as processing_router
 from app.routes.progress import router as progress_router, set_prisma_client
+from app.auth import set_prisma_client as set_auth_prisma_client
 from app.routes.simple_processing import router as simple_processing_router
 from app.routes.password_reset import router as password_reset_router
 from app.routes.tiktok import router as tiktok_router
@@ -43,6 +44,7 @@ async def lifespan(app: FastAPI):
     prisma_client = Prisma()
     await prisma_client.connect()
     set_prisma_client(prisma_client)
+    set_auth_prisma_client(prisma_client)
     print("✅ Database connected")
     
     # Créer l'utilisateur demo s'il n'existe pas

@@ -22,6 +22,13 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 # JWT Bearer scheme
 security = HTTPBearer()
 
+# Shared Prisma client (set by main.py at startup)
+_prisma_client: Prisma = None
+
+def set_prisma_client(client: Prisma):
+    global _prisma_client
+    _prisma_client = client
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a password against its hash."""
     try:
@@ -47,29 +54,35 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 async def get_user_by_email(email: str):
     """Get user by email address."""
-    prisma = Prisma()
-    await prisma.connect()
-
-    try:
-        user = await prisma.user.find_unique(
+    if _prisma_client:
+        return await _prisma_client.user.find_unique(
             where={"email": email},
             include={"workspaces": True}
         )
-        return user
+    prisma = Prisma()
+    await prisma.connect()
+    try:
+        return await prisma.user.find_unique(
+            where={"email": email},
+            include={"workspaces": True}
+        )
     finally:
         await prisma.disconnect()
 
 async def get_user_by_id(user_id: str):
     """Get user by user ID."""
-    prisma = Prisma()
-    await prisma.connect()
-
-    try:
-        user = await prisma.user.find_unique(
+    if _prisma_client:
+        return await _prisma_client.user.find_unique(
             where={"id": user_id},
             include={"workspaces": True}
         )
-        return user
+    prisma = Prisma()
+    await prisma.connect()
+    try:
+        return await prisma.user.find_unique(
+            where={"id": user_id},
+            include={"workspaces": True}
+        )
     finally:
         await prisma.disconnect()
 
