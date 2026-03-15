@@ -1,7 +1,7 @@
 """Calendar and scheduled posts routes."""
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Optional, List
 from pydantic import BaseModel
 from ..auth import get_current_user
@@ -147,7 +147,7 @@ async def schedule_post(
             )
 
         # Validate scheduled date is in the future
-        if request.scheduledDate <= datetime.now():
+        if request.scheduledDate.replace(tzinfo=None) <= datetime.utcnow():
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="Scheduled date must be in the future"
@@ -220,7 +220,7 @@ async def update_scheduled_post(
         update_data = {}
 
         if request.scheduledDate:
-            if request.scheduledDate <= datetime.now():
+            if request.scheduledDate.replace(tzinfo=None) <= datetime.utcnow():
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Scheduled date must be in the future"
