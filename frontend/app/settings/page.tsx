@@ -54,6 +54,20 @@ export default function SettingsPage() {
   const [loadingPrefs, setLoadingPrefs] = useState(true);
   const [savingPrefs, setSavingPrefs] = useState(false);
 
+  // Password change state
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  // Notifications state
+  const [notifications, setNotifications] = useState({
+    email_updates: true,
+    video_ready: true,
+    weekly_report: false,
+  });
+
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
   const token = Cookies.get('access_token');
 
@@ -65,6 +79,11 @@ export default function SettingsPage() {
     fetchSubscription();
     fetchPreferences();
     fetchUserEmail();
+    // Load notification preferences from localStorage
+    const saved = localStorage.getItem('vidova_notifications');
+    if (saved) {
+      try { setNotifications(JSON.parse(saved)); } catch {}
+    }
   }, []);
 
   // Handle URL hash for direct section links
@@ -190,6 +209,45 @@ export default function SettingsPage() {
   const handleLogout = () => {
     Cookies.remove('access_token');
     window.location.href = '/login';
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      toast.error('Les mots de passe ne correspondent pas');
+      return;
+    }
+    if (newPassword.length < 6) {
+      toast.error('Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+    try {
+      setChangingPassword(true);
+      const response = await fetch(`${apiUrl}/auth/change-password`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ current_password: currentPassword, new_password: newPassword })
+      });
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.detail || 'Erreur lors du changement de mot de passe');
+      }
+      toast.success('Mot de passe modifié avec succès');
+      setShowPasswordForm(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error: any) {
+      toast.error(error.message || 'Erreur lors du changement de mot de passe');
+    } finally {
+      setChangingPassword(false);
+    }
+  };
+
+  const toggleNotification = (key: keyof typeof notifications) => {
+    const updated = { ...notifications, [key]: !notifications[key] };
+    setNotifications(updated);
+    localStorage.setItem('vidova_notifications', JSON.stringify(updated));
+    toast.success('Préférence sauvegardée');
   };
 
   const isPro = subscription?.plan === 'PRO';
@@ -559,24 +617,24 @@ export default function SettingsPage() {
 
                   <div className="space-y-4">
                     {[
-                      { label: 'Notifications par email', desc: 'Recevez des mises à jour par email', default: true },
-                      { label: 'Vidéos traitées', desc: 'Notification quand une vidéo est prête', default: true },
-                      { label: 'Rapport hebdomadaire', desc: 'Résumé hebdomadaire de vos activités', default: false },
-                    ].map((notif, i) => (
-                      <label
-                        key={i}
-                        className="flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer"
+                      { key: 'email_updates' as const, label: 'Notifications par email', desc: 'Recevez des mises à jour par email' },
+                      { key: 'video_ready' as const, label: 'Vidéos traitées', desc: 'Notification quand une vidéo est prête' },
+                      { key: 'weekly_report' as const, label: 'Rapport hebdomadaire', desc: 'Résumé hebdomadaire de vos activités' },
+                    ].map((notif) => (
+                      <button
+                        key={notif.key}
+                        onClick={() => toggleNotification(notif.key)}
+                        className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-200 hover:border-gray-300 transition-colors text-left"
                       >
                         <div>
                           <div className="text-sm font-medium text-gray-900">{notif.label}</div>
                           <div className="text-xs text-gray-400 mt-0.5">{notif.desc}</div>
                         </div>
                         <div className="relative flex-shrink-0 ml-4">
-                          <input type="checkbox" defaultChecked={notif.default} className="sr-only peer" />
-                          <div className="w-10 h-6 bg-gray-200 rounded-full peer-checked:bg-gray-900 transition-colors"></div>
-                          <div className="absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-sm peer-checked:translate-x-4 transition-transform"></div>
+                          <div className={`w-10 h-6 rounded-full transition-colors ${notifications[notif.key] ? 'bg-gray-900' : 'bg-gray-200'}`}></div>
+                          <div className={`absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-sm transition-transform ${notifications[notif.key] ? 'left-[18px]' : 'left-0.5'}`}></div>
                         </div>
-                      </label>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -592,15 +650,69 @@ export default function SettingsPage() {
 
                   <div className="space-y-4">
                     <div className="p-5 rounded-xl border border-gray-200">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-sm font-medium text-gray-900">Mot de passe</h3>
-                          <p className="text-xs text-gray-400 mt-1">Modifiez votre mot de passe pour sécuriser votre compte</p>
+                      {!showPasswordForm ? (
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h3 className="text-sm font-medium text-gray-900">Mot de passe</h3>
+                            <p className="text-xs text-gray-400 mt-1">Modifiez votre mot de passe pour sécuriser votre compte</p>
+                          </div>
+                          <button
+                            onClick={() => setShowPasswordForm(true)}
+                            className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
+                          >
+                            Modifier
+                          </button>
                         </div>
-                        <button className="px-4 py-2 text-sm font-medium border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-                          Modifier
-                        </button>
-                      </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <h3 className="text-sm font-medium text-gray-900">Changer le mot de passe</h3>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1.5">Mot de passe actuel</label>
+                            <input
+                              type="password"
+                              value={currentPassword}
+                              onChange={(e) => setCurrentPassword(e.target.value)}
+                              className="w-full max-w-sm px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400"
+                              placeholder="Votre mot de passe actuel"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1.5">Nouveau mot de passe</label>
+                            <input
+                              type="password"
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className="w-full max-w-sm px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400"
+                              placeholder="Minimum 6 caractères"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1.5">Confirmer le nouveau mot de passe</label>
+                            <input
+                              type="password"
+                              value={confirmPassword}
+                              onChange={(e) => setConfirmPassword(e.target.value)}
+                              className="w-full max-w-sm px-3 py-2.5 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-gray-400"
+                              placeholder="Confirmez votre nouveau mot de passe"
+                            />
+                          </div>
+                          <div className="flex items-center gap-3 pt-2">
+                            <button
+                              onClick={handleChangePassword}
+                              disabled={changingPassword || !currentPassword || !newPassword || !confirmPassword}
+                              className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50"
+                            >
+                              {changingPassword ? 'Modification...' : 'Enregistrer'}
+                            </button>
+                            <button
+                              onClick={() => { setShowPasswordForm(false); setCurrentPassword(''); setNewPassword(''); setConfirmPassword(''); }}
+                              className="px-4 py-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                            >
+                              Annuler
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
 
                     <div className="p-5 rounded-xl border border-gray-200">
@@ -614,16 +726,6 @@ export default function SettingsPage() {
                           Connecté
                         </span>
                       </div>
-                    </div>
-
-                    <div className="pt-4 border-t border-gray-100">
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-2 px-4 py-2.5 text-sm font-medium text-red-600 border border-red-200 rounded-xl hover:bg-red-50 transition-colors"
-                      >
-                        <LogOut className="h-4 w-4" />
-                        Se déconnecter
-                      </button>
                     </div>
                   </div>
                 </div>

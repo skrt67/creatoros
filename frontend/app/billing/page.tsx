@@ -28,7 +28,7 @@ export default function BillingPage() {
           'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          price_id: 'price_1SOfVwGUC8VxEGVNjalEbEiN',
+          price_id: 'price_1QRTzvP5ckafIVmUdkI8bqZz',
           success_url: `${window.location.origin}/dashboard?upgrade=success`,
           cancel_url: `${window.location.origin}/billing?upgrade=cancelled`
         })
