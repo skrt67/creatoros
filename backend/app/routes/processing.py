@@ -523,30 +523,67 @@ async def process_all_pending_videos(
                     where={"id": video.id},
                     data={"status": "PROCESSING"}
                 )
-                
-                # Simulate processing
-                await asyncio.sleep(1)
-                
-                # Create transcript
-                transcript_content = f"Simulated transcript for video {video.id}"
-                await prisma.transcript.create(
-                    data={
-                        "videoSourceId": video.id,
-                        "content": transcript_content,
-                        "status": "COMPLETED"
-                    }
+
+                # Create or get processing job
+                existing_job = await prisma.processingjob.find_unique(
+                    where={"videoSourceId": video.id}
                 )
-                
-                # Create content assets
+
+                if existing_job:
+                    job = await prisma.processingjob.update(
+                        where={"id": existing_job.id},
+                        data={"status": "STARTED"}
+                    )
+                else:
+                    job = await prisma.processingjob.create(
+                        data={
+                            "videoSourceId": video.id,
+                            "status": "STARTED",
+                            "temporalWorkflowId": f"batch-processing-{video.id}"
+                        }
+                    )
+
+                # Create transcript with correct schema
+                import json
+                transcript_content = json.dumps({
+                    "text": f"Simulated transcript for video {video.id}",
+                    "language": "en",
+                    "service": "demo"
+                })
+
+                existing_transcript = await prisma.transcript.find_unique(
+                    where={"jobId": job.id}
+                )
+
+                if existing_transcript:
+                    await prisma.transcript.update(
+                        where={"id": existing_transcript.id},
+                        data={"fullTranscript": transcript_content}
+                    )
+                else:
+                    await prisma.transcript.create(
+                        data={
+                            "jobId": job.id,
+                            "fullTranscript": transcript_content
+                        }
+                    )
+
+                # Create content asset with correct schema
                 await prisma.contentasset.create(
                     data={
-                        "videoSourceId": video.id,
-                        "type": "blog_post",
+                        "jobId": job.id,
+                        "type": "BLOG_POST",
                         "content": f"Blog post content for {video.id}",
-                        "status": "COMPLETED"
+                        "status": "GENERATED"
                     }
                 )
-                
+
+                # Mark job as completed
+                await prisma.processingjob.update(
+                    where={"id": job.id},
+                    data={"status": "COMPLETED"}
+                )
+
                 # Mark as completed
                 await prisma.videosource.update(
                     where={"id": video.id},
@@ -555,9 +592,9 @@ async def process_all_pending_videos(
                         "title": f"Processed Video - {video.id[:8]}"
                     }
                 )
-                
+
                 processed_count += 1
-                
+
             except Exception as e:
                 logger.error(f"Failed to process video {video.id}: {str(e)}")
                 await prisma.videosource.update(

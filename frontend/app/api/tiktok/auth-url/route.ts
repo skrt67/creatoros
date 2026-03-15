@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const TIKTOK_CLIENT_KEY = process.env.NEXT_PUBLIC_TIKTOK_CLIENT_KEY;
-const TIKTOK_REDIRECT_URI = `${process.env.NEXTAUTH_URL || 'https://creatoros-henna.vercel.app'}/api/tiktok/callback`;
+const TIKTOK_REDIRECT_URI = `${process.env.NEXTAUTH_URL || 'https://vidova.me'}/api/tiktok/callback`;
 
 export async function POST(request: NextRequest) {
   try {

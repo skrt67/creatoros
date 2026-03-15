@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get the token from the request cookies
-    const token = request.cookies.get('token')?.value;
+    const token = request.cookies.get('access_token')?.value;
 
     if (!token) {
       return NextResponse.redirect(new URL('/login', request.url));
@@ -29,7 +29,7 @@ export async function GET(request: NextRequest) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
       },
-      body: JSON.stringify({ code }),
+      body: JSON.stringify({ code, state }),
     });
 
     if (response.ok) {

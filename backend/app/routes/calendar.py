@@ -1,11 +1,11 @@
 """Calendar and scheduled posts routes."""
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from prisma import Prisma
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
 from ..auth import get_current_user
+from ..database import get_prisma_client
 
 router = APIRouter(prefix="/calendar", tags=["calendar"])
 
@@ -30,8 +30,7 @@ async def get_scheduled_posts(
     current_user = Depends(get_current_user)
 ):
     """Get all scheduled posts for current user with optional filters."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         user_id = current_user.id
@@ -94,11 +93,9 @@ async def get_scheduled_posts(
         import traceback
         traceback.print_exc()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Failed to fetch scheduled posts: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()
 
 
 @router.post("/schedule-post")
@@ -107,8 +104,7 @@ async def schedule_post(
     current_user = Depends(get_current_user)
 ):
     """Schedule a content asset for publication on a specific platform."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         user_id = current_user.id
@@ -186,11 +182,9 @@ async def schedule_post(
         import traceback
         traceback.print_exc()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Failed to schedule post: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()
 
 
 @router.put("/scheduled-posts/{post_id}")
@@ -200,8 +194,7 @@ async def update_scheduled_post(
     current_user = Depends(get_current_user)
 ):
     """Update a scheduled post (reschedule or cancel)."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         user_id = current_user.id
@@ -271,11 +264,9 @@ async def update_scheduled_post(
         import traceback
         traceback.print_exc()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Failed to update scheduled post: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()
 
 
 @router.delete("/scheduled-posts/{post_id}")
@@ -284,8 +275,7 @@ async def delete_scheduled_post(
     current_user = Depends(get_current_user)
 ):
     """Delete a scheduled post."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         user_id = current_user.id
@@ -323,11 +313,9 @@ async def delete_scheduled_post(
         import traceback
         traceback.print_exc()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Failed to delete scheduled post: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()
 
 
 @router.get("/available-content")
@@ -335,8 +323,7 @@ async def get_available_content(
     current_user = Depends(get_current_user)
 ):
     """Get all generated content assets that can be scheduled."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         user_id = current_user.id
@@ -384,8 +371,6 @@ async def get_available_content(
         import traceback
         traceback.print_exc()
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            status_code=500,
             detail=f"Failed to fetch available content: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()

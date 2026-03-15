@@ -2,7 +2,6 @@
 
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from prisma import Prisma
 
 from ..models import (
     JobDetails,
@@ -12,6 +11,7 @@ from ..models import (
     VideoSourceResponse
 )
 from ..auth import get_current_active_user
+from ..database import get_prisma_client
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
@@ -21,9 +21,8 @@ async def get_job_status_and_results(
     current_user = Depends(get_current_active_user)
 ):
     """Get processing job status and all generated content assets."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         job = await prisma.processingjob.find_unique(
             where={"id": job_id},
@@ -98,7 +97,7 @@ async def get_job_status_and_results(
         )
         
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/{job_id}/assets", response_model=List[ContentAssetResponse])
 async def get_job_content_assets(
@@ -106,9 +105,8 @@ async def get_job_content_assets(
     current_user = Depends(get_current_active_user)
 ):
     """Get all content assets for a specific job."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # First verify job access
         job = await prisma.processingjob.find_unique(
@@ -153,7 +151,7 @@ async def get_job_content_assets(
         ]
         
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/{job_id}/transcript", response_model=TranscriptResponse)
 async def get_job_transcript(
@@ -161,9 +159,8 @@ async def get_job_transcript(
     current_user = Depends(get_current_active_user)
 ):
     """Get transcript for a specific job."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # First verify job access
         job = await prisma.processingjob.find_unique(
@@ -204,7 +201,7 @@ async def get_job_transcript(
         )
         
     finally:
-        await prisma.disconnect()
+        pass
 
 # Individual asset routes
 @router.get("/assets/{asset_id}", response_model=ContentAssetResponse)
@@ -213,9 +210,8 @@ async def get_content_asset(
     current_user = Depends(get_current_active_user)
 ):
     """Get a specific content asset."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         asset = await prisma.contentasset.find_unique(
             where={"id": asset_id},
@@ -254,4 +250,4 @@ async def get_content_asset(
         )
         
     finally:
-        await prisma.disconnect()
+        pass

@@ -37,11 +37,13 @@ export default function TikTokCallbackPage() {
       }
       
       // Send code and state to backend
-      const apiUrl = 'https://api.vidova.me';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
+      const token = Cookies.get('access_token');
       const response = await fetch(`${apiUrl}/tiktok/callback`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({ 
           code,

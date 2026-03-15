@@ -6,7 +6,6 @@ import shutil
 import asyncio
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
-from prisma import Prisma
 
 from ..models import (
     VideoSubmit,
@@ -17,6 +16,7 @@ from ..models import (
 from ..auth import get_current_active_user
 from ..services.video_processor import VideoProcessor
 from ..services import usage_service
+from ..database import get_prisma_client
 
 router = APIRouter(tags=["videos"])
 
@@ -27,8 +27,7 @@ async def submit_video_for_processing(
     current_user = Depends(get_current_active_user)
 ):
     """Submit a YouTube video for processing."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         # Check usage limits FIRST
@@ -111,8 +110,6 @@ async def submit_video_for_processing(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Failed to submit video: {str(e)}"
         )
-    finally:
-        await prisma.disconnect()
 
 async def process_video_async(video_id: str, youtube_url: str, job_id: str, workspace_id: str):
     """Process video asynchronously without Temporal."""
@@ -124,9 +121,8 @@ async def process_video_async(video_id: str, youtube_url: str, job_id: str, work
 
 async def process_uploaded_video_async(video_id: str, file_path: str, job_id: str, filename: str):
     """Process uploaded video file asynchronously."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         print(f"🎬 Starting processing for uploaded video: {filename}")
         
@@ -280,8 +276,6 @@ async def process_uploaded_video_async(video_id: str, file_path: str, job_id: st
             )
         except Exception as update_error:
             print(f"Failed to update error status: {update_error}")
-    finally:
-        await prisma.disconnect()
 
 @router.post("/workspaces/{workspace_id}/videos/upload", response_model=APIResponse)
 async def upload_video_file(
@@ -290,8 +284,7 @@ async def upload_video_file(
     current_user = Depends(get_current_active_user)
 ):
     """Upload a video file for processing."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         # Check usage limits
@@ -400,7 +393,7 @@ async def upload_video_file(
             detail=f"Failed to upload video: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/workspaces/{workspace_id}/videos", response_model=List[VideoSourceResponse])
 async def list_workspace_videos(
@@ -408,9 +401,8 @@ async def list_workspace_videos(
     current_user = Depends(get_current_active_user)
 ):
     """List all videos in a workspace."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # Verify workspace ownership
         workspace = await prisma.workspace.find_unique(
@@ -449,7 +441,7 @@ async def list_workspace_videos(
         ]
         
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/videos/{video_id}", response_model=VideoSourceWithJob)
 async def get_video_details(
@@ -457,9 +449,8 @@ async def get_video_details(
     current_user = Depends(get_current_active_user)
 ):
     """Get detailed video information including processing status."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         video = await prisma.videosource.find_unique(
             where={"id": video_id},
@@ -515,7 +506,7 @@ async def get_video_details(
             detail=f"Failed to get transcript: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/videos/{video_id}/transcript")
 async def get_video_transcript(
@@ -523,9 +514,8 @@ async def get_video_transcript(
     current_user = Depends(get_current_active_user)
 ):
     """Get transcript for a specific video."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # Get video and check ownership
         video = await prisma.videosource.find_unique(
@@ -583,7 +573,7 @@ async def get_video_transcript(
             detail=f"Failed to get transcript: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/videos/{video_id}/content")
 async def get_video_content(
@@ -591,9 +581,8 @@ async def get_video_content(
     current_user = Depends(get_current_active_user)
 ):
     """Get generated content for a specific video."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # Get video and check ownership
         video = await prisma.videosource.find_unique(
@@ -644,7 +633,7 @@ async def get_video_content(
             detail=f"Failed to get content: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.delete("/videos/{video_id}", response_model=APIResponse)
 async def delete_video(
@@ -652,9 +641,8 @@ async def delete_video(
     current_user = Depends(get_current_active_user)
 ):
     """Delete a video and its associated data."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # Get video and check ownership
         video = await prisma.videosource.find_unique(
@@ -693,101 +681,8 @@ async def delete_video(
             detail=f"Failed to delete video: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
-@router.post("/workspaces/{workspace_id}/videos/upload", response_model=APIResponse)
-async def upload_video_file(
-    workspace_id: str,
-    file: UploadFile = File(...),
-    current_user = Depends(get_current_active_user)
-):
-    """Upload a video file for processing."""
-    prisma = Prisma()
-    await prisma.connect()
-    
-    try:
-        # Verify workspace ownership
-        workspace = await prisma.workspace.find_unique(
-            where={"id": workspace_id}
-        )
-        
-        if not workspace:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Workspace not found"
-            )
-        
-        if workspace.ownerId != current_user.id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Access denied to this workspace"
-            )
-        
-        # Validate file type
-        allowed_extensions = {'.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv', '.wmv', '.m4v'}
-        file_ext = os.path.splitext(file.filename)[1].lower()
-        
-        if file_ext not in allowed_extensions:
-            raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
-                detail=f"Invalid file type. Allowed: {', '.join(allowed_extensions)}"
-            )
-        
-        # Create upload directory if it doesn't exist
-        upload_dir = os.path.join(os.getcwd(), "uploads", "videos")
-        os.makedirs(upload_dir, exist_ok=True)
-        
-        # Generate unique filename
-        file_id = str(uuid.uuid4())
-        file_path = os.path.join(upload_dir, f"{file_id}{file_ext}")
-        
-        # Save uploaded file
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
-        
-        # Create video source record with file path
-        video_source = await prisma.videosource.create(
-            data={
-                "title": file.filename,
-                "youtubeUrl": f"file://{file_path}",  # Store file path
-                "workspaceId": workspace_id,
-                "status": "PENDING"
-            }
-        )
-        
-        # Create processing job record
-        job_id = str(uuid.uuid4())
-        workflow_id = f"process-video-{video_source.id}-{job_id}"
-        
-        processing_job = await prisma.processingjob.create(
-            data={
-                "id": job_id,
-                "temporalWorkflowId": workflow_id,
-                "videoSourceId": video_source.id,
-                "status": "STARTED"
-            }
-        )
-        
-        return APIResponse(
-            success=True,
-            message="Video file uploaded successfully",
-            data={
-                "video_id": video_source.id,
-                "job_id": job_id,
-                "filename": file.filename,
-                "file_size": os.path.getsize(file_path)
-            }
-        )
-        
-    except HTTPException:
-        raise
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to upload video: {str(e)}"
-        )
-    finally:
-        await prisma.disconnect()
 
 
 @router.post("/content/{asset_id}/regenerate", response_model=APIResponse)
@@ -796,8 +691,7 @@ async def regenerate_content(
     current_user = Depends(get_current_active_user)
 ):
     """Regenerate a specific content asset."""
-    prisma = Prisma()
-    await prisma.connect()
+    prisma = get_prisma_client()
 
     try:
         # Get the content asset
@@ -891,4 +785,4 @@ async def regenerate_content(
             detail=f"Failed to regenerate content: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass

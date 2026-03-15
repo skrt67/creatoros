@@ -37,7 +37,7 @@ export default function TikTokPage() {
   const initPage = async () => {
     try {
       setLoading(true);
-      const apiUrl = 'https://api.vidova.me';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
       let token = Cookies.get('access_token');
 
       // If no token, allow access to TikTok page (user can connect TikTok without being logged in)
@@ -82,7 +82,7 @@ export default function TikTokPage() {
   const handleConnectTikTok = async () => {
     try {
       setConnecting(true);
-      const apiUrl = 'https://api.vidova.me';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
       const token = Cookies.get('access_token');
 
       if (!token) {
@@ -114,7 +114,7 @@ export default function TikTokPage() {
   const handleSyncStats = async () => {
     try {
       setSyncing(true);
-      const apiUrl = 'https://api.vidova.me';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
       const token = Cookies.get('access_token');
 
       const response = await fetch(`${apiUrl}/tiktok/sync`, {

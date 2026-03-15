@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui';
 import { Save, Settings } from 'lucide-react';
@@ -27,8 +28,9 @@ export default function ContentSettingsPage() {
 
   const fetchPreferences = async () => {
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/preferences/content`, {
+      const token = Cookies.get('access_token');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
+      const response = await fetch(`${apiUrl}/preferences/content`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -52,8 +54,9 @@ export default function ContentSettingsPage() {
   const savePreferences = async () => {
     setSaving(true);
     try {
-      const token = localStorage.getItem('authToken');
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/preferences/content`, {
+      const token = Cookies.get('access_token');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.vidova.me';
+      const response = await fetch(`${apiUrl}/preferences/content`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

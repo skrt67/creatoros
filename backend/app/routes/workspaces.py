@@ -2,7 +2,6 @@
 
 from typing import List
 from fastapi import APIRouter, Depends, HTTPException, status
-from prisma import Prisma
 
 from ..models import (
     WorkspaceCreate,
@@ -11,14 +10,14 @@ from ..models import (
     APIResponse
 )
 from ..auth import get_current_active_user
+from ..database import get_prisma_client
 
 router = APIRouter(prefix="/workspaces", tags=["workspaces"])
 
 @router.get("", response_model=List[WorkspaceResponse])
 async def list_user_workspaces(current_user = Depends(get_current_active_user)):
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         workspaces = await prisma.workspace.find_many(
             where={"ownerId": current_user.id}
@@ -36,7 +35,7 @@ async def list_user_workspaces(current_user = Depends(get_current_active_user)):
         ]
         
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.post("", response_model=APIResponse)
 async def create_workspace(
@@ -44,9 +43,8 @@ async def create_workspace(
     current_user = Depends(get_current_active_user)
 ):
     """Create a new workspace."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         workspace = await prisma.workspace.create(
             data={
@@ -70,7 +68,7 @@ async def create_workspace(
             detail=f"Failed to create workspace: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.get("/{workspace_id}", response_model=WorkspaceWithVideos)
 async def get_workspace_details(
@@ -78,9 +76,8 @@ async def get_workspace_details(
     current_user = Depends(get_current_active_user)
 ):
     """Get workspace details with video sources."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         workspace = await prisma.workspace.find_unique(
             where={"id": workspace_id},
@@ -134,7 +131,7 @@ async def get_workspace_details(
         )
         
     finally:
-        await prisma.disconnect()
+        pass
 
 @router.delete("/{workspace_id}", response_model=APIResponse)
 async def delete_workspace(
@@ -142,9 +139,8 @@ async def delete_workspace(
     current_user = Depends(get_current_active_user)
 ):
     """Delete a workspace and all its content."""
-    prisma = Prisma()
-    await prisma.connect()
-    
+    prisma = get_prisma_client()
+
     try:
         # Check if workspace exists and user owns it
         workspace = await prisma.workspace.find_unique(
@@ -181,4 +177,4 @@ async def delete_workspace(
             detail=f"Failed to delete workspace: {str(e)}"
         )
     finally:
-        await prisma.disconnect()
+        pass

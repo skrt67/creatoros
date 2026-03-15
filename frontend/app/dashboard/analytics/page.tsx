@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Cookies from 'js-cookie';
 import { ArrowUpRight, Users, Video, Heart, Eye } from 'lucide-react';
 
 interface TikTokStats {
@@ -29,7 +30,7 @@ export default function AnalyticsPage() {
       setIsLoading(true);
       const response = await fetch('/api/tiktok/stats', {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${Cookies.get('access_token')}`,
         },
       });
 
@@ -56,7 +57,7 @@ export default function AnalyticsPage() {
       const response = await fetch('/api/tiktok/auth-url', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${Cookies.get('access_token')}`,
           'Content-Type': 'application/json',
         },
       });
@@ -81,7 +82,7 @@ export default function AnalyticsPage() {
       const response = await fetch('/api/tiktok/sync', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${Cookies.get('access_token')}`,
           'Content-Type': 'application/json',
         },
       });
