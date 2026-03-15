@@ -132,6 +132,57 @@ async def create_portal_session(
         )
 
 
+@router.post("/cancel-subscription")
+async def cancel_subscription(
+    current_user = Depends(get_current_active_user)
+):
+    """Cancel user's subscription. Handles both real Stripe and test subscriptions."""
+    prisma = get_prisma_client()
+
+    try:
+        subscription = await prisma.subscription.find_unique(
+            where={"userId": current_user.id}
+        )
+
+        if not subscription:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="No subscription found"
+            )
+
+        # For real Stripe subscriptions, cancel via Stripe API
+        if not subscription.stripeSubscriptionId.startswith("sub_test_"):
+            try:
+                stripe.Subscription.cancel(subscription.stripeSubscriptionId)
+            except stripe.error.StripeError as e:
+                print(f"Stripe cancel error: {e}")
+
+        # Update subscription status in database
+        await prisma.subscription.update(
+            where={"userId": current_user.id},
+            data={"status": "canceled"}
+        )
+
+        # Downgrade user to FREE
+        await prisma.user.update(
+            where={"id": current_user.id},
+            data={"plan": "FREE"}
+        )
+
+        print(f"✅ Subscription canceled for user {current_user.id}")
+
+        return {"success": True, "message": "Abonnement annulé avec succès"}
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"❌ Error canceling subscription: {str(e)}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to cancel subscription: {str(e)}"
+        )
+
+
 @router.get("/subscription")
 async def get_user_subscription(current_user = Depends(get_current_active_user)):
     """Get current user's subscription details."""
