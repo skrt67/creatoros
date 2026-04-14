@@ -99,8 +99,15 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
             onVideoSubmitted();
           }, 2000);
         } else {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Échec de la soumission');
+          let errorMessage = `Erreur ${response.status}: `;
+          try {
+            const errorData = await response.json();
+            errorMessage += errorData.detail || errorData.message || 'Échec de la soumission';
+          } catch (parseError) {
+            errorMessage += await response.text() || 'Échec de la soumission';
+          }
+          console.error('URL submission error:', errorMessage);
+          throw new Error(errorMessage);
         }
       } else {
         if (!selectedFile) {
@@ -125,11 +132,19 @@ export function VideoSubmission({ workspaceId, onVideoSubmitted }: VideoSubmissi
           setSelectedFile(null);
           onVideoSubmitted();
         } else {
-          const errorData = await response.json();
-          throw new Error(errorData.detail || 'Échec de l\'upload');
+          let errorMessage = `Erreur ${response.status}: `;
+          try {
+            const errorData = await response.json();
+            errorMessage += errorData.detail || errorData.message || 'Échec de l\'upload';
+          } catch (parseError) {
+            errorMessage += await response.text() || 'Échec de l\'upload';
+          }
+          console.error('Upload error:', errorMessage);
+          throw new Error(errorMessage);
         }
       }
     } catch (err: any) {
+      console.error('Video submission error:', err);
       setError(err.message || 'Une erreur est survenue');
     } finally {
       setIsSubmitting(false);

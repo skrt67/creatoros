@@ -162,7 +162,10 @@ async def process_uploaded_video_async(video_id: str, file_path: str, job_id: st
         aai.settings.api_key = os_module.getenv("ASSEMBLYAI_API_KEY")
         
         if not aai.settings.api_key:
+            print("❌ ERROR: AssemblyAI API key not configured")
             raise Exception("AssemblyAI API key not configured")
+        
+        print(f"✅ AssemblyAI API key configured: {aai.settings.api_key[:10]}...")
         
         transcriber = aai.Transcriber()
         transcript_result = transcriber.transcribe(audio_path)
@@ -287,11 +290,15 @@ async def upload_video_file(
     prisma = get_prisma_client()
 
     try:
+        print(f"📤 Upload request received - User: {current_user.email}, Workspace: {workspace_id}")
+        print(f"📁 File: {file.filename}, Type: {file.content_type}, Size: {file.size if hasattr(file, 'size') else 'unknown'}")
+        
         # Check usage limits
         can_process, error_message = await usage_service.check_can_process_video(
             current_user.id,
             prisma
         )
+        print(f"✅ Usage check: can_process={can_process}")
 
         if not can_process:
             raise HTTPException(
